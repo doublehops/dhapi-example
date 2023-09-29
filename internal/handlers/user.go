@@ -49,11 +49,11 @@ func ListUser(c *gin.Context) {
 	resp.GetListResp(users, p)
 }
 
-func getRules(user *User) []validator.Rule {
+func (u *User) getRules() []validator.Rule {
 	return []validator.Rule{
-		{"username", user.Username, true, []validator.ValidateFuncs{validator.LengthInRange(3, 8, "")}},
-		{"emailAddress", user.EmailAddress, true, []validator.ValidateFuncs{validator.EmailAddress("")}},
-		{"age", user.Age, true, []validator.ValidateFuncs{validator.MinValue(18, "")}},
+		{"username", u.Username, true, []validator.ValidateFuncs{validator.LengthInRange(3, 8, "")}},
+		{"emailAddress", u.EmailAddress, true, []validator.ValidateFuncs{validator.EmailAddress("")}},
+		{"age", u.Age, false, []validator.ValidateFuncs{validator.MinValue(18, "")}},
 	}
 }
 
@@ -65,7 +65,7 @@ func UpdateUser(c *gin.Context) {
 
 	_ = c.ShouldBindJSON(&user)
 
-	validationErrors := validator.RunValidation(getRules(&user))
+	validationErrors := validator.RunValidation(user.getRules())
 
 	if len(validationErrors) > 0 {
 		c.JSON(http.StatusBadRequest, resp.GetValidateErrResp(validationErrors))
