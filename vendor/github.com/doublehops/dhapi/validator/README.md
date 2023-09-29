@@ -4,6 +4,10 @@ This validation package is designed to make adding validation to API endpoints a
 easy to use as possible. Although common validation rules exist for use, it's easy to create
 custom ones as well as custom error messages.
 
+# TODO
+- See if it's possible to add required validation into `RunValidation` function.
+- Add CI/CD to GitHub rules - `golint` and automated tests.
+
 ## Example Usage
 
 You define the rules for each of the struct properties that need to be tested. Each
@@ -53,3 +57,30 @@ each could fail. It should be easy for any frontend to consume. An example would
 
 ## Adding a Custom Validation Rule
 
+You can create custom validation functions and use them just the same. The function
+must confirm to the `ValidateFuncs` signature. Create the function and then assign
+it to the variables in the `rules` slice like the pre-created functions.
+
+An example would be:
+```go
+func CustomValidation(errorMessage string) ValidationFunctions {
+	return func(required bool, value interface{}) (bool, string) {
+		if errorMessage == "" {
+			errorMessage = defaultErrorMessage
+		}
+
+		var v string
+		var ok bool
+
+		if v, ok = value.(string); !ok {
+			return false, errorMessage
+		}
+
+		if v == "my-custom-value" {
+			return true, ""
+		}
+
+		return false, errorMessage
+	}
+}
+```

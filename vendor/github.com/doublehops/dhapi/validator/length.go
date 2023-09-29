@@ -1,9 +1,9 @@
 package validator
 
 const (
-	MinLengthDefaultMessage     = "does not meet minimum length"
+	MinLengthDefaultMessage     = "is below minimum required length"
 	MaxLengthDefaultMessage     = "exceeds maximum length"
-	BetweenLengthDefaultMessage = "does not conform to min and max lengths"
+	BetweenLengthDefaultMessage = "is not within required range"
 )
 
 func MinLength(minLength int, errorMessage string) ValidateFuncs {
@@ -64,7 +64,7 @@ func MaxLength(maxLength int, errorMessage string) ValidateFuncs {
 	}
 }
 
-func Between(minLength, maxLength int, errorMessage string) ValidateFuncs {
+func LengthInRange(minLength, maxLength int, errorMessage string) ValidateFuncs {
 	return func(required bool, value interface{}) (bool, string) {
 		if errorMessage == "" {
 			errorMessage = BetweenLengthDefaultMessage

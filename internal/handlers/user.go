@@ -11,6 +11,7 @@ import (
 type User struct {
 	Username     string `json:"username"`
 	EmailAddress string `json:"emailAddress"`
+	Age          int    `json:"age"`
 }
 
 func GetUser(c *gin.Context) {
@@ -50,14 +51,15 @@ func ListUser(c *gin.Context) {
 
 func getRules(user *User) []validator.Rule {
 	return []validator.Rule{
-		{"username", user.Username, true, []validator.ValidateFuncs{validator.Between(3, 8, "")}},
+		{"username", user.Username, true, []validator.ValidateFuncs{validator.LengthInRange(3, 8, "")}},
 		{"emailAddress", user.EmailAddress, true, []validator.ValidateFuncs{validator.EmailAddress("")}},
+		{"age", user.Age, true, []validator.ValidateFuncs{validator.MinValue(18, "")}},
 	}
 }
 
 // UpdateUser - Validation error example.
-// Example valid test request: curl -s -X PUT localhost:8080/v1/user -H "Content-Type: application/json" --data '{"username": "johns", "emailAddress": "john@example.com"}'| jq; echo
-// Example invalid test request: curl -s -X PUT localhost:8080/v1/user -H "Content-Type: application/json" --data '{"username": "j", "emailAddress": "john.smith"}'| jq; echo
+// Example valid test request: curl -s -X PUT localhost:8080/v1/user -H "Content-Type: application/json" --data '{"username": "johns", "emailAddress": "john@example.com", "age": 30}'| jq; echo
+// Example invalid test request: curl -s -X PUT localhost:8080/v1/user -H "Content-Type: application/json" --data '{"username": "j", "emailAddress": "john.smith", "age": 17}'| jq; echo
 func UpdateUser(c *gin.Context) {
 	var user User
 
