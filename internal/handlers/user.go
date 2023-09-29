@@ -2,8 +2,10 @@ package handlers
 
 import (
 	"github.com/gin-gonic/gin"
+	"net/http"
 
 	"github.com/doublehops/dhapi/responses"
+	"github.com/doublehops/dhapi/validator"
 )
 
 type User struct {
@@ -17,7 +19,7 @@ func GetUser(c *gin.Context) {
 		EmailAddress: c.MustGet("emailAddress").(string),
 	}
 
-	responses.SingleItemResponse(c, user)
+	c.JSON(http.StatusOK, responses.GetSingleItemResponse(user))
 }
 
 func ListUser(c *gin.Context) {
@@ -43,36 +45,31 @@ func ListUser(c *gin.Context) {
 		TotalCount:  229,
 	}
 
-	responses.MultiItemResponse(c, users, p)
+	responses.GetMultiItemResponse(users, p)
 }
 
-type UpdateUserObj struct {
-	Username string `json:"username" binding:"required,min=3"`
-	Country  string `json:"country" binding:"min=3,max=3"`
-}
-
-// GetErrorMessages will return the list of custom validation error messages to use in response.
-func GetErrorMessages() responses.CustomerErrorMessages {
-	return responses.CustomerErrorMessages{
-		"username": {"required": "This field is required"},
-		"country":  {"required": "This field is required", "min": "Must be at least 3 characters long"},
+func getRules(user *User) []validator.Rule {
+	return []validator.Rule{
+		{"username", user.Username, true, []validator.ValidationFunctions{validator.Between(3, 8, "")}},
+		{"emailAddress", user.EmailAddress, true, []validator.ValidationFunctions{validator.EmailAddress("")}},
 	}
 }
 
 // UpdateUser - Validation error example.
-// Example test request: curl -s -X PUT localhost:8080/v1/user -H "Content-Type: application/json" --data '{"username": "aaa", "country": "AUA"}'| jq; echo
+// Example valid test request: curl -s -X PUT localhost:8080/v1/user -H "Content-Type: application/json" --data '{"username": "johns", "emailAddress": "john@example.com"}'| jq; echo
+// Example invalid test request: curl -s -X PUT localhost:8080/v1/user -H "Content-Type: application/json" --data '{"username": "j", "emailAddress": "john.smith"}'| jq; echo
 func UpdateUser(c *gin.Context) {
-	var user UpdateUserObj
+	var user User
 
 	_ = c.ShouldBindJSON(&user)
 
-	validationErrors := responses.Validate(c, &user, GetErrorMessages())
+	validationErrors := validator.RunValidation(getRules(&user))
 
 	if len(validationErrors) > 0 {
-		responses.ValidationErrorResponse(c, 422, validationErrors)
+		c.JSON(http.StatusBadRequest, responses.GetValidationErrorResponse(validationErrors))
 
 		return
 	}
 
-	responses.SingleItemResponse(c, user)
+	c.JSON(http.StatusOK, responses.GetSingleItemResponse(user))
 }

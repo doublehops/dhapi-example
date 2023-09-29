@@ -3,10 +3,10 @@ module github.com/doublehops/dhapi-example
 go 1.21.0
 
 // @todo - this should be removed when dhapi is pushed to Github.
-replace github.com/doublehops/dhapi => /home/b/workspace/dhapi
+replace github.com/doublehops/dhapi => /home/b/workspace/dhapi-2
 
 require (
-	github.com/doublehops/dhapi v0.0.0-00010101000000-000000000000
+	github.com/doublehops/dhapi v0.0.0-20230929034722-5387dc0c935f
 	github.com/gin-gonic/gin v1.9.1
 )
 
