@@ -4,7 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 
-	"github.com/doublehops/dhapi/responses"
+	"github.com/doublehops/dhapi/resp"
 	"github.com/doublehops/dhapi/validator"
 )
 
@@ -19,7 +19,7 @@ func GetUser(c *gin.Context) {
 		EmailAddress: c.MustGet("emailAddress").(string),
 	}
 
-	c.JSON(http.StatusOK, responses.GetSingleItemResponse(user))
+	c.JSON(http.StatusOK, resp.GetSingleItemResp(user))
 }
 
 func ListUser(c *gin.Context) {
@@ -38,20 +38,20 @@ func ListUser(c *gin.Context) {
 		},
 	}
 
-	p := responses.PaginationType{
+	p := resp.Pagination{
 		CurrentPage: 1,
 		PerPage:     10,
 		PageCount:   22,
 		TotalCount:  229,
 	}
 
-	responses.GetMultiItemResponse(users, p)
+	resp.GetListResp(users, p)
 }
 
 func getRules(user *User) []validator.Rule {
 	return []validator.Rule{
-		{"username", user.Username, true, []validator.ValidationFunctions{validator.Between(3, 8, "")}},
-		{"emailAddress", user.EmailAddress, true, []validator.ValidationFunctions{validator.EmailAddress("")}},
+		{"username", user.Username, true, []validator.ValidateFuncs{validator.Between(3, 8, "")}},
+		{"emailAddress", user.EmailAddress, true, []validator.ValidateFuncs{validator.EmailAddress("")}},
 	}
 }
 
@@ -66,10 +66,10 @@ func UpdateUser(c *gin.Context) {
 	validationErrors := validator.RunValidation(getRules(&user))
 
 	if len(validationErrors) > 0 {
-		c.JSON(http.StatusBadRequest, responses.GetValidationErrorResponse(validationErrors))
+		c.JSON(http.StatusBadRequest, resp.GetValidateErrResp(validationErrors))
 
 		return
 	}
 
-	c.JSON(http.StatusOK, responses.GetSingleItemResponse(user))
+	c.JSON(http.StatusOK, resp.GetSingleItemResp(user))
 }

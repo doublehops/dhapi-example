@@ -6,7 +6,7 @@ const (
 	BetweenLengthDefaultMessage = "does not conform to min and max lengths"
 )
 
-func MinLength(minLength int, errorMessage string) ValidationFunctions {
+func MinLength(minLength int, errorMessage string) ValidateFuncs {
 	return func(required bool, value interface{}) (bool, string) {
 		if errorMessage == "" {
 			errorMessage = MinLengthDefaultMessage
@@ -35,7 +35,7 @@ func MinLength(minLength int, errorMessage string) ValidationFunctions {
 	}
 }
 
-func MaxLength(maxLength int, errorMessage string) ValidationFunctions {
+func MaxLength(maxLength int, errorMessage string) ValidateFuncs {
 	return func(required bool, value interface{}) (bool, string) {
 		if errorMessage == "" {
 			errorMessage = BetweenLengthDefaultMessage
@@ -64,7 +64,7 @@ func MaxLength(maxLength int, errorMessage string) ValidationFunctions {
 	}
 }
 
-func Between(minLength, maxLength int, errorMessage string) ValidationFunctions {
+func Between(minLength, maxLength int, errorMessage string) ValidateFuncs {
 	return func(required bool, value interface{}) (bool, string) {
 		if errorMessage == "" {
 			errorMessage = BetweenLengthDefaultMessage

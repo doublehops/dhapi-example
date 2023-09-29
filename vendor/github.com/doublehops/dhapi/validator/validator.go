@@ -1,27 +1,25 @@
 package validator
 
-import "github.com/doublehops/dhapi/responses"
+import "github.com/doublehops/dhapi/resp"
 
 const (
 	RequiredPropertyError   = "this is a required property"
 	ProcessingPropertyError = "unable to process property"
 )
 
-type ValidationFunctions func(bool, interface{}) (bool, string)
+type ValidateFuncs func(bool, interface{}) (bool, string)
 
 type Rule struct {
 	VariableName string
-	Value        interface{} // WHAT WAS THIS?
+	Value        interface{}
 	Required     bool
-	Function     []ValidationFunctions // AND WHAT WAS THIS?
+	Function     []ValidateFuncs
 }
 
 type Error string
 
-//type ErrorMessages map[string][]Error
-
-func RunValidation(rules []Rule) responses.ErrorMessages {
-	errorMessages := make(responses.ErrorMessages)
+func RunValidation(rules []Rule) resp.ErrMsgs {
+	errorMessages := make(resp.ErrMsgs)
 
 	for _, prop := range rules {
 		var errors []string
