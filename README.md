@@ -1,6 +1,8 @@
-This is a playground to see how to go about implementing many 
-required features of a RESTful API using Gin.
+This is a RESTful API framework built in Golang that is hopefully well designed for
+quick development and easy maintainability. It will work with dependencies made 
+available in the repository `github.com/doublehops/dhapi`.
 
+## Basic Requirements
 The basic requirements from a RESTful API framework are:
 - ~~parameters in URL - such as `api/user/123`~~
 - ~~easy validation~~
@@ -16,3 +18,14 @@ The basic requirements from a RESTful API framework are:
 
 Good to have:
 - command line tool to list endpoints
+
+## Directory Structure
+- `./cmd/api/main.go` # Start API service
+- `./cmd/migrate/migrate.go` # Run database migrations
+- `./internal/models/` # Contain data models
+- `./internal/routes/` # Contains definitions of API routes. One file per model
+- `./internal/handlers/` # Contains handlers for incoming API requests
+- `./internal/service/` # Service layer that contains business logic of each model/endpoints
+- `./internal/repository/` # Contains data retrieval functions
+- `./internal/migrations/` # Contains database migration files
+- `./internal/middleware/` # Contains API middleware
