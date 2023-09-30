@@ -22,10 +22,11 @@ Good to have:
 ## Directory Structure
 - `./cmd/api/main.go` # Start API service
 - `./cmd/migrate/migrate.go` # Run database migrations
-- `./internal/models/` # Contain data models
 - `./internal/routes/` # Contains definitions of API routes. One file per model
 - `./internal/handlers/` # Contains handlers for incoming API requests
+- `./internal/models/` # Contain data models
 - `./internal/service/` # Service layer that contains business logic of each model/endpoints
 - `./internal/repository/` # Contains data retrieval functions
 - `./internal/migrations/` # Contains database migration files
 - `./internal/middleware/` # Contains API middleware
+- `./config.json` # Application configuration
