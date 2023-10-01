@@ -25,7 +25,7 @@ github.com/bytedance/sonic/utf8
 ## explicit; go 1.15
 github.com/chenzhuoyu/base64x
 # github.com/doublehops/dhapi v0.0.0-20230929034722-5387dc0c935f => /home/b/workspace/dhapi-2
-## explicit; go 1.19
+## explicit; go 1.21
 github.com/doublehops/dhapi/resp
 github.com/doublehops/dhapi/validator
 # github.com/gabriel-vasile/mimetype v1.4.2

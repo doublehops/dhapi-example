@@ -7,13 +7,13 @@ const (
 	ProcessingPropertyError = "unable to process property"
 )
 
-type ValidateFuncs func(bool, interface{}) (bool, string)
+type ValidationFuncs func(bool, interface{}) (bool, string)
 
 type Rule struct {
 	VariableName string
 	Value        interface{}
 	Required     bool
-	Function     []ValidateFuncs
+	Function     []ValidationFuncs
 }
 
 type Error string

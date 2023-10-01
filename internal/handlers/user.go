@@ -51,9 +51,9 @@ func ListUser(c *gin.Context) {
 
 func (u *User) getRules() []validator.Rule {
 	return []validator.Rule{
-		{"username", u.Username, true, []validator.ValidateFuncs{validator.LengthInRange(3, 8, "")}},
-		{"emailAddress", u.EmailAddress, true, []validator.ValidateFuncs{validator.EmailAddress("")}},
-		{"age", u.Age, false, []validator.ValidateFuncs{validator.MinValue(18, "")}},
+		{"username", u.Username, true, []validator.ValidationFuncs{validator.LengthInRange(3, 8, "")}},
+		{"emailAddress", u.EmailAddress, true, []validator.ValidationFuncs{validator.EmailAddress("")}},
+		{"age", u.Age, true, []validator.ValidationFuncs{validator.MinValue(18, "")}},
 	}
 }
 
