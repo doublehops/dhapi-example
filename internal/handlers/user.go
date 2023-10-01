@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"github.com/gin-gonic/gin"
+	"log/slog"
 	"net/http"
 
 	"github.com/doublehops/dhapi/resp"
@@ -63,6 +64,8 @@ func (u *User) getRules() []validator.Rule {
 func UpdateUser(c *gin.Context) {
 	var user User
 
+	l, _ := c.MustGet("log").(*slog.Logger)
+	l.Info("RequestMade", c.Request.Method+" "+c.Request.RequestURI)
 	_ = c.ShouldBindJSON(&user)
 
 	validationErrors := validator.RunValidation(user.getRules())

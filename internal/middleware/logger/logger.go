@@ -1,29 +1,14 @@
 package logger
 
 import (
-	"log"
-	"time"
+	"log/slog"
 
 	"github.com/gin-gonic/gin"
 )
 
-func Logger() gin.HandlerFunc {
+func LoggingMiddleware(log *slog.Logger) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		t := time.Now()
-
-		// Set example variable
-		c.Set("example", "12345")
-
-		// before request
-
+		c.Set("log", log)
 		c.Next()
-
-		// after request
-		latency := time.Since(t)
-		log.Print("latency: ", latency)
-
-		// access the status we are sending
-		status := c.Writer.Status()
-		log.Println(status)
 	}
 }
