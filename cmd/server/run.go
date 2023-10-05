@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
 
@@ -8,6 +9,7 @@ import (
 
 	"github.com/doublehops/dhapi-example/internal/config"
 	"github.com/doublehops/dhapi-example/internal/db"
+	"github.com/doublehops/dhapi-example/internal/handlers"
 	"github.com/doublehops/dhapi-example/internal/logga"
 	"github.com/doublehops/dhapi-example/internal/middleware/database"
 	"github.com/doublehops/dhapi-example/internal/middleware/logger"
@@ -16,11 +18,19 @@ import (
 )
 
 func main() {
+	if err := run(); err != nil {
+		log.Printf(err.Error())
+		os.Exit(1)
+	}
+}
+
+func run() error {
 	flags := runflags.GetFlags()
+
 	// Setup config.
 	cfg, err := config.New(flags.ConfigFile)
 	if err != nil {
-		log.Fatalf("error starting main. %s", err.Error())
+		return fmt.Errorf("error starting main. %s", err.Error())
 	}
 
 	// Setup logger.
@@ -29,8 +39,7 @@ func main() {
 	// Setup db connection.
 	DB, err := db.New(l, cfg.DB)
 	if err != nil {
-		l.Error("error creating database connection. %s", err.Error())
-		os.Exit(1)
+		return fmt.Errorf("error creating database connection. %s", err.Error())
 	}
 
 	// Setup and run Gin.
@@ -38,13 +47,20 @@ func main() {
 	r.ForwardedByClientIP = true
 	err = r.SetTrustedProxies([]string{"127.0.0.1"})
 	if err != nil {
-		log.Fatalf("error setting trusted proxy. %s", err)
+		return fmt.Errorf("error setting trusted proxy. %s", err)
+	}
+
+	app := &handlers.App{
+		DB:     DB,
+		Logger: l,
 	}
 
 	r.Use(gin.Recovery())
 	r.Use(database.DatabaseMiddleware(DB))
 	r.Use(logger.LoggingMiddleware(l))
-	routes.GetRoutes(r)
+	routes.GetRoutes(r, app)
 
 	r.Run(":8080")
+
+	return nil
 }

@@ -7,7 +7,7 @@ import (
 )
 
 // New will return the log handler.
-// It might be nice to allow the output to be configured also.
+// It might be nice to allow the output location to be configured also.
 func New(cfg *config.Logging) *slog.Logger {
 	switch cfg.OutputFormat {
 	case "json":
