@@ -1,20 +1,45 @@
 package logga
 
 import (
+	"fmt"
 	"github.com/doublehops/dhapi-example/internal/config"
 	"log/slog"
 	"os"
 )
 
-// New will return the log handler.
-// It might be nice to allow the output location to be configured also.
-func New(cfg *config.Logging) *slog.Logger {
+const InvalidLogLevelValue = "A valid log level was not defined in configuration"
+
+// New will return the log handler with the options defined in config.
+func New(cfg *config.Logging) (*slog.Logger, error) {
+	level, err := getLogLevel(cfg.LogLevel)
+	if err != nil {
+		return nil, err
+	}
+
+	logLevel := &slog.LevelVar{}
+	logLevel.Set(level)
+
 	switch cfg.OutputFormat {
 	case "json":
-		return slog.New(slog.NewJSONHandler(os.Stdout, nil))
+		return slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{Level: logLevel})), nil
 	case "text":
-		return slog.New(slog.NewTextHandler(os.Stdout, nil))
+		return slog.New(slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{Level: logLevel})), nil
 	default:
-		return slog.New(slog.NewTextHandler(os.Stdout, nil))
+		return slog.New(slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{Level: logLevel})), nil
 	}
+}
+
+func getLogLevel(configuredLevel string) (slog.Level, error) {
+	switch configuredLevel {
+	case "DEBUG":
+		return slog.LevelDebug, nil
+	case "INFO":
+		return slog.LevelInfo, nil
+	case "WARN":
+		return slog.LevelWarn, nil
+	case "ERROR":
+		return slog.LevelError, nil
+	}
+
+	return 0, fmt.Errorf(InvalidLogLevelValue)
 }

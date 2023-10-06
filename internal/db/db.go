@@ -11,7 +11,7 @@ import (
 )
 
 func New(l *slog.Logger, cfg config.DB) (*sql.DB, error) {
-	l.Info("db", "opening database connection")
+	l.Info("opening database connection")
 
 	dsn := fmt.Sprintf("%s:%s@tcp(%s)/%s?parseTime=true", cfg.User, cfg.Pass, cfg.Host, cfg.Name)
 

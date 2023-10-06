@@ -1,6 +1,6 @@
 {
   "logging": {
-    "logLevel": "debug",
+    "logLevel": "DEBUG",
     "outputFormat": "json"
   },
   "database": {

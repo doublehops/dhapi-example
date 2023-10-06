@@ -11,8 +11,6 @@ import (
 	"github.com/doublehops/dhapi-example/internal/db"
 	"github.com/doublehops/dhapi-example/internal/handlers"
 	"github.com/doublehops/dhapi-example/internal/logga"
-	"github.com/doublehops/dhapi-example/internal/middleware/database"
-	"github.com/doublehops/dhapi-example/internal/middleware/logger"
 	"github.com/doublehops/dhapi-example/internal/routes"
 	"github.com/doublehops/dhapi-example/internal/runflags"
 )
@@ -34,12 +32,20 @@ func run() error {
 	}
 
 	// Setup logger.
-	l := logga.New(&cfg.Logging)
+	l, err := logga.New(&cfg.Logging)
+	if err != nil {
+		return fmt.Errorf("error configuring logger. %s", err.Error())
+	}
 
 	// Setup db connection.
 	DB, err := db.New(l, cfg.DB)
 	if err != nil {
 		return fmt.Errorf("error creating database connection. %s", err.Error())
+	}
+
+	app := &handlers.App{
+		DB:     DB,
+		Logger: l,
 	}
 
 	// Setup and run Gin.
@@ -50,14 +56,7 @@ func run() error {
 		return fmt.Errorf("error setting trusted proxy. %s", err)
 	}
 
-	app := &handlers.App{
-		DB:     DB,
-		Logger: l,
-	}
-
 	r.Use(gin.Recovery())
-	r.Use(database.DatabaseMiddleware(DB))
-	r.Use(logger.LoggingMiddleware(l))
 	routes.GetRoutes(r, app)
 
 	r.Run(":8080")
