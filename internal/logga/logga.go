@@ -1,13 +1,15 @@
 package logga
 
 import (
-	"fmt"
+	"errors"
 	"github.com/doublehops/dhapi-example/internal/config"
 	"log/slog"
 	"os"
 )
 
-const InvalidLogLevelValue = "A valid log level was not defined in configuration"
+var (
+	InvalidLogLevelValue = errors.New("a valid log level was not defined in configuration")
+)
 
 // New will return the log handler with the options defined in config.
 func New(cfg *config.Logging) (*slog.Logger, error) {
@@ -41,5 +43,5 @@ func getLogLevel(configuredLevel string) (slog.Level, error) {
 		return slog.LevelError, nil
 	}
 
-	return 0, fmt.Errorf(InvalidLogLevelValue)
+	return slog.LevelInfo, InvalidLogLevelValue
 }
