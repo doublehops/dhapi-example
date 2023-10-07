@@ -1,6 +1,6 @@
 
 run:
-	go run cmd/server/run.go -config ./config.jsonsw
+	go run cmd/server/run.go -config ./config.json
 
 gofmt:
 	gofumpt -l -w .

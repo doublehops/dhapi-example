@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"log"
-	"log/slog"
 	"os"
 
 	"github.com/gin-gonic/gin"
@@ -37,9 +36,6 @@ func run() error {
 	if err != nil {
 		return fmt.Errorf("error configuring logger. %s", err.Error())
 	}
-
-	l.Info(nil, "mesdasd")
-	slog.Info("My message", "key", "value", "name", "damien")
 
 	// Setup db connection.
 	DB, err := db.New(l, cfg.DB)
