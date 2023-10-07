@@ -1,7 +1,7 @@
 package user
 
 import (
-	"log/slog"
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -83,8 +83,7 @@ func (u *User) getRules() []validator.Rule {
 func (h *Handle) UpdateUser(c *gin.Context) {
 	var user User
 
-	l, _ := c.MustGet("log").(*slog.Logger)
-	l.Info("RequestMade", c.Request.Method+" "+c.Request.RequestURI)
+	h.app.Log.Info(c, fmt.Sprintf("RequestMade: %s %s", c.Request.Method, c.Request.RequestURI))
 	_ = c.ShouldBindJSON(&user)
 
 	validationErrors := validator.RunValidation(user.getRules())
