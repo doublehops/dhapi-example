@@ -7,13 +7,6 @@ import (
 	"os"
 )
 
-//type Log interface {
-//	Debug(string, ...any)
-//	Info(string, ...any)
-//	Warn(string, ...any)
-//	Error(string, ...any)
-//}
-
 var (
 	InvalidLogLevelValue = errors.New("a valid log level was not defined in configuration")
 )
