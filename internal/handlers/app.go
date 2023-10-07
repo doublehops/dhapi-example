@@ -2,10 +2,10 @@ package handlers
 
 import (
 	"database/sql"
-	"log/slog"
+	"github.com/doublehops/dhapi-example/internal/logga"
 )
 
 type App struct {
-	DB     *sql.DB
-	Logger *slog.Logger
+	DB  *sql.DB
+	Log *logga.Logga
 }

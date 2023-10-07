@@ -28,8 +28,13 @@ type User struct {
 }
 
 func (h *Handle) GetUser(c *gin.Context) {
-	h.app.Logger.Info("**** call to /v1/user")
-	h.app.Logger.Error("**** ERROR /v1/user")
+
+	c.Set("traceID", "AB19-B891-CA8D")
+	c.Set("userID", 123)
+
+	h.app.Log.Info(c, "**** call to /v1/user", "custom", "hello")
+	h.app.Log.Error(c, "**** ERROR /v1/user")
+
 	user := User{
 		Username:     c.MustGet("username").(string),
 		EmailAddress: c.MustGet("emailAddress").(string),

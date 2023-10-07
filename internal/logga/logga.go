@@ -7,12 +7,23 @@ import (
 	"os"
 )
 
+//type Log interface {
+//	Debug(string, ...any)
+//	Info(string, ...any)
+//	Warn(string, ...any)
+//	Error(string, ...any)
+//}
+
 var (
 	InvalidLogLevelValue = errors.New("a valid log level was not defined in configuration")
 )
 
+type Logga struct {
+	Log *slog.Logger
+}
+
 // New will return the log handler with the options defined in config.
-func New(cfg *config.Logging) (*slog.Logger, error) {
+func New(cfg *config.Logging) (*Logga, error) {
 	level, err := getLogLevel(cfg.LogLevel)
 	if err != nil {
 		return nil, err
@@ -21,14 +32,18 @@ func New(cfg *config.Logging) (*slog.Logger, error) {
 	logLevel := &slog.LevelVar{}
 	logLevel.Set(level)
 
+	var logger *slog.Logger
+
 	switch cfg.OutputFormat {
 	case "json":
-		return slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{Level: logLevel})), nil
+		logger = slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{Level: logLevel}))
 	case "text":
-		return slog.New(slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{Level: logLevel})), nil
+		logger = slog.New(slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{Level: logLevel}))
 	default:
-		return slog.New(slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{Level: logLevel})), nil
+		logger = slog.New(slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{Level: logLevel}))
 	}
+
+	return &Logga{Log: logger}, nil
 }
 
 func getLogLevel(configuredLevel string) (slog.Level, error) {
