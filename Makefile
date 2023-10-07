@@ -1,4 +1,7 @@
 
+run:
+	go run cmd/server/run.go -config ./config.jsonsw
+
 gofmt:
 	gofumpt -l -w .
 
