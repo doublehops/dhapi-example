@@ -17,6 +17,7 @@ type Aggregator struct {
 }
 
 type Logging struct {
+	Writer       string
 	LogLevel     string `json:"logLevel"`
 	OutputFormat string `json:"outputFormat"`
 }

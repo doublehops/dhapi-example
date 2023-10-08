@@ -1,5 +1,6 @@
 {
   "logging": {
+    "writer": "os.Stdout",
     "logLevel": "DEBUG",
     "outputFormat": "json"
   },
