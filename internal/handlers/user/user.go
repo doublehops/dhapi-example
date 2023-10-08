@@ -28,7 +28,6 @@ type User struct {
 }
 
 func (h *Handle) GetUser(c *gin.Context) {
-
 	c.Set("traceID", "AB19-B891-CA8D")
 	c.Set("userID", 123)
 

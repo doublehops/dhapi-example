@@ -3,18 +3,18 @@ package logga
 import (
 	"encoding/json"
 	"errors"
-	"github.com/doublehops/dhapi-example/internal/config"
-	"github.com/doublehops/dhapi-example/test/testbuffer"
-	"github.com/gin-gonic/gin"
 	"log/slog"
 	"os"
 	"reflect"
 	"testing"
 	"time"
+
+	"github.com/doublehops/dhapi-example/internal/config"
+	"github.com/doublehops/dhapi-example/test/testbuffer"
+	"github.com/gin-gonic/gin"
 )
 
 func TestNew(t *testing.T) {
-
 	tests := []struct {
 		name          string
 		config        *config.Logging
@@ -57,7 +57,6 @@ func TestNew(t *testing.T) {
 }
 
 func TestGetLogLevel(t *testing.T) {
-
 	tests := []struct {
 		name            string
 		configuredLevel string
@@ -183,7 +182,6 @@ func TestSendLogMessage(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-
 			// Test if file exists and wait if so. A concurrent test may have created it.
 			for fileExists() {
 				time.Sleep(50 * time.Millisecond)

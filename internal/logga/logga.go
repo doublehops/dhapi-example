@@ -2,11 +2,12 @@ package logga
 
 import (
 	"errors"
-	"github.com/doublehops/dhapi-example/internal/config"
-	"github.com/doublehops/dhapi-example/test/testbuffer"
 	"io"
 	"log/slog"
 	"os"
+
+	"github.com/doublehops/dhapi-example/internal/config"
+	"github.com/doublehops/dhapi-example/test/testbuffer"
 )
 
 var (

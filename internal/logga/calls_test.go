@@ -2,13 +2,13 @@ package logga
 
 import (
 	"context"
-	"github.com/doublehops/dhapi-example/internal/config"
 	"reflect"
 	"testing"
+
+	"github.com/doublehops/dhapi-example/internal/config"
 )
 
 func TestGetArguments(t *testing.T) {
-
 	tests := []struct {
 		name         string
 		context      context.Context

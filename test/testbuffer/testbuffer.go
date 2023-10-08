@@ -5,9 +5,7 @@ import (
 	"os"
 )
 
-var (
-	Filename = "/tmp/testwriter.log"
-)
+var Filename = "/tmp/testwriter.log"
 
 type TestBuffer struct {
 	buffer []byte

@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"database/sql"
+
 	"github.com/doublehops/dhapi-example/internal/logga"
 )
 
