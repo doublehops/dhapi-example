@@ -28,7 +28,7 @@ func v1routes(rg *gin.RouterGroup, app *handlers.App) {
 	User.PUT("", userHandle.UpdateUser)
 
 	User.GET("/middleware-test", func(c *gin.Context) {
-		example := c.MustGet("example").(string)
+		example, _ := c.MustGet("example").(string)
 
 		log.Println(example)
 		c.JSON(http.StatusOK, fmt.Sprintf("User: %s", example))

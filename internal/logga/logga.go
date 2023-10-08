@@ -11,8 +11,8 @@ import (
 )
 
 var (
-	InvalidLogWriter     = errors.New("a valid writer was not defined in configuration")
-	InvalidLogLevelValue = errors.New("a valid log level was not defined in configuration")
+	invalidLogWriter     = errors.New("a valid writer was not defined in configuration")
+	invalidLogLevelValue = errors.New("a valid log level was not defined in configuration")
 )
 
 type Logga struct {
@@ -30,6 +30,9 @@ func New(cfg *config.Logging) (*Logga, error) {
 	logLevel.Set(level)
 
 	writer, err := getWriterFromConfig(cfg.Writer)
+	if err != nil {
+		return nil, err
+	}
 
 	var logger *slog.Logger
 
@@ -55,7 +58,7 @@ func getWriterFromConfig(configuredWriter string) (io.Writer, error) {
 		return testbuffer.TestBuffer{}, nil
 	}
 
-	return nil, InvalidLogWriter
+	return nil, invalidLogWriter
 }
 
 func getLogLevelFromConfig(configuredLevel string) (slog.Level, error) {
@@ -70,5 +73,5 @@ func getLogLevelFromConfig(configuredLevel string) (slog.Level, error) {
 		return slog.LevelError, nil
 	}
 
-	return slog.LevelInfo, InvalidLogLevelValue
+	return slog.LevelInfo, invalidLogLevelValue
 }

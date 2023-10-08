@@ -7,9 +7,7 @@ import (
 
 var Filename = "/tmp/testwriter.log"
 
-type TestBuffer struct {
-	buffer []byte
-}
+type TestBuffer struct{}
 
 func (tb TestBuffer) Read() ([]byte, error) {
 	data, err := os.ReadFile(Filename)

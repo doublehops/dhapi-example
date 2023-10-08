@@ -17,7 +17,7 @@ import (
 
 func main() {
 	if err := run(); err != nil {
-		log.Printf(err.Error())
+		log.Print(err.Error())
 		os.Exit(1)
 	}
 }

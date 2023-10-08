@@ -91,7 +91,7 @@ func TestGetLogLevel(t *testing.T) {
 			name:            "failNotConfigured",
 			configuredLevel: "",
 			expectedLevel:   slog.LevelInfo,
-			expectedError:   InvalidLogLevelValue,
+			expectedError:   invalidLogLevelValue,
 		},
 	}
 
@@ -229,5 +229,6 @@ func fileExists() bool {
 	if os.IsNotExist(err) {
 		return false
 	}
+
 	return !os.IsNotExist(err)
 }

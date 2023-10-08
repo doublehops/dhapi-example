@@ -68,6 +68,7 @@ func (h *Handle) ListUser(c *gin.Context) {
 	resp.GetListResp(users, p)
 }
 
+// nolint:govet
 func (u *User) getRules() []validator.Rule {
 	return []validator.Rule{
 		{"username", u.Username, true, []validator.ValidationFuncs{validator.LengthInRange(3, 8, "")}},
