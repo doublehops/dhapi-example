@@ -1,0 +1,4 @@
+CREATE DATABASE IF NOT EXISTS `dhapi`;
+CREATE DATABASE IF NOT EXISTS `dhapi_test`;
+
+GRANT ALL PRIVILEGES ON dhapi_test.* to 'dev'@'%';

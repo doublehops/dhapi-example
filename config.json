@@ -1,12 +1,12 @@
 {
   "logging": {
-    "writer": "os.Stdout",
+    "writer": "stdout",
     "logLevel": "DEBUG",
     "outputFormat": "json"
   },
   "database": {
     "host": "127.0.0.1",
-    "name": "cw",
+    "name": "dhapi",
     "user": "dev",
     "password": "pass12"
   }

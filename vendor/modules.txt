@@ -38,6 +38,10 @@ github.com/doublehops/cryptowatcher-2.0/internal/types/database
 ## explicit; go 1.21
 github.com/doublehops/dhapi/resp
 github.com/doublehops/dhapi/validator
+# github.com/doublehops/go-migration v0.0.2
+## explicit; go 1.16
+github.com/doublehops/go-migration
+github.com/doublehops/go-migration/helpers
 # github.com/gabriel-vasile/mimetype v1.4.2
 ## explicit; go 1.20
 github.com/gabriel-vasile/mimetype
