@@ -1,42 +1,26 @@
 package routes
 
 import (
-	"fmt"
+	group "github.com/mythrnr/httprouter-group"
+
 	"github.com/doublehops/dhapi-example/internal/app"
-	"log"
-	"net/http"
-
-	"github.com/gin-gonic/gin"
-
-	"github.com/doublehops/dhapi-example/internal/handlers/user"
-	"github.com/doublehops/dhapi-example/internal/middleware/customauth"
+	"github.com/doublehops/dhapi-example/internal/handlers/author"
 )
 
-func GetRoutes(router *gin.Engine, app *app.App) {
-	v1 := router.Group("/v1")
-	v1routes(v1, app)
-}
+func GetV1Routes(app *app.App) *group.RouteGroup {
+	authorHandle := author.New(app)
 
-func v1routes(rg *gin.RouterGroup, app *app.App) {
-	// *****  USER  *****
-	User := rg.Group("/user")
+	authorGroup := group.New("/author")
+	authorGroup.GET(authorHandle.GetAll)
+	authorGroup.Children(
+		group.New("/:id").GET(authorHandle.GetByID),
+		group.New("").POST(authorHandle.Create),
+		group.New("/:id").PUT(authorHandle.Update),
+	)
 
-	userHandle := user.New(app)
+	g := group.New("/v1").Children(
+		authorGroup,
+	)
 
-	User.GET("", userHandle.ListUser)
-	User.GET("/bobby", customauth.Auth(), userHandle.GetUser)
-	User.PUT("", userHandle.UpdateUser)
-
-	User.GET("/middleware-test", func(c *gin.Context) {
-		example, _ := c.MustGet("example").(string)
-
-		log.Println(example)
-		c.JSON(http.StatusOK, fmt.Sprintf("User: %s", example))
-	})
-
-	User.GET("/by-id/:id", func(c *gin.Context) {
-		c.JSON(http.StatusOK, fmt.Sprintf("User: %s", c.Param("id")))
-	})
-
-	authorHandle(rg, app)
+	return g
 }

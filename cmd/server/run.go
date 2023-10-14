@@ -2,16 +2,17 @@ package main
 
 import (
 	"fmt"
-	"github.com/doublehops/dhapi-example/internal/httproutes"
-	"github.com/julienschmidt/httprouter"
 	"log"
 	"net/http"
 	"os"
+
+	"github.com/julienschmidt/httprouter"
 
 	"github.com/doublehops/dhapi-example/internal/app"
 	"github.com/doublehops/dhapi-example/internal/config"
 	"github.com/doublehops/dhapi-example/internal/db"
 	"github.com/doublehops/dhapi-example/internal/logga"
+	"github.com/doublehops/dhapi-example/internal/routes"
 	"github.com/doublehops/dhapi-example/internal/runflags"
 )
 
@@ -49,9 +50,10 @@ func run() error {
 	}
 
 	router := httprouter.New()
-	routes := httproutes.GetV1Routes(App)
+	routes := routes.GetV1Routes(App)
 
 	for _, r := range routes.Routes() {
+		fmt.Printf(">>> %s %s\n", r.Method(), r.Path())
 		router.Handle(r.Method(), r.Path(), r.Handler())
 	}
 
@@ -59,19 +61,6 @@ func run() error {
 	if err != nil {
 		return fmt.Errorf("unable to start server. %s", err.Error())
 	}
-
-	// Setup and run Gin.
-	//r := gin.New()
-	//r.ForwardedByClientIP = true
-	//err = r.SetTrustedProxies([]string{"127.0.0.1"})
-	//if err != nil {
-	//	return fmt.Errorf("error setting trusted proxy. %s", err)
-	//}
-	//
-	//r.Use(gin.Recovery())
-	//routes.GetRoutes(r, App)
-	//
-	//r.Run(":8080")
 
 	return nil
 }

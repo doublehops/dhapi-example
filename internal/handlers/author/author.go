@@ -1,16 +1,19 @@
 package author
 
 import (
+	"context"
 	"encoding/json"
+	"net/http"
+	"strconv"
+
+	"github.com/julienschmidt/httprouter"
+
+	"github.com/doublehops/dhapi/resp"
+
 	"github.com/doublehops/dhapi-example/internal/app"
 	"github.com/doublehops/dhapi-example/internal/model"
 	"github.com/doublehops/dhapi-example/internal/repository/repositoryauthor"
 	"github.com/doublehops/dhapi-example/internal/service"
-	"github.com/julienschmidt/httprouter"
-	"net/http"
-	"strconv"
-
-	"github.com/doublehops/dhapi/resp"
 )
 
 type Handle struct {
@@ -33,41 +36,49 @@ func (h *Handle) Create(w http.ResponseWriter, r *http.Request, ps httprouter.Pa
 	h.app.Log.Info(c, "Request made to CreateAuthor")
 
 	var author *model.Author
-	err := json.Unmarshal(r.Body, &author)
+	err := json.NewDecoder(r.Body).Decode(&author)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, "Unable to parse request")
+		h.writeJson(c, w, http.StatusBadRequest, "Unable to parse request")
 
 		return
 	}
 
 	a, err := h.as.Create(c, author)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, "Unable to process request")
+		h.writeJson(c, w, http.StatusInternalServerError, "Unable to process request")
 
 		return
 	}
 
-	c.JSON(http.StatusOK, resp.GetSingleItemResp(a))
+	h.writeJson(c, w, http.StatusOK, resp.GetSingleItemResp(a))
+}
+
+// todo - move this to a reusable place.
+func (h *Handle) writeJson(ctx context.Context, w http.ResponseWriter, statusCode int, res interface{}) {
+	w.WriteHeader(statusCode)
+	err := json.NewEncoder(w).Encode(res)
+	if err != nil {
+		h.app.Log.Error(ctx, "unable to marshal to JSON. T%s"+err.Error())
+	}
 }
 
 func (h *Handle) Update(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	c := r.Context()
 	h.app.Log.Info(c, "Request made to UpdateAuthor")
 
-	ID := c.Param("id")
+	ID := ps.ByName("id")
 
 	var author *model.Author
-	//fmt.Printf("body: %s", c.Request.Body)
-	err := c.BindJSON(&author)
+	err := json.NewEncoder(w).Encode(author)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, "Unable to parse request")
+		h.writeJson(c, w, http.StatusBadRequest, "Unable to parse request")
 
 		return
 	}
 
 	i, err := strconv.Atoi(ID)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, "ID is not a valid value")
+		h.writeJson(c, w, http.StatusBadRequest, "ID is not a valid value")
 
 		return
 	}
@@ -76,25 +87,25 @@ func (h *Handle) Update(w http.ResponseWriter, r *http.Request, ps httprouter.Pa
 
 	a, err := h.as.Update(c, author)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, "Unable to process request")
+		h.writeJson(c, w, http.StatusInternalServerError, "Unable to process request")
 
 		return
 	}
 
-	c.JSON(http.StatusOK, resp.GetSingleItemResp(a))
+	h.writeJson(c, w, http.StatusOK, resp.GetSingleItemResp(a))
 }
 
 func (h *Handle) GetByID(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	c := r.Context()
 	h.app.Log.Info(c, "Request made to Get author")
 
-	ID := c.Param("id")
+	ID := ps.ByName("id")
 
 	author := &model.Author{}
 
 	i, err := strconv.Atoi(ID)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, "ID is not a valid value")
+		h.writeJson(c, w, http.StatusBadRequest, "ID is not a valid value")
 
 		return
 	}
@@ -103,26 +114,26 @@ func (h *Handle) GetByID(w http.ResponseWriter, r *http.Request, ps httprouter.P
 
 	err = h.as.GetByID(c, intID, author)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, "Unable to process request")
+		h.writeJson(c, w, http.StatusInternalServerError, "Unable to process request")
 
 		return
 	}
 
-	c.JSON(http.StatusOK, resp.GetSingleItemResp(author))
+	h.writeJson(c, w, http.StatusOK, resp.GetSingleItemResp(author))
 }
 
-func (h *Handle) GetAll(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func (h *Handle) GetAll(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	c := r.Context()
 	h.app.Log.Info(c, "Request made to Get authors")
 
 	authors, err := h.as.GetAll(c)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, "Unable to process request")
+		h.writeJson(c, w, http.StatusInternalServerError, "Unable to process request")
 
 		return
 	}
 
 	pagination := resp.Pagination{}
 
-	c.JSON(http.StatusOK, resp.GetListResp(authors, pagination))
+	h.writeJson(c, w, http.StatusOK, resp.GetListResp(authors, pagination))
 }
