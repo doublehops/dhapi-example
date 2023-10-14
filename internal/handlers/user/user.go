@@ -3,12 +3,12 @@ package user
 import (
 	"fmt"
 	"github.com/doublehops/dhapi-example/internal/app"
+	"github.com/doublehops/dhapi/resp"
 	"net/http"
 
-	"github.com/gin-gonic/gin"
-
-	"github.com/doublehops/dhapi/resp"
 	"github.com/doublehops/dhapi/validator"
+	"github.com/gin-gonic/gin"
+	"github.com/julienschmidt/httprouter"
 )
 
 type Handle struct {
@@ -27,9 +27,13 @@ type User struct {
 	Age          int    `json:"age"`
 }
 
-func (h *Handle) GetUser(c *gin.Context) {
-	c.Set("traceID", "AB19-B891-CA8D")
-	c.Set("userID", 123)
+func (h *Handle) Hello(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	fmt.Fprintf(w, "hello, %s!\n", ps.ByName("name"))
+}
+
+func (h *Handle) GetUser(hr httprouter.Handle) {
+	//c.Set("traceID", "AB19-B891-CA8D")
+	//c.Set("userID", 123)
 
 	h.app.Log.Info(c, "**** call to /v1/user", "custom", "hello")
 	h.app.Log.Error(c, "**** ERROR /v1/user")
