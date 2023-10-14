@@ -7,9 +7,9 @@ import (
 
 	"github.com/gin-gonic/gin"
 
+	"github.com/doublehops/dhapi-example/internal/app"
 	"github.com/doublehops/dhapi-example/internal/config"
 	"github.com/doublehops/dhapi-example/internal/db"
-	"github.com/doublehops/dhapi-example/internal/handlers"
 	"github.com/doublehops/dhapi-example/internal/logga"
 	"github.com/doublehops/dhapi-example/internal/routes"
 	"github.com/doublehops/dhapi-example/internal/runflags"
@@ -43,7 +43,7 @@ func run() error {
 		return fmt.Errorf("error creating database connection. %s", err.Error())
 	}
 
-	app := &handlers.App{
+	App := &app.App{
 		DB:  DB,
 		Log: l,
 	}
@@ -57,7 +57,7 @@ func run() error {
 	}
 
 	r.Use(gin.Recovery())
-	routes.GetRoutes(r, app)
+	routes.GetRoutes(r, App)
 
 	r.Run(":8080")
 

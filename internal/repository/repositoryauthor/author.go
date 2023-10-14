@@ -1,38 +1,42 @@
 package repositoryauthor
 
 import (
-	"log/slog"
-	"reflect"
+	"context"
+	"database/sql"
+	"fmt"
 
+	"github.com/doublehops/dhapi-example/internal/logga"
 	"github.com/doublehops/dhapi-example/internal/model"
 )
 
 type RepositoryAuthor struct {
 	DB  *sql.DB
-	log *slog.Logger
+	Log *logga.Logga
 }
 
-func New(DB *sql.DB, logger *slog.Logger) *RepositoryAuthor {
+func New(DB *sql.DB, logger *logga.Logga) *RepositoryAuthor {
 	return &RepositoryAuthor{
 		DB:  DB,
-		log: logger,
+		Log: logger,
 	}
 }
 
-func (a RepositoryAuthor) Create(author *model.Author) (*model.Author, error) {
-	a.log.Info("Adding author: %s; with interface type: %v", author.Name, reflect.TypeOf(m.db))
+func (a RepositoryAuthor) Create(ctx context.Context, tx *sql.Tx, model *model.Author) error {
 
-	result, err := a.DB.Exec(InsertRecordSQL, record.Name, record.Symbol)
+	result, err := tx.Exec(InsertRecordSQL, model.Name, model.CreatedBy, model.UpdatedBy, model.CreatedAt, model.UpdatedAt)
 	if err != nil {
-		a.log.Error("There was an error saving record to db. %s", err)
+		errMsg := fmt.Sprintf("there was an error saving record to db. %s", err)
+		a.Log.Error(ctx, errMsg)
 
-		return 0, err
+		return fmt.Errorf(errMsg)
 	}
 
 	lastInsertID, err := result.LastInsertId()
 	if err != nil {
-		return 0, err
+		return err
 	}
 
-	return lastInsertID, nil
+	model.ID = int32(lastInsertID)
+
+	return nil
 }

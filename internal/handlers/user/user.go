@@ -2,20 +2,20 @@ package user
 
 import (
 	"fmt"
+	"github.com/doublehops/dhapi-example/internal/app"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/doublehops/dhapi-example/internal/handlers"
 	"github.com/doublehops/dhapi/resp"
 	"github.com/doublehops/dhapi/validator"
 )
 
 type Handle struct {
-	app *handlers.App
+	app *app.App
 }
 
-func New(app *handlers.App) *Handle {
+func New(app *app.App) *Handle {
 	return &Handle{
 		app: app,
 	}

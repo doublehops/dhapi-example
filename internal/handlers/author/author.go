@@ -1,6 +1,7 @@
 package author
 
 import (
+	"github.com/doublehops/dhapi-example/internal/app"
 	"github.com/doublehops/dhapi-example/internal/model"
 	"github.com/doublehops/dhapi-example/internal/repository/repositoryauthor"
 	"github.com/doublehops/dhapi-example/internal/service"
@@ -8,18 +9,17 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/doublehops/dhapi-example/internal/handlers"
 	"github.com/doublehops/dhapi/resp"
 )
 
 type Handle struct {
-	app *handlers.App
+	app *app.App
 	ar  *repositoryauthor.RepositoryAuthor
 	as  *service.AuthorService
 }
 
-func New(app *handlers.App) *Handle {
-	ar := repositoryauthor.New(app.DB)
+func New(app *app.App) *Handle {
+	ar := repositoryauthor.New(app.DB, app.Log)
 	return &Handle{
 		app: app,
 		ar:  ar,
@@ -27,17 +27,29 @@ func New(app *handlers.App) *Handle {
 	}
 }
 
-func (h *Handle) CreateAuthor(c *gin.Context) {
+func (h *Handle) Create(c *gin.Context) {
+
+	//jsonData, esrr := io.ReadAll(c.Request.Body)
+	//if esrr != nil {
+	//	// Handle error
+	//}
+	//fmt.Printf(">>>>>> %s", jsonData)
 
 	h.app.Log.Info(c, "Request made to CreateAuthor")
 
 	var author *model.Author
-	err := c.ShouldBindJSON(author)
+	//fmt.Printf("body: %s", c.Request.Body)
+	err := c.BindJSON(&author)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, "Unable to parse request")
 	}
 
-	a, _ := h.as.Create(author)
+	a, err := h.as.Create(c, author)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, "Unable to process request")
+
+		return
+	}
 
 	c.JSON(http.StatusOK, resp.GetSingleItemResp(a))
 }

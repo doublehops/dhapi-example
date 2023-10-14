@@ -1,9 +1,13 @@
-package handlers
+package app
 
 import (
 	"database/sql"
 
 	"github.com/doublehops/dhapi-example/internal/logga"
+)
+
+const (
+	UserIDKey = "userID"
 )
 
 type App struct {

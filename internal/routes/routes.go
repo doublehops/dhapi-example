@@ -2,22 +2,22 @@ package routes
 
 import (
 	"fmt"
+	"github.com/doublehops/dhapi-example/internal/app"
 	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/doublehops/dhapi-example/internal/handlers"
 	"github.com/doublehops/dhapi-example/internal/handlers/user"
 	"github.com/doublehops/dhapi-example/internal/middleware/customauth"
 )
 
-func GetRoutes(router *gin.Engine, app *handlers.App) {
+func GetRoutes(router *gin.Engine, app *app.App) {
 	v1 := router.Group("/v1")
 	v1routes(v1, app)
 }
 
-func v1routes(rg *gin.RouterGroup, app *handlers.App) {
+func v1routes(rg *gin.RouterGroup, app *app.App) {
 	// *****  USER  *****
 	User := rg.Group("/user")
 
@@ -37,4 +37,6 @@ func v1routes(rg *gin.RouterGroup, app *handlers.App) {
 	User.GET("/by-id/:id", func(c *gin.Context) {
 		c.JSON(http.StatusOK, fmt.Sprintf("User: %s", c.Param("id")))
 	})
+
+	authorHandle(rg, app)
 }
