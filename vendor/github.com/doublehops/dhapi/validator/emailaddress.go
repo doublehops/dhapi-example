@@ -8,7 +8,7 @@ const (
 	emailPattern = `^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`
 )
 
-func EmailAddress(errorMessage string) ValidateFuncs {
+func EmailAddress(errorMessage string) ValidationFuncs {
 	return func(required bool, value interface{}) (bool, string) {
 		var v string
 		var ok bool

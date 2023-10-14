@@ -1,0 +1,13 @@
+{
+  "logging": {
+    "writer": "stdout",
+    "logLevel": "DEBUG",
+    "outputFormat": "json"
+  },
+  "database": {
+    "host": "127.0.0.1",
+    "name": "dhapi",
+    "user": "dev",
+    "password": "pass12"
+  }
+}

@@ -1,12 +1,25 @@
-package handlers
+package user
 
 import (
-	"github.com/gin-gonic/gin"
+	"fmt"
+	"github.com/doublehops/dhapi-example/internal/app"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 
 	"github.com/doublehops/dhapi/resp"
 	"github.com/doublehops/dhapi/validator"
 )
+
+type Handle struct {
+	app *app.App
+}
+
+func New(app *app.App) *Handle {
+	return &Handle{
+		app: app,
+	}
+}
 
 type User struct {
 	Username     string `json:"username"`
@@ -14,7 +27,13 @@ type User struct {
 	Age          int    `json:"age"`
 }
 
-func GetUser(c *gin.Context) {
+func (h *Handle) GetUser(c *gin.Context) {
+	c.Set("traceID", "AB19-B891-CA8D")
+	c.Set("userID", 123)
+
+	h.app.Log.Info(c, "**** call to /v1/user", "custom", "hello")
+	h.app.Log.Error(c, "**** ERROR /v1/user")
+
 	user := User{
 		Username:     c.MustGet("username").(string),
 		EmailAddress: c.MustGet("emailAddress").(string),
@@ -23,7 +42,7 @@ func GetUser(c *gin.Context) {
 	c.JSON(http.StatusOK, resp.GetSingleItemResp(user))
 }
 
-func ListUser(c *gin.Context) {
+func (h *Handle) ListUser(c *gin.Context) {
 	users := []User{
 		{
 			Username:     "Alice",
@@ -49,20 +68,22 @@ func ListUser(c *gin.Context) {
 	resp.GetListResp(users, p)
 }
 
+// nolint:govet
 func (u *User) getRules() []validator.Rule {
 	return []validator.Rule{
-		{"username", u.Username, true, []validator.ValidateFuncs{validator.LengthInRange(3, 8, "")}},
-		{"emailAddress", u.EmailAddress, true, []validator.ValidateFuncs{validator.EmailAddress("")}},
-		{"age", u.Age, false, []validator.ValidateFuncs{validator.MinValue(18, "")}},
+		{"username", u.Username, true, []validator.ValidationFuncs{validator.LengthInRange(3, 8, "")}},
+		{"emailAddress", u.EmailAddress, true, []validator.ValidationFuncs{validator.EmailAddress("")}},
+		{"age", u.Age, true, []validator.ValidationFuncs{validator.MinValue(18, "")}},
 	}
 }
 
 // UpdateUser - Validation error example.
 // Example valid test request: curl -s -X PUT localhost:8080/v1/user -H "Content-Type: application/json" --data '{"username": "johns", "emailAddress": "john@example.com", "age": 30}'| jq; echo
 // Example invalid test request: curl -s -X PUT localhost:8080/v1/user -H "Content-Type: application/json" --data '{"username": "j", "emailAddress": "john.smith", "age": 17}'| jq; echo
-func UpdateUser(c *gin.Context) {
+func (h *Handle) UpdateUser(c *gin.Context) {
 	var user User
 
+	h.app.Log.Info(c, fmt.Sprintf("RequestMade: %s %s", c.Request.Method, c.Request.RequestURI))
 	_ = c.ShouldBindJSON(&user)
 
 	validationErrors := validator.RunValidation(user.getRules())
