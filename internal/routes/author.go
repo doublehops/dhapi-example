@@ -16,5 +16,5 @@ func authorHandle(rg *gin.RouterGroup, app *app.App) {
 	//User.GET("", authorHandle.ListUser)
 	//User.GET("/bobby", customauth.Auth(), authorHandle.GetUser)
 	ag.POST("", authorHandle.Create)
-	//User.PUT("", authorHandle.UpdateUser)
+	ag.PUT("/:id", authorHandle.Update)
 }

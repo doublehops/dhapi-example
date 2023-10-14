@@ -14,3 +14,10 @@ var InsertRecordSQL = `INSERT INTO author (
 	?
 	)
 `
+
+var UpdateRecordSQL = `UPDATE author SET 
+	name=?,
+    updated_by=?,
+    updated_at=?
+	WHERE id=?
+`

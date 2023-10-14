@@ -39,3 +39,24 @@ func (s AuthorService) Create(ctx context.Context, author *model.Author) (model.
 
 	return *author, nil
 }
+
+func (s AuthorService) Update(ctx context.Context, author *model.Author) (model.Author, error) {
+	ctx = context.WithValue(ctx, app.UserIDKey, 2) // todo - set this in middleware.
+
+	author.SetUpdated(ctx)
+
+	tx, _ := s.app.DB.BeginTx(ctx, nil)
+	defer tx.Rollback()
+
+	err := s.authorRepo.Update(ctx, tx, author)
+	if err != nil {
+		s.app.Log.Error(ctx, "unable to update new record. "+err.Error())
+	}
+
+	err = tx.Commit()
+	if err != nil {
+		s.app.Log.Error(ctx, "unable to commit transaction"+err.Error())
+	}
+
+	return *author, nil
+}

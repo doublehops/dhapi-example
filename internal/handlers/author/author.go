@@ -6,6 +6,7 @@ import (
 	"github.com/doublehops/dhapi-example/internal/repository/repositoryauthor"
 	"github.com/doublehops/dhapi-example/internal/service"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 
@@ -28,13 +29,6 @@ func New(app *app.App) *Handle {
 }
 
 func (h *Handle) Create(c *gin.Context) {
-
-	//jsonData, esrr := io.ReadAll(c.Request.Body)
-	//if esrr != nil {
-	//	// Handle error
-	//}
-	//fmt.Printf(">>>>>> %s", jsonData)
-
 	h.app.Log.Info(c, "Request made to CreateAuthor")
 
 	var author *model.Author
@@ -42,9 +36,44 @@ func (h *Handle) Create(c *gin.Context) {
 	err := c.BindJSON(&author)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, "Unable to parse request")
+
+		return
 	}
 
 	a, err := h.as.Create(c, author)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, "Unable to process request")
+
+		return
+	}
+
+	c.JSON(http.StatusOK, resp.GetSingleItemResp(a))
+}
+
+func (h *Handle) Update(c *gin.Context) {
+	h.app.Log.Info(c, "Request made to UpdateAuthor")
+
+	ID := c.Param("id")
+
+	var author *model.Author
+	//fmt.Printf("body: %s", c.Request.Body)
+	err := c.BindJSON(&author)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, "Unable to parse request")
+
+		return
+	}
+
+	i, err := strconv.Atoi(ID)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, "ID is not a valid value")
+
+		return
+	}
+
+	author.ID = int32(i)
+
+	a, err := h.as.Update(c, author)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, "Unable to process request")
 
