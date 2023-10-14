@@ -106,6 +106,8 @@ func (h *Handle) GetByID(c *gin.Context) {
 		return
 	}
 
+	author.DeletedAt.IsZero()
+
 	c.JSON(http.StatusOK, resp.GetSingleItemResp(author))
 }
 

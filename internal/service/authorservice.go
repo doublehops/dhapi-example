@@ -19,7 +19,7 @@ func New(app *app.App, authorRepo *repositoryauthor.RepositoryAuthor) *AuthorSer
 	}
 }
 
-func (s AuthorService) Create(ctx context.Context, author *model.Author) (model.Author, error) {
+func (s AuthorService) Create(ctx context.Context, author *model.Author) (*model.Author, error) {
 	ctx = context.WithValue(ctx, app.UserIDKey, 1) // todo - set this in middleware.
 
 	author.SetCreated(ctx)
@@ -37,10 +37,10 @@ func (s AuthorService) Create(ctx context.Context, author *model.Author) (model.
 		s.app.Log.Error(ctx, "unable to commit transaction"+err.Error())
 	}
 
-	return *author, nil
+	return author, nil
 }
 
-func (s AuthorService) Update(ctx context.Context, author *model.Author) (model.Author, error) {
+func (s AuthorService) Update(ctx context.Context, author *model.Author) (*model.Author, error) {
 	ctx = context.WithValue(ctx, app.UserIDKey, 2) // todo - set this in middleware.
 
 	author.SetUpdated(ctx)
@@ -58,7 +58,7 @@ func (s AuthorService) Update(ctx context.Context, author *model.Author) (model.
 		s.app.Log.Error(ctx, "unable to commit transaction"+err.Error())
 	}
 
-	return *author, nil
+	return author, nil
 }
 
 func (s AuthorService) GetByID(ctx context.Context, ID int32, author *model.Author) error {
