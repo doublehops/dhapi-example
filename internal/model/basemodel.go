@@ -9,12 +9,12 @@ import (
 const DateFormat = "2006-1-2 15:4:5"
 
 type BaseModel struct {
-	ID        int32     `json:"id"`
-	CreatedBy int32     `json:"createdBy"`
-	UpdatedBy int32     `json:"updatedBy"`
-	CreatedAt time.Time `json:"createdAt"`
-	UpdatedAt time.Time `json:"updatedAt"`
-	DeletedAt time.Time `json:"deletedAt,omitempty"`
+	ID        int32      `json:"id"`
+	CreatedBy int32      `json:"createdBy"`
+	UpdatedBy int32      `json:"updatedBy"`
+	CreatedAt *time.Time `json:"createdAt"`
+	UpdatedAt *time.Time `json:"updatedAt"`
+	DeletedAt *time.Time `json:"deletedAt"`
 }
 
 func (bm *BaseModel) SetCreated(ctx context.Context) {
@@ -24,8 +24,10 @@ func (bm *BaseModel) SetCreated(ctx context.Context) {
 		bm.UpdatedBy = int32(userID.(int))
 	}
 
-	bm.CreatedAt = time.Now()
-	bm.UpdatedAt = time.Now()
+	t := time.Now()
+
+	bm.CreatedAt = &t
+	bm.UpdatedAt = &t
 }
 
 func (bm *BaseModel) SetUpdated(ctx context.Context) {
@@ -34,5 +36,7 @@ func (bm *BaseModel) SetUpdated(ctx context.Context) {
 		bm.UpdatedBy = int32(userID.(int))
 	}
 
-	bm.UpdatedAt = time.Now()
+	t := time.Now()
+
+	bm.UpdatedAt = &t
 }
