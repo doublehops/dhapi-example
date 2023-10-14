@@ -31,3 +31,13 @@ var selectByIDQuery = `SELECT
     updated_at
     FROM author
     WHERE id=?`
+
+var selectAllQuery = `SELECT 
+    id,
+    name,
+    created_by,
+    updated_by,
+    created_at,
+    updated_at
+    FROM author
+`

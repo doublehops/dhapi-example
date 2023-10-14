@@ -69,3 +69,12 @@ func (s AuthorService) GetByID(ctx context.Context, ID int32, author *model.Auth
 
 	return nil
 }
+
+func (s AuthorService) GetAll(ctx context.Context) ([]*model.Author, error) {
+	authors, err := s.authorRepo.GetAll(ctx, s.app.DB)
+	if err != nil {
+		s.app.Log.Error(ctx, "unable to update new record. "+err.Error())
+	}
+
+	return authors, nil
+}

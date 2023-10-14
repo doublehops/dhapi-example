@@ -18,4 +18,5 @@ func authorHandle(rg *gin.RouterGroup, app *app.App) {
 	ag.POST("", authorHandle.Create)
 	ag.PUT("/:id", authorHandle.Update)
 	ag.GET("/:id", authorHandle.GetByID)
+	ag.GET("", authorHandle.GetAll)
 }

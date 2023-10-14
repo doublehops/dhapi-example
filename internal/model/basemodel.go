@@ -14,7 +14,7 @@ type BaseModel struct {
 	UpdatedBy int32     `json:"updatedBy"`
 	CreatedAt time.Time `json:"createdAt"`
 	UpdatedAt time.Time `json:"updatedAt"`
-	DeletedAt time.Time `json:"deletedAt"`
+	DeletedAt time.Time `json:"deletedAt,omitempty"`
 }
 
 func (bm *BaseModel) SetCreated(ctx context.Context) {

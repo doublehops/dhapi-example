@@ -109,6 +109,21 @@ func (h *Handle) GetByID(c *gin.Context) {
 	c.JSON(http.StatusOK, resp.GetSingleItemResp(author))
 }
 
+func (h *Handle) GetAll(c *gin.Context) {
+	h.app.Log.Info(c, "Request made to Get authors")
+
+	authors, err := h.as.GetAll(c)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, "Unable to process request")
+
+		return
+	}
+
+	pagination := resp.Pagination{}
+
+	c.JSON(http.StatusOK, resp.GetListResp(authors, pagination))
+}
+
 //func (h *Handle) GetUser(c *gin.Context) {
 //	c.Set("traceID", "AB19-B891-CA8D")
 //	c.Set("userID", 123)

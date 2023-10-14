@@ -4,7 +4,6 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-
 	"github.com/doublehops/dhapi-example/internal/logga"
 	"github.com/doublehops/dhapi-example/internal/model"
 )
@@ -61,6 +60,25 @@ func (a *RepositoryAuthor) GetByID(ctx context.Context, DB *sql.DB, ID int32, au
 	}
 
 	return nil
+}
+
+func (a *RepositoryAuthor) GetAll(ctx context.Context, DB *sql.DB) ([]*model.Author, error) {
+	var authors []*model.Author
+	rows, err := DB.Query(selectAllQuery)
+	if err != nil {
+		return authors, fmt.Errorf("unable to fetch rows")
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var record model.Author
+		if err = rows.Scan(&record.ID, &record.Name, &record.CreatedBy, &record.UpdatedBy, &record.CreatedAt, &record.UpdatedAt); err != nil {
+			return authors, fmt.Errorf("unable to fetch rows. %s", err)
+		}
+		authors = append(authors, &record)
+	}
+
+	return authors, nil
 }
 
 // populateRecord will populate model object from query.
