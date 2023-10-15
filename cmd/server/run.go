@@ -3,9 +3,10 @@ package main
 import (
 	"fmt"
 	"log"
+	"net/http"
 	"os"
 
-	"github.com/gin-gonic/gin"
+	"github.com/julienschmidt/httprouter"
 
 	"github.com/doublehops/dhapi-example/internal/app"
 	"github.com/doublehops/dhapi-example/internal/config"
@@ -48,18 +49,18 @@ func run() error {
 		Log: l,
 	}
 
-	// Setup and run Gin.
-	r := gin.New()
-	r.ForwardedByClientIP = true
-	err = r.SetTrustedProxies([]string{"127.0.0.1"})
-	if err != nil {
-		return fmt.Errorf("error setting trusted proxy. %s", err)
+	router := httprouter.New()
+	routes := routes.GetV1Routes(App)
+
+	for _, r := range routes.Routes() {
+		fmt.Printf(">>> %s %s\n", r.Method(), r.Path())
+		router.Handle(r.Method(), r.Path(), r.Handler())
 	}
 
-	r.Use(gin.Recovery())
-	routes.GetRoutes(r, App)
-
-	r.Run(":8080")
+	err = http.ListenAndServe(":8080", router)
+	if err != nil {
+		return fmt.Errorf("unable to start server. %s", err.Error())
+	}
 
 	return nil
 }
