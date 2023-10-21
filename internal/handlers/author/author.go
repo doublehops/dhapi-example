@@ -23,7 +23,8 @@ type Handle struct {
 }
 
 func New(app *app.App) *Handle {
-	ar := repositoryauthor.New(app.DB, app.Log)
+	ar := repositoryauthor.New(app.Log)
+
 	return &Handle{
 		app: app,
 		ar:  ar,
@@ -55,10 +56,12 @@ func (h *Handle) Create(w http.ResponseWriter, r *http.Request, ps httprouter.Pa
 
 // todo - move this to a reusable place.
 func (h *Handle) writeJson(ctx context.Context, w http.ResponseWriter, statusCode int, res interface{}) {
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(statusCode)
+
 	err := json.NewEncoder(w).Encode(res)
 	if err != nil {
-		h.app.Log.Error(ctx, "unable to marshal to JSON. T%s"+err.Error())
+		h.app.Log.Error(ctx, "unable to marshal to JSON. "+err.Error())
 	}
 }
 
@@ -67,15 +70,6 @@ func (h *Handle) Update(w http.ResponseWriter, r *http.Request, ps httprouter.Pa
 	h.app.Log.Info(c, "Request made to UpdateAuthor")
 
 	ID := ps.ByName("id")
-
-	var author *model.Author
-	err := json.NewEncoder(w).Encode(author)
-	if err != nil {
-		h.writeJson(c, w, http.StatusBadRequest, "Unable to parse request")
-
-		return
-	}
-
 	i, err := strconv.Atoi(ID)
 	if err != nil {
 		h.writeJson(c, w, http.StatusBadRequest, "ID is not a valid value")
@@ -83,7 +77,27 @@ func (h *Handle) Update(w http.ResponseWriter, r *http.Request, ps httprouter.Pa
 		return
 	}
 
-	author.ID = int32(i)
+	var author *model.Author
+	if err := json.NewDecoder(r.Body).Decode(author); err != nil {
+		errResp := resp.GetValidateErrResp(nil, "Unable to parse request")
+		h.writeJson(c, w, http.StatusBadRequest, errResp)
+
+		return
+	}
+
+	if errors := author.Validate(); errors != nil {
+		errs := resp.GetValidateErrResp(errors, resp.ValidationError.Error())
+		h.writeJson(c, w, http.StatusBadRequest, errs)
+
+		return
+	}
+
+	err = h.as.GetByID(c, author, int32(i))
+	if err != nil {
+		h.writeJson(c, w, http.StatusBadRequest, err)
+
+		return
+	}
 
 	a, err := h.as.Update(c, author)
 	if err != nil {
@@ -100,9 +114,6 @@ func (h *Handle) GetByID(w http.ResponseWriter, r *http.Request, ps httprouter.P
 	h.app.Log.Info(c, "Request made to Get author")
 
 	ID := ps.ByName("id")
-
-	author := &model.Author{}
-
 	i, err := strconv.Atoi(ID)
 	if err != nil {
 		h.writeJson(c, w, http.StatusBadRequest, "ID is not a valid value")
@@ -110,11 +121,10 @@ func (h *Handle) GetByID(w http.ResponseWriter, r *http.Request, ps httprouter.P
 		return
 	}
 
-	intID := int32(i)
-
-	err = h.as.GetByID(c, intID, author)
+	author := &model.Author{}
+	err = h.as.GetByID(c, author, int32(i))
 	if err != nil {
-		h.writeJson(c, w, http.StatusInternalServerError, "Unable to process request")
+		h.writeJson(c, w, http.StatusNotFound, err)
 
 		return
 	}

@@ -30,7 +30,8 @@ var selectByIDQuery = `SELECT
     created_at,
     updated_at
     FROM author
-    WHERE id=?`
+    WHERE id=?
+    AND deleted_at IS NULL`
 
 var selectAllQuery = `SELECT 
     id,
@@ -40,4 +41,5 @@ var selectAllQuery = `SELECT
     created_at,
     updated_at
     FROM author
+    WHERE deleted_at IS NULL
 `

@@ -2,11 +2,14 @@ package model
 
 import (
 	"context"
-	"github.com/doublehops/dhapi-example/internal/app"
 	"time"
+
+	"github.com/doublehops/dhapi-example/internal/app"
 )
 
-const DateFormat = "2006-1-2 15:4:5"
+type Model interface {
+	Unmarshal(data []byte) error
+}
 
 type BaseModel struct {
 	ID        int32      `json:"id"`
