@@ -44,6 +44,13 @@ func (h *Handle) Create(w http.ResponseWriter, r *http.Request, ps httprouter.Pa
 		return
 	}
 
+	if errors := author.Validate(); len(errors) > 0 {
+		errs := resp.GetValidateErrResp(errors, resp.ValidationError.Error())
+		h.writeJson(c, w, http.StatusBadRequest, errs)
+
+		return
+	}
+
 	a, err := h.as.Create(c, author)
 	if err != nil {
 		h.writeJson(c, w, http.StatusInternalServerError, "Unable to process request")
@@ -77,7 +84,7 @@ func (h *Handle) Update(w http.ResponseWriter, r *http.Request, ps httprouter.Pa
 		return
 	}
 
-	var author *model.Author
+	author := &model.Author{}
 	if err := json.NewDecoder(r.Body).Decode(author); err != nil {
 		errResp := resp.GetValidateErrResp(nil, "Unable to parse request")
 		h.writeJson(c, w, http.StatusBadRequest, errResp)
@@ -85,7 +92,7 @@ func (h *Handle) Update(w http.ResponseWriter, r *http.Request, ps httprouter.Pa
 		return
 	}
 
-	if errors := author.Validate(); errors != nil {
+	if errors := author.Validate(); len(errors) > 0 {
 		errs := resp.GetValidateErrResp(errors, resp.ValidationError.Error())
 		h.writeJson(c, w, http.StatusBadRequest, errs)
 
