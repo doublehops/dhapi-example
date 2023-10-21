@@ -67,7 +67,7 @@ func (a *RepositoryAuthor) Delete(ctx context.Context, tx *sql.Tx, model *model.
 func (a *RepositoryAuthor) GetByID(ctx context.Context, DB *sql.DB, ID int32, author *model.Author) error {
 	row := DB.QueryRow(selectByIDQuery, ID)
 
-	err := row.Scan(&author.ID, &author.Name, &author.CreatedBy, &author.UpdatedBy, &author.CreatedAt, &author.UpdatedAt)
+	err := row.Scan(&author.ID, &author.UserID, &author.Name, &author.CreatedBy, &author.UpdatedBy, &author.CreatedAt, &author.UpdatedAt)
 	if err != nil {
 		return fmt.Errorf("unable to fetch record %d", ID)
 	}
@@ -85,7 +85,7 @@ func (a *RepositoryAuthor) GetAll(ctx context.Context, DB *sql.DB) ([]*model.Aut
 
 	for rows.Next() {
 		var record model.Author
-		if err = rows.Scan(&record.ID, &record.Name, &record.CreatedBy, &record.UpdatedBy, &record.CreatedAt, &record.UpdatedAt); err != nil {
+		if err = rows.Scan(&record.ID, &record.UserID, &record.Name, &record.CreatedBy, &record.UpdatedBy, &record.CreatedAt, &record.UpdatedAt); err != nil {
 			return authors, fmt.Errorf("unable to fetch rows. %s", err)
 		}
 

@@ -36,10 +36,9 @@ func (h *Handle) Create(w http.ResponseWriter, r *http.Request, ps httprouter.Pa
 	c := r.Context()
 	h.app.Log.Info(c, "Request made to CreateAuthor")
 
-	var author *model.Author
-	err := json.NewDecoder(r.Body).Decode(&author)
-	if err != nil {
-		h.writeJson(c, w, http.StatusBadRequest, "Unable to parse request")
+	author := &model.Author{}
+	if err := json.NewDecoder(r.Body).Decode(author); err != nil {
+		h.writeJson(c, w, http.StatusBadRequest, resp.UnableToParseResp())
 
 		return
 	}
@@ -86,8 +85,7 @@ func (h *Handle) UpdateByID(w http.ResponseWriter, r *http.Request, ps httproute
 
 	author := &model.Author{}
 	if err := json.NewDecoder(r.Body).Decode(author); err != nil {
-		errResp := resp.GetValidateErrResp(nil, "Unable to parse request")
-		h.writeJson(c, w, http.StatusBadRequest, errResp)
+		h.writeJson(c, w, http.StatusBadRequest, resp.UnableToParseResp())
 
 		return
 	}

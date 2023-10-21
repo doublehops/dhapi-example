@@ -33,6 +33,7 @@ var deleteRecordSQL = `UPDATE author SET
 
 var selectByIDQuery = `SELECT 
     id,
+    user_id,
     name,
     created_by,
     updated_by,
@@ -44,6 +45,7 @@ var selectByIDQuery = `SELECT
 
 var selectAllQuery = `SELECT 
     id,
+    user_id,
     name,
     created_by,
     updated_by,

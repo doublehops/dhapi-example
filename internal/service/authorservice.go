@@ -2,10 +2,12 @@ package service
 
 import (
 	"context"
+
+	"github.com/doublehops/dhapi/resp"
+
 	"github.com/doublehops/dhapi-example/internal/app"
 	"github.com/doublehops/dhapi-example/internal/model"
 	"github.com/doublehops/dhapi-example/internal/repository/repositoryauthor"
-	"github.com/doublehops/dhapi/resp"
 )
 
 type AuthorService struct {
@@ -40,7 +42,13 @@ func (s AuthorService) Create(ctx context.Context, author *model.Author) (*model
 		s.app.Log.Error(ctx, "unable to commit transaction"+err.Error())
 	}
 
-	return author, nil
+	a := &model.Author{}
+	err = s.authorRepo.GetByID(ctx, s.app.DB, author.ID, a)
+	if err != nil {
+		s.app.Log.Error(ctx, "unable to retrieve record. "+err.Error())
+	}
+
+	return a, nil
 }
 
 func (s AuthorService) Update(ctx context.Context, author *model.Author) (*model.Author, error) {
@@ -86,7 +94,7 @@ func (s AuthorService) DeleteByID(ctx context.Context, author *model.Author, ID 
 func (s AuthorService) GetByID(ctx context.Context, author *model.Author, ID int32) error {
 	err := s.authorRepo.GetByID(ctx, s.app.DB, ID, author)
 	if err != nil {
-		s.app.Log.Error(ctx, "unable to update new record. "+err.Error())
+		s.app.Log.Error(ctx, "unable to retrieve record. "+err.Error())
 	}
 
 	return nil
