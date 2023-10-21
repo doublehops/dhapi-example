@@ -50,7 +50,7 @@ func (s AuthorService) Update(ctx context.Context, author *model.Author) (*model
 
 	err := s.authorRepo.Update(ctx, tx, author)
 	if err != nil {
-		s.app.Log.Error(ctx, "unable to update new record. "+err.Error())
+		s.app.Log.Error(ctx, "unable to update record. "+err.Error())
 	}
 
 	err = tx.Commit()
@@ -59,6 +59,25 @@ func (s AuthorService) Update(ctx context.Context, author *model.Author) (*model
 	}
 
 	return author, nil
+}
+
+func (s AuthorService) DeleteByID(ctx context.Context, author *model.Author, ID int32) error {
+	tx, _ := s.app.DB.BeginTx(ctx, nil)
+	defer tx.Rollback()
+
+	author.SetDeleted(ctx)
+
+	err := s.authorRepo.Delete(ctx, tx, author)
+	if err != nil {
+		s.app.Log.Error(ctx, "unable to delete record. "+err.Error())
+	}
+
+	err = tx.Commit()
+	if err != nil {
+		s.app.Log.Error(ctx, "unable to commit transaction"+err.Error())
+	}
+
+	return nil
 }
 
 func (s AuthorService) GetByID(ctx context.Context, author *model.Author, ID int32) error {

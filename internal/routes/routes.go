@@ -15,7 +15,8 @@ func GetV1Routes(app *app.App) *group.RouteGroup {
 	authorGroup.Children(
 		group.New("/:id").GET(authorHandle.GetByID),
 		group.New("").POST(authorHandle.Create),
-		group.New("/:id").PUT(authorHandle.Update),
+		group.New("/:id").PUT(authorHandle.UpdateByID),
+		group.New("/:id").DELETE(authorHandle.DeleteByID),
 	)
 
 	g := group.New("/v1").Children(

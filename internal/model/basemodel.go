@@ -43,3 +43,15 @@ func (bm *BaseModel) SetUpdated(ctx context.Context) {
 
 	bm.UpdatedAt = &t
 }
+
+func (bm *BaseModel) SetDeleted(ctx context.Context) {
+	userID := ctx.Value(app.UserIDKey)
+	if userID != nil {
+		bm.UpdatedBy = int32(userID.(int))
+	}
+
+	t := time.Now()
+
+	bm.UpdatedAt = &t
+	bm.DeletedAt = &t
+}

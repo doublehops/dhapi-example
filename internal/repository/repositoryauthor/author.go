@@ -51,6 +51,19 @@ func (a *RepositoryAuthor) Update(ctx context.Context, tx *sql.Tx, model *model.
 	return nil
 }
 
+func (a *RepositoryAuthor) Delete(ctx context.Context, tx *sql.Tx, model *model.Author) error {
+
+	_, err := tx.Exec(deleteRecordSQL, model.UpdatedBy, model.UpdatedAt, model.DeletedAt, model.ID)
+	if err != nil {
+		errMsg := fmt.Sprintf("there was an error saving record to db. %s", err)
+		a.Log.Error(ctx, errMsg)
+
+		return fmt.Errorf(errMsg)
+	}
+
+	return nil
+}
+
 func (a *RepositoryAuthor) GetByID(ctx context.Context, DB *sql.DB, ID int32, author *model.Author) error {
 	row := DB.QueryRow(selectByIDQuery, ID)
 

@@ -22,6 +22,13 @@ var updateRecordSQL = `UPDATE author SET
 	WHERE id=?
 `
 
+var deleteRecordSQL = `UPDATE author SET 
+    updated_by=?,
+    updated_at=?,
+    deleted_at=?
+	WHERE id=?
+`
+
 var selectByIDQuery = `SELECT 
     id,
     name,

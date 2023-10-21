@@ -72,7 +72,7 @@ func (h *Handle) writeJson(ctx context.Context, w http.ResponseWriter, statusCod
 	}
 }
 
-func (h *Handle) Update(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func (h *Handle) UpdateByID(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	c := r.Context()
 	h.app.Log.Info(c, "Request made to UpdateAuthor")
 
@@ -106,6 +106,14 @@ func (h *Handle) Update(w http.ResponseWriter, r *http.Request, ps httprouter.Pa
 		return
 	}
 
+	if author.ID == 0 {
+		h.writeJson(c, w, http.StatusNotFound, resp.GetNotFoundResp())
+
+		return
+	}
+
+	// todo - check authorised.
+
 	a, err := h.as.Update(c, author)
 	if err != nil {
 		h.writeJson(c, w, http.StatusInternalServerError, "Unable to process request")
@@ -114,6 +122,39 @@ func (h *Handle) Update(w http.ResponseWriter, r *http.Request, ps httprouter.Pa
 	}
 
 	h.writeJson(c, w, http.StatusOK, resp.GetSingleItemResp(a))
+}
+
+func (h *Handle) DeleteByID(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	c := r.Context()
+	h.app.Log.Info(c, "Request made to DELETE author")
+
+	ID := ps.ByName("id")
+	i, err := strconv.Atoi(ID)
+	if err != nil {
+		h.writeJson(c, w, http.StatusBadRequest, "ID is not a valid value")
+
+		return
+	}
+
+	author := &model.Author{}
+	err = h.as.GetByID(c, author, int32(i))
+	if err != nil {
+		h.writeJson(c, w, http.StatusNotFound, "Unable to find record")
+
+		return
+	}
+
+	if author.ID == 0 {
+		h.writeJson(c, w, http.StatusNotFound, resp.GetNotFoundResp())
+
+		return
+	}
+
+	// todo - check authorised.
+
+	h.as.DeleteByID(c, author, int32(i))
+
+	h.writeJson(c, w, http.StatusOK, resp.GetSingleItemResp(author))
 }
 
 func (h *Handle) GetByID(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
@@ -131,10 +172,18 @@ func (h *Handle) GetByID(w http.ResponseWriter, r *http.Request, ps httprouter.P
 	author := &model.Author{}
 	err = h.as.GetByID(c, author, int32(i))
 	if err != nil {
-		h.writeJson(c, w, http.StatusNotFound, err)
+		h.writeJson(c, w, http.StatusNotFound, "Unable to find record")
 
 		return
 	}
+
+	if author.ID == 0 {
+		h.writeJson(c, w, http.StatusNotFound, resp.GetNotFoundResp())
+
+		return
+	}
+
+	// todo - check authorised.
 
 	h.writeJson(c, w, http.StatusOK, resp.GetSingleItemResp(author))
 }

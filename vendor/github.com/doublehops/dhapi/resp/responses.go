@@ -7,12 +7,18 @@ import (
 
 var (
 	ValidationError = errors.New("one or more validation errors occurred")
+
+	NotFoundMsg = map[string]string{"message": "not found"}
 )
 
 func GetSingleItemResp(data interface{}) SingleItemResp {
 	return SingleItemResp{
 		Data: data,
 	}
+}
+
+func GetNotFoundResp() map[string]string {
+	return map[string]string{"message": "not found"}
 }
 
 func GetListResp(data interface{}, pagination Pagination) ListResp {
