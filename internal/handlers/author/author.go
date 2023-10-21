@@ -150,9 +150,13 @@ func (h *Handle) DeleteByID(w http.ResponseWriter, r *http.Request, ps httproute
 
 	// todo - check authorised.
 
-	h.as.DeleteByID(c, author, int32(i))
+	if err = h.as.DeleteByID(c, author, int32(i)); err != nil {
+		h.writeJson(c, w, http.StatusInternalServerError, resp.ErrorProcessingRequestResp())
 
-	h.writeJson(c, w, http.StatusOK, resp.GetSingleItemResp(author))
+		return
+	}
+
+	h.writeJson(c, w, http.StatusNoContent, nil)
 }
 
 func (h *Handle) GetByID(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
