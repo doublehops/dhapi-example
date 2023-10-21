@@ -13,7 +13,7 @@ type Model interface {
 
 type BaseModel struct {
 	ID        int32      `json:"id"`
-	UserID    int32      `json:"user_id"`
+	UserID    int32      `json:"userId"`
 	CreatedBy int32      `json:"createdBy"`
 	UpdatedBy int32      `json:"updatedBy"`
 	CreatedAt *time.Time `json:"createdAt"`

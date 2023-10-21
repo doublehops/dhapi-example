@@ -69,7 +69,13 @@ func (s AuthorService) Update(ctx context.Context, author *model.Author) (*model
 		s.app.Log.Error(ctx, "unable to commit transaction"+err.Error())
 	}
 
-	return author, nil
+	a := &model.Author{}
+	err = s.authorRepo.GetByID(ctx, s.app.DB, author.ID, a)
+	if err != nil {
+		s.app.Log.Error(ctx, "unable to retrieve record. "+err.Error())
+	}
+
+	return a, nil
 }
 
 func (s AuthorService) DeleteByID(ctx context.Context, author *model.Author, ID int32) error {

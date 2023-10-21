@@ -84,19 +84,6 @@ func (h *Handle) UpdateByID(w http.ResponseWriter, r *http.Request, ps httproute
 	}
 
 	author := &model.Author{}
-	if err := json.NewDecoder(r.Body).Decode(author); err != nil {
-		h.writeJson(c, w, http.StatusBadRequest, resp.UnableToParseResp())
-
-		return
-	}
-
-	if errors := author.Validate(); len(errors) > 0 {
-		errs := resp.GetValidateErrResp(errors, resp.ValidationError.Error())
-		h.writeJson(c, w, http.StatusBadRequest, errs)
-
-		return
-	}
-
 	err = h.as.GetByID(c, author, int32(i))
 	if err != nil {
 		h.writeJson(c, w, http.StatusBadRequest, err)
@@ -106,6 +93,19 @@ func (h *Handle) UpdateByID(w http.ResponseWriter, r *http.Request, ps httproute
 
 	if author.ID == 0 {
 		h.writeJson(c, w, http.StatusNotFound, resp.GetNotFoundResp())
+
+		return
+	}
+
+	if err := json.NewDecoder(r.Body).Decode(author); err != nil {
+		h.writeJson(c, w, http.StatusBadRequest, resp.UnableToParseResp())
+
+		return
+	}
+
+	if errors := author.Validate(); len(errors) > 0 {
+		errs := resp.GetValidateErrResp(errors, resp.ValidationError.Error())
+		h.writeJson(c, w, http.StatusBadRequest, errs)
 
 		return
 	}
