@@ -25,4 +25,8 @@ type ValidateErrResp struct {
 	Errors  ErrMsgs `json:"errors"`
 }
 
+type CustomErrorResp struct {
+	Message string `json:"message"`
+}
+
 type ErrMsgs map[string][]string

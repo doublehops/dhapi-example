@@ -5,6 +5,7 @@ import (
 	"github.com/doublehops/dhapi-example/internal/app"
 	"github.com/doublehops/dhapi-example/internal/model"
 	"github.com/doublehops/dhapi-example/internal/repository/repositoryauthor"
+	"github.com/doublehops/dhapi/resp"
 )
 
 type AuthorService struct {
@@ -30,6 +31,8 @@ func (s AuthorService) Create(ctx context.Context, author *model.Author) (*model
 	err := s.authorRepo.Create(ctx, tx, author)
 	if err != nil {
 		s.app.Log.Error(ctx, "unable to save new record. "+err.Error())
+
+		return author, resp.CouldNotSaveRecord
 	}
 
 	err = tx.Commit()

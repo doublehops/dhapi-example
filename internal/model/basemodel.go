@@ -13,6 +13,7 @@ type Model interface {
 
 type BaseModel struct {
 	ID        int32      `json:"id"`
+	UserID    int32      `json:"id"`
 	CreatedBy int32      `json:"createdBy"`
 	UpdatedBy int32      `json:"updatedBy"`
 	CreatedAt *time.Time `json:"createdAt"`
@@ -25,6 +26,7 @@ func (bm *BaseModel) SetCreated(ctx context.Context) {
 	if userID != nil {
 		bm.CreatedBy = int32(userID.(int))
 		bm.UpdatedBy = int32(userID.(int))
+		bm.UserID = int32(userID.(int))
 	}
 
 	t := time.Now()

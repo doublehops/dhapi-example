@@ -20,7 +20,7 @@ func New(logger *logga.Logga) *RepositoryAuthor {
 
 func (a *RepositoryAuthor) Create(ctx context.Context, tx *sql.Tx, model *model.Author) error {
 
-	result, err := tx.Exec(insertRecordSQL, model.Name, model.CreatedBy, model.UpdatedBy, model.CreatedAt, model.UpdatedAt)
+	result, err := tx.Exec(insertRecordSQL, model.UserID, model.Name, model.CreatedBy, model.UpdatedBy, model.CreatedAt, model.UpdatedAt)
 	if err != nil {
 		errMsg := fmt.Sprintf("there was an error saving record to db. %s", err)
 		a.Log.Error(ctx, errMsg)

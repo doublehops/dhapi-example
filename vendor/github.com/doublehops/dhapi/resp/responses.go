@@ -6,10 +6,13 @@ import (
 )
 
 var (
-	ValidationError = errors.New("one or more validation errors occurred")
+	ValidationError    = errors.New("one or more validation errors occurred")
+	CouldNotSaveRecord = errors.New("could not save record")
 
-	NotFoundMsg = map[string]string{"message": "not found"}
+	NotFoundMsg = ErrorMessage{"message": "not found"}
 )
+
+type ErrorMessage map[string]string
 
 func GetSingleItemResp(data interface{}) SingleItemResp {
 	return SingleItemResp{
@@ -17,8 +20,12 @@ func GetSingleItemResp(data interface{}) SingleItemResp {
 	}
 }
 
-func GetNotFoundResp() map[string]string {
-	return map[string]string{"message": "not found"}
+func GetNotFoundResp() ErrorMessage {
+	return ErrorMessage{"message": "not found"}
+}
+
+func ErrorResp(msg string) CustomErrorResp {
+	return CustomErrorResp{Message: msg}
 }
 
 func GetListResp(data interface{}, pagination Pagination) ListResp {

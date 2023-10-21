@@ -53,7 +53,7 @@ func (h *Handle) Create(w http.ResponseWriter, r *http.Request, ps httprouter.Pa
 
 	a, err := h.as.Create(c, author)
 	if err != nil {
-		h.writeJson(c, w, http.StatusInternalServerError, "Unable to process request")
+		h.writeJson(c, w, http.StatusInternalServerError, resp.ErrorResp(err.Error()))
 
 		return
 	}

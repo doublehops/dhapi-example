@@ -1,12 +1,14 @@
 package repositoryauthor
 
 var insertRecordSQL = `INSERT INTO author (
+	user_id,
 	name,
     created_by,
     updated_by,
     created_at,
     updated_at
 	  ) VALUES (
+	?,
 	?,
 	?,
 	?,
