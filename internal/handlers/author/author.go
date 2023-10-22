@@ -129,8 +129,6 @@ func (h *Handle) UpdateByID(w http.ResponseWriter, r *http.Request, ps httproute
 		return
 	}
 
-	// todo - check authorised.
-
 	a, err := h.as.Update(c, author)
 	if err != nil {
 		h.writeJson(c, w, http.StatusInternalServerError, "Unable to process request")
@@ -143,6 +141,7 @@ func (h *Handle) UpdateByID(w http.ResponseWriter, r *http.Request, ps httproute
 
 func (h *Handle) DeleteByID(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	c := r.Context()
+	userID := h.GetUser(c)
 	h.app.Log.Info(c, "Request made to DELETE author")
 
 	ID := ps.ByName("id")
@@ -167,7 +166,11 @@ func (h *Handle) DeleteByID(w http.ResponseWriter, r *http.Request, ps httproute
 		return
 	}
 
-	// todo - check authorised.
+	if !h.app.HasPermission(userID, author) {
+		h.writeJson(c, w, http.StatusForbidden, resp.GetNotAuthorisedResp())
+
+		return
+	}
 
 	if err = h.as.DeleteByID(c, author, int32(i)); err != nil {
 		h.writeJson(c, w, http.StatusInternalServerError, resp.ErrorProcessingRequestResp())
@@ -180,6 +183,7 @@ func (h *Handle) DeleteByID(w http.ResponseWriter, r *http.Request, ps httproute
 
 func (h *Handle) GetByID(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	c := r.Context()
+	userID := h.GetUser(c)
 	h.app.Log.Info(c, "Request made to Get author")
 
 	ID := ps.ByName("id")
@@ -204,7 +208,11 @@ func (h *Handle) GetByID(w http.ResponseWriter, r *http.Request, ps httprouter.P
 		return
 	}
 
-	// todo - check authorised.
+	if !h.app.HasPermission(userID, author) {
+		h.writeJson(c, w, http.StatusForbidden, resp.GetNotAuthorisedResp())
+
+		return
+	}
 
 	h.writeJson(c, w, http.StatusOK, resp.GetSingleItemResp(author))
 }
