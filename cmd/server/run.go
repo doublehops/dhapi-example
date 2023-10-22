@@ -8,12 +8,12 @@ import (
 
 	"github.com/julienschmidt/httprouter"
 
-	"github.com/doublehops/dhapi-example/internal/app"
 	"github.com/doublehops/dhapi-example/internal/config"
 	"github.com/doublehops/dhapi-example/internal/db"
 	"github.com/doublehops/dhapi-example/internal/logga"
 	"github.com/doublehops/dhapi-example/internal/routes"
 	"github.com/doublehops/dhapi-example/internal/runflags"
+	"github.com/doublehops/dhapi-example/internal/service"
 )
 
 func main() {
@@ -44,7 +44,7 @@ func run() error {
 		return fmt.Errorf("error creating database connection. %s", err.Error())
 	}
 
-	App := &app.App{
+	App := &service.App{
 		DB:  DB,
 		Log: l,
 	}

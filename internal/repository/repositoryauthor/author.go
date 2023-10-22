@@ -12,7 +12,7 @@ type RepositoryAuthor struct {
 	Log *logga.Logga
 }
 
-func New(DB *sql.DB, logger *logga.Logga) *RepositoryAuthor {
+func New(logger *logga.Logga) *RepositoryAuthor {
 	return &RepositoryAuthor{
 		Log: logger,
 	}
@@ -20,7 +20,7 @@ func New(DB *sql.DB, logger *logga.Logga) *RepositoryAuthor {
 
 func (a *RepositoryAuthor) Create(ctx context.Context, tx *sql.Tx, model *model.Author) error {
 
-	result, err := tx.Exec(insertRecordSQL, model.Name, model.CreatedBy, model.UpdatedBy, model.CreatedAt, model.UpdatedAt)
+	result, err := tx.Exec(insertRecordSQL, model.UserID, model.Name, model.CreatedBy, model.UpdatedBy, model.CreatedAt, model.UpdatedAt)
 	if err != nil {
 		errMsg := fmt.Sprintf("there was an error saving record to db. %s", err)
 		a.Log.Error(ctx, errMsg)
@@ -51,10 +51,23 @@ func (a *RepositoryAuthor) Update(ctx context.Context, tx *sql.Tx, model *model.
 	return nil
 }
 
-func (a *RepositoryAuthor) GetByID(ctx context.Context, DB *sql.DB, ID int32, author *model.Author) error {
+func (a *RepositoryAuthor) Delete(ctx context.Context, tx *sql.Tx, model *model.Author) error {
+
+	_, err := tx.Exec(deleteRecordSQL, model.UpdatedBy, model.UpdatedAt, model.DeletedAt, model.ID)
+	if err != nil {
+		errMsg := fmt.Sprintf("there was an error saving record to db. %s", err)
+		a.Log.Error(ctx, errMsg)
+
+		return fmt.Errorf(errMsg)
+	}
+
+	return nil
+}
+
+func (a *RepositoryAuthor) GetByID(ctx context.Context, DB *sql.DB, ID int32, model *model.Author) error {
 	row := DB.QueryRow(selectByIDQuery, ID)
 
-	err := a.populateRecord(author, row)
+	err := row.Scan(&model.ID, &model.UserID, &model.Name, &model.CreatedBy, &model.UpdatedBy, &model.CreatedAt, &model.UpdatedAt)
 	if err != nil {
 		return fmt.Errorf("unable to fetch record %d", ID)
 	}
@@ -72,18 +85,12 @@ func (a *RepositoryAuthor) GetAll(ctx context.Context, DB *sql.DB) ([]*model.Aut
 
 	for rows.Next() {
 		var record model.Author
-		if err = rows.Scan(&record.ID, &record.Name, &record.CreatedBy, &record.UpdatedBy, &record.CreatedAt, &record.UpdatedAt); err != nil {
+		if err = rows.Scan(&record.ID, &record.UserID, &record.Name, &record.CreatedBy, &record.UpdatedBy, &record.CreatedAt, &record.UpdatedAt); err != nil {
 			return authors, fmt.Errorf("unable to fetch rows. %s", err)
 		}
+
 		authors = append(authors, &record)
 	}
 
 	return authors, nil
-}
-
-// populateRecord will populate model object from query.
-func (a *RepositoryAuthor) populateRecord(record *model.Author, row *sql.Row) error {
-	err := row.Scan(&record.ID, &record.Name, &record.CreatedBy, &record.UpdatedBy, &record.CreatedAt, &record.UpdatedAt)
-
-	return err
 }

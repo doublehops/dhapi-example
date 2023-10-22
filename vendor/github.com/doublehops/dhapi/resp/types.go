@@ -16,13 +16,17 @@ type Pagination struct {
 	TotalCount  int `json:"totalCount"`
 }
 
-type ValidateErrResp struct {
+type GeneralErrorResp struct {
 	Name    string  `json:"name"`
 	Message string  `json:"message"`
 	Code    int     `json:"code"`
 	Status  string  `json:"status"`
 	Type    string  `json:"type"`
 	Errors  ErrMsgs `json:"errors"`
+}
+
+type CustomErrorResp struct {
+	Message string `json:"message"`
 }
 
 type ErrMsgs map[string][]string

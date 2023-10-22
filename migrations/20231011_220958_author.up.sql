@@ -1,6 +1,7 @@
 CREATE TABLE author
 (
     id         INT(11) AUTO_INCREMENT NOT NULL,
+    user_id    INT(11) NOT NULL,
     name       varchar(100) NOT NULL,
     created_by INT(11),
     updated_by INT(11),
