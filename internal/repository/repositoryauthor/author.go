@@ -64,10 +64,10 @@ func (a *RepositoryAuthor) Delete(ctx context.Context, tx *sql.Tx, model *model.
 	return nil
 }
 
-func (a *RepositoryAuthor) GetByID(ctx context.Context, DB *sql.DB, ID int32, author *model.Author) error {
+func (a *RepositoryAuthor) GetByID(ctx context.Context, DB *sql.DB, ID int32, model *model.Author) error {
 	row := DB.QueryRow(selectByIDQuery, ID)
 
-	err := row.Scan(&author.ID, &author.UserID, &author.Name, &author.CreatedBy, &author.UpdatedBy, &author.CreatedAt, &author.UpdatedAt)
+	err := row.Scan(&model.ID, &model.UserID, &model.Name, &model.CreatedBy, &model.UpdatedBy, &model.CreatedAt, &model.UpdatedAt)
 	if err != nil {
 		return fmt.Errorf("unable to fetch record %d", ID)
 	}
@@ -94,10 +94,3 @@ func (a *RepositoryAuthor) GetAll(ctx context.Context, DB *sql.DB) ([]*model.Aut
 
 	return authors, nil
 }
-
-// populateRecord will populate model object from query.
-//func (a *RepositoryAuthor) populateRecord(record *model.Author, row *sql.Rows) error {
-//	err := row.Scan(&record.ID, &record.Name, &record.CreatedBy, &record.UpdatedBy, &record.CreatedAt, &record.UpdatedAt)
-//
-//	return err
-//}
