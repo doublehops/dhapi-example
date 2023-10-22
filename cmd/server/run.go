@@ -2,13 +2,13 @@ package main
 
 import (
 	"fmt"
+	"github.com/doublehops/dhapi-example/internal/service"
 	"log"
 	"net/http"
 	"os"
 
 	"github.com/julienschmidt/httprouter"
 
-	"github.com/doublehops/dhapi-example/internal/app"
 	"github.com/doublehops/dhapi-example/internal/config"
 	"github.com/doublehops/dhapi-example/internal/db"
 	"github.com/doublehops/dhapi-example/internal/logga"
@@ -44,7 +44,7 @@ func run() error {
 		return fmt.Errorf("error creating database connection. %s", err.Error())
 	}
 
-	App := &app.App{
+	App := &service.App{
 		DB:  DB,
 		Log: l,
 	}

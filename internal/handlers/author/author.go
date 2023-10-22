@@ -17,12 +17,12 @@ import (
 )
 
 type Handle struct {
-	app *app.App
+	app *service.App
 	ar  *repositoryauthor.RepositoryAuthor
 	as  *service.AuthorService
 }
 
-func New(app *app.App) *Handle {
+func New(app *service.App) *Handle {
 	ar := repositoryauthor.New(app.Log)
 
 	return &Handle{
@@ -60,6 +60,18 @@ func (h *Handle) Create(w http.ResponseWriter, r *http.Request, ps httprouter.Pa
 	h.writeJson(c, w, http.StatusOK, resp.GetSingleItemResp(a))
 }
 
+func (h *Handle) GetUser(ctx context.Context) int32 {
+	var intValue int32
+	var ok bool
+
+	val := ctx.Value(app.UserIDKey)
+	if intValue, ok = val.(int32); ok {
+
+	}
+
+	return intValue
+}
+
 // todo - move this to a reusable place.
 func (h *Handle) writeJson(ctx context.Context, w http.ResponseWriter, statusCode int, res interface{}) {
 	w.Header().Set("Content-Type", "application/json")
@@ -73,6 +85,7 @@ func (h *Handle) writeJson(ctx context.Context, w http.ResponseWriter, statusCod
 
 func (h *Handle) UpdateByID(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	c := r.Context()
+	userID := h.GetUser(c)
 	h.app.Log.Info(c, "Request made to UpdateAuthor")
 
 	ID := ps.ByName("id")
@@ -93,6 +106,12 @@ func (h *Handle) UpdateByID(w http.ResponseWriter, r *http.Request, ps httproute
 
 	if author.ID == 0 {
 		h.writeJson(c, w, http.StatusNotFound, resp.GetNotFoundResp())
+
+		return
+	}
+
+	if !h.app.HasPermission(userID, author) {
+		h.writeJson(c, w, http.StatusForbidden, resp.GetNotAuthorisedResp())
 
 		return
 	}

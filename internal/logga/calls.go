@@ -2,6 +2,7 @@ package logga
 
 import (
 	"context"
+	"github.com/doublehops/dhapi-example/internal/app"
 )
 
 // Debug - args should be key/value pairs separated by a space. Example: "file", "migrate.go"
@@ -49,8 +50,8 @@ func getContextAtts(ctx context.Context) []any {
 		args = append(args, "traceID", traceID)
 	}
 
-	if userID := ctx.Value("userID"); userID != nil {
-		args = append(args, "userID", userID)
+	if userID := ctx.Value(app.UserIDKey); userID != nil {
+		args = append(args, app.UserIDKey, userID)
 	}
 
 	return args

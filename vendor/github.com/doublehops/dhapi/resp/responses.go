@@ -11,6 +11,7 @@ var (
 	CouldNotSaveRecord     = errors.New("could not save record")
 	CouldNotParseRequest   = errors.New("could not parse request")
 	ErrorProcessingRequest = errors.New("there was an error processing the request")
+	ErrorNotAuthorised     = errors.New("not authorised")
 
 	NotFoundMsg = ErrorMessage{"message": "not found"}
 )
@@ -27,7 +28,17 @@ func GeneralErrResp(msg string) GeneralErrorResp {
 	return GeneralErrorResp{
 		Name:    "there was an error processing request",
 		Message: msg,
-		Code:    http.StatusBadRequest,
+		Code:    http.StatusInternalServerError,
+		Status:  "error",
+		Errors:  nil,
+	}
+}
+
+func GetNotAuthorisedResp() GeneralErrorResp {
+	return GeneralErrorResp{
+		Name:    "there was an error processing request",
+		Message: ErrorNotAuthorised.Error(),
+		Code:    http.StatusForbidden,
 		Status:  "error",
 		Errors:  nil,
 	}

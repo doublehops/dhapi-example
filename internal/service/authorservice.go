@@ -2,20 +2,20 @@ package service
 
 import (
 	"context"
+	"github.com/doublehops/dhapi-example/internal/app"
 
 	"github.com/doublehops/dhapi/resp"
 
-	"github.com/doublehops/dhapi-example/internal/app"
 	"github.com/doublehops/dhapi-example/internal/model"
 	"github.com/doublehops/dhapi-example/internal/repository/repositoryauthor"
 )
 
 type AuthorService struct {
-	app        *app.App
+	app        *App
 	authorRepo *repositoryauthor.RepositoryAuthor
 }
 
-func New(app *app.App, authorRepo *repositoryauthor.RepositoryAuthor) *AuthorService {
+func New(app *App, authorRepo *repositoryauthor.RepositoryAuthor) *AuthorService {
 	return &AuthorService{
 		app:        app,
 		authorRepo: authorRepo,

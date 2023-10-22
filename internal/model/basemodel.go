@@ -8,7 +8,8 @@ import (
 )
 
 type Model interface {
-	Unmarshal(data []byte) error
+	GetUserID() int32
+	SetCreated(context.Context)
 }
 
 type BaseModel struct {
@@ -19,6 +20,10 @@ type BaseModel struct {
 	CreatedAt *time.Time `json:"createdAt"`
 	UpdatedAt *time.Time `json:"updatedAt"`
 	DeletedAt *time.Time `json:"deletedAt"`
+}
+
+func (bm *BaseModel) GetUserID() int32 {
+	return bm.UserID
 }
 
 func (bm *BaseModel) SetCreated(ctx context.Context) {
