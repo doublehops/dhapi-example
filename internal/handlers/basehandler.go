@@ -3,10 +3,10 @@ package handlers
 import (
 	"context"
 	"encoding/json"
-	"github.com/doublehops/dhapi-example/internal/logga"
 	"net/http"
 
 	"github.com/doublehops/dhapi-example/internal/app"
+	"github.com/doublehops/dhapi-example/internal/logga"
 )
 
 type BaseHandler struct {
@@ -19,7 +19,7 @@ func (bh *BaseHandler) GetUser(ctx context.Context) int32 {
 
 	val := ctx.Value(app.UserIDKey)
 	if intValue, ok = val.(int32); ok {
-
+		bh.Log.Error(ctx, "unable to convert userID to int32")
 	}
 
 	return intValue

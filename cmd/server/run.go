@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"github.com/doublehops/dhapi-example/internal/service"
 	"log"
 	"net/http"
 	"os"
@@ -14,6 +13,7 @@ import (
 	"github.com/doublehops/dhapi-example/internal/logga"
 	"github.com/doublehops/dhapi-example/internal/routes"
 	"github.com/doublehops/dhapi-example/internal/runflags"
+	"github.com/doublehops/dhapi-example/internal/service"
 )
 
 func main() {
