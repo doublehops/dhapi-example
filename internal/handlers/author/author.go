@@ -2,7 +2,6 @@ package author
 
 import (
 	"encoding/json"
-	"github.com/doublehops/dhapi-example/internal/handlers"
 	"net/http"
 	"strconv"
 
@@ -10,13 +9,13 @@ import (
 
 	"github.com/doublehops/dhapi/resp"
 
+	"github.com/doublehops/dhapi-example/internal/handlers"
 	"github.com/doublehops/dhapi-example/internal/model"
 	"github.com/doublehops/dhapi-example/internal/repository/repositoryauthor"
 	"github.com/doublehops/dhapi-example/internal/service"
 )
 
 type Handle struct {
-	app  *service.App
 	ar   *repositoryauthor.RepositoryAuthor
 	as   *service.AuthorService
 	base *handlers.BaseHandler
@@ -26,9 +25,8 @@ func New(app *service.App) *Handle {
 	ar := repositoryauthor.New(app.Log)
 
 	return &Handle{
-		app: app,
-		ar:  ar,
-		as:  service.New(app, ar),
+		ar: ar,
+		as: service.New(app, ar),
 		base: &handlers.BaseHandler{
 			Log: app.Log,
 		},
@@ -37,7 +35,7 @@ func New(app *service.App) *Handle {
 
 func (h *Handle) Create(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	c := r.Context()
-	h.app.Log.Info(c, "Request made to CreateAuthor")
+	h.as.Log.Info(c, "Request made to CreateAuthor")
 
 	author := &model.Author{}
 	if err := json.NewDecoder(r.Body).Decode(author); err != nil {
@@ -66,7 +64,7 @@ func (h *Handle) Create(w http.ResponseWriter, r *http.Request, ps httprouter.Pa
 func (h *Handle) UpdateByID(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	c := r.Context()
 	userID := h.base.GetUser(c)
-	h.app.Log.Info(c, "Request made to UpdateAuthor")
+	h.as.Log.Info(c, "Request made to UpdateAuthor")
 
 	ID := ps.ByName("id")
 	i, err := strconv.Atoi(ID)
@@ -90,7 +88,7 @@ func (h *Handle) UpdateByID(w http.ResponseWriter, r *http.Request, ps httproute
 		return
 	}
 
-	if !h.app.HasPermission(userID, author) {
+	if !h.as.HasPermission(userID, author) {
 		h.base.WriteJson(c, w, http.StatusForbidden, resp.GetNotAuthorisedResp())
 
 		return
@@ -122,7 +120,7 @@ func (h *Handle) UpdateByID(w http.ResponseWriter, r *http.Request, ps httproute
 func (h *Handle) DeleteByID(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	c := r.Context()
 	userID := h.base.GetUser(c)
-	h.app.Log.Info(c, "Request made to DELETE author")
+	h.as.Log.Info(c, "Request made to DELETE author")
 
 	ID := ps.ByName("id")
 	i, err := strconv.Atoi(ID)
@@ -146,7 +144,7 @@ func (h *Handle) DeleteByID(w http.ResponseWriter, r *http.Request, ps httproute
 		return
 	}
 
-	if !h.app.HasPermission(userID, author) {
+	if !h.as.HasPermission(userID, author) {
 		h.base.WriteJson(c, w, http.StatusForbidden, resp.GetNotAuthorisedResp())
 
 		return
@@ -164,7 +162,7 @@ func (h *Handle) DeleteByID(w http.ResponseWriter, r *http.Request, ps httproute
 func (h *Handle) GetByID(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	c := r.Context()
 	userID := h.base.GetUser(c)
-	h.app.Log.Info(c, "Request made to Get author")
+	h.as.Log.Info(c, "Request made to Get author")
 
 	ID := ps.ByName("id")
 	i, err := strconv.Atoi(ID)
@@ -188,7 +186,7 @@ func (h *Handle) GetByID(w http.ResponseWriter, r *http.Request, ps httprouter.P
 		return
 	}
 
-	if !h.app.HasPermission(userID, author) {
+	if !h.as.HasPermission(userID, author) {
 		h.base.WriteJson(c, w, http.StatusForbidden, resp.GetNotAuthorisedResp())
 
 		return
@@ -199,7 +197,7 @@ func (h *Handle) GetByID(w http.ResponseWriter, r *http.Request, ps httprouter.P
 
 func (h *Handle) GetAll(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	c := r.Context()
-	h.app.Log.Info(c, "Request made to Get authors")
+	h.as.Log.Info(c, "Request made to Get authors")
 
 	authors, err := h.as.GetAll(c)
 	if err != nil {

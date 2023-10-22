@@ -11,13 +11,13 @@ import (
 )
 
 type AuthorService struct {
-	app        *App
+	*App
 	authorRepo *repositoryauthor.RepositoryAuthor
 }
 
 func New(app *App, authorRepo *repositoryauthor.RepositoryAuthor) *AuthorService {
 	return &AuthorService{
-		app:        app,
+		App:        app,
 		authorRepo: authorRepo,
 	}
 }
@@ -27,25 +27,25 @@ func (s AuthorService) Create(ctx context.Context, author *model.Author) (*model
 
 	author.SetCreated(ctx)
 
-	tx, _ := s.app.DB.BeginTx(ctx, nil)
+	tx, _ := s.DB.BeginTx(ctx, nil)
 	defer tx.Rollback()
 
 	err := s.authorRepo.Create(ctx, tx, author)
 	if err != nil {
-		s.app.Log.Error(ctx, "unable to save new record. "+err.Error())
+		s.Log.Error(ctx, "unable to save new record. "+err.Error())
 
 		return author, resp.CouldNotSaveRecord
 	}
 
 	err = tx.Commit()
 	if err != nil {
-		s.app.Log.Error(ctx, "unable to commit transaction"+err.Error())
+		s.Log.Error(ctx, "unable to commit transaction"+err.Error())
 	}
 
 	a := &model.Author{}
-	err = s.authorRepo.GetByID(ctx, s.app.DB, author.ID, a)
+	err = s.authorRepo.GetByID(ctx, s.DB, author.ID, a)
 	if err != nil {
-		s.app.Log.Error(ctx, "unable to retrieve record. "+err.Error())
+		s.Log.Error(ctx, "unable to retrieve record. "+err.Error())
 	}
 
 	return a, nil
@@ -56,60 +56,60 @@ func (s AuthorService) Update(ctx context.Context, author *model.Author) (*model
 
 	author.SetUpdated(ctx)
 
-	tx, _ := s.app.DB.BeginTx(ctx, nil)
+	tx, _ := s.DB.BeginTx(ctx, nil)
 	defer tx.Rollback()
 
 	err := s.authorRepo.Update(ctx, tx, author)
 	if err != nil {
-		s.app.Log.Error(ctx, "unable to update record. "+err.Error())
+		s.Log.Error(ctx, "unable to update record. "+err.Error())
 	}
 
 	err = tx.Commit()
 	if err != nil {
-		s.app.Log.Error(ctx, "unable to commit transaction"+err.Error())
+		s.Log.Error(ctx, "unable to commit transaction"+err.Error())
 	}
 
 	a := &model.Author{}
-	err = s.authorRepo.GetByID(ctx, s.app.DB, author.ID, a)
+	err = s.authorRepo.GetByID(ctx, s.DB, author.ID, a)
 	if err != nil {
-		s.app.Log.Error(ctx, "unable to retrieve record. "+err.Error())
+		s.Log.Error(ctx, "unable to retrieve record. "+err.Error())
 	}
 
 	return a, nil
 }
 
 func (s AuthorService) DeleteByID(ctx context.Context, author *model.Author, ID int32) error {
-	tx, _ := s.app.DB.BeginTx(ctx, nil)
+	tx, _ := s.DB.BeginTx(ctx, nil)
 	defer tx.Rollback()
 
 	author.SetDeleted(ctx)
 
 	err := s.authorRepo.Delete(ctx, tx, author)
 	if err != nil {
-		s.app.Log.Error(ctx, "unable to delete record. "+err.Error())
+		s.Log.Error(ctx, "unable to delete record. "+err.Error())
 	}
 
 	err = tx.Commit()
 	if err != nil {
-		s.app.Log.Error(ctx, "unable to commit transaction"+err.Error())
+		s.Log.Error(ctx, "unable to commit transaction"+err.Error())
 	}
 
 	return nil
 }
 
 func (s AuthorService) GetByID(ctx context.Context, author *model.Author, ID int32) error {
-	err := s.authorRepo.GetByID(ctx, s.app.DB, ID, author)
+	err := s.authorRepo.GetByID(ctx, s.DB, ID, author)
 	if err != nil {
-		s.app.Log.Error(ctx, "unable to retrieve record. "+err.Error())
+		s.Log.Error(ctx, "unable to retrieve record. "+err.Error())
 	}
 
 	return nil
 }
 
 func (s AuthorService) GetAll(ctx context.Context) ([]*model.Author, error) {
-	authors, err := s.authorRepo.GetAll(ctx, s.app.DB)
+	authors, err := s.authorRepo.GetAll(ctx, s.DB)
 	if err != nil {
-		s.app.Log.Error(ctx, "unable to update new record. "+err.Error())
+		s.Log.Error(ctx, "unable to update new record. "+err.Error())
 	}
 
 	return authors, nil

@@ -1,13 +1,19 @@
 package service
 
 import (
+	"database/sql"
+
+	"github.com/doublehops/dhapi-example/internal/logga"
 	"github.com/doublehops/dhapi-example/internal/model"
 )
 
-//type App struct {
-//	app *app.App
-//}
+type App struct {
+	DB  *sql.DB
+	Log *logga.Logga
+}
 
-func HasPermission(ID int32, record model.BaseModel) bool {
-	return ID == record.UserID
+// HasPermission will check whether the authenticated user has authorisation for the requested record. This function
+// can be overwritten in each service.
+func (a *App) HasPermission(ID int32, record model.Model) bool {
+	return ID == record.GetUserID()
 }
