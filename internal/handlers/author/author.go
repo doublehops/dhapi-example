@@ -16,8 +16,8 @@ import (
 )
 
 type Handle struct {
-	ar   *repositoryauthor.RepositoryAuthor
-	as   *service.AuthorService
+	repo *repositoryauthor.RepositoryAuthor
+	srv  *service.AuthorService
 	base *handlers.BaseHandler
 }
 
@@ -25,8 +25,8 @@ func New(app *service.App) *Handle {
 	ar := repositoryauthor.New(app.Log)
 
 	return &Handle{
-		ar: ar,
-		as: service.New(app, ar),
+		repo: ar,
+		srv:  service.New(app, ar),
 		base: &handlers.BaseHandler{
 			Log: app.Log,
 		},
@@ -35,7 +35,7 @@ func New(app *service.App) *Handle {
 
 func (h *Handle) Create(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	c := r.Context()
-	h.as.Log.Info(c, "Request made to CreateAuthor")
+	h.srv.Log.Info(c, "Request made to CreateAuthor")
 
 	author := &model.Author{}
 	if err := json.NewDecoder(r.Body).Decode(author); err != nil {
@@ -51,7 +51,7 @@ func (h *Handle) Create(w http.ResponseWriter, r *http.Request, ps httprouter.Pa
 		return
 	}
 
-	a, err := h.as.Create(c, author)
+	a, err := h.srv.Create(c, author)
 	if err != nil {
 		h.base.WriteJson(c, w, http.StatusInternalServerError, resp.GeneralErrResp(resp.ErrorProcessingRequest.Error()))
 
@@ -64,7 +64,7 @@ func (h *Handle) Create(w http.ResponseWriter, r *http.Request, ps httprouter.Pa
 func (h *Handle) UpdateByID(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	c := r.Context()
 	userID := h.base.GetUser(c)
-	h.as.Log.Info(c, "Request made to UpdateAuthor")
+	h.srv.Log.Info(c, "Request made to UpdateAuthor")
 
 	ID := ps.ByName("id")
 	i, err := strconv.Atoi(ID)
@@ -75,7 +75,7 @@ func (h *Handle) UpdateByID(w http.ResponseWriter, r *http.Request, ps httproute
 	}
 
 	author := &model.Author{}
-	err = h.as.GetByID(c, author, int32(i))
+	err = h.srv.GetByID(c, author, int32(i))
 	if err != nil {
 		h.base.WriteJson(c, w, http.StatusBadRequest, err)
 
@@ -88,7 +88,7 @@ func (h *Handle) UpdateByID(w http.ResponseWriter, r *http.Request, ps httproute
 		return
 	}
 
-	if !h.as.HasPermission(userID, author) {
+	if !h.srv.HasPermission(userID, author) {
 		h.base.WriteJson(c, w, http.StatusForbidden, resp.GetNotAuthorisedResp())
 
 		return
@@ -107,7 +107,7 @@ func (h *Handle) UpdateByID(w http.ResponseWriter, r *http.Request, ps httproute
 		return
 	}
 
-	a, err := h.as.Update(c, author)
+	a, err := h.srv.Update(c, author)
 	if err != nil {
 		h.base.WriteJson(c, w, http.StatusInternalServerError, "Unable to process request")
 
@@ -120,7 +120,7 @@ func (h *Handle) UpdateByID(w http.ResponseWriter, r *http.Request, ps httproute
 func (h *Handle) DeleteByID(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	c := r.Context()
 	userID := h.base.GetUser(c)
-	h.as.Log.Info(c, "Request made to DELETE author")
+	h.srv.Log.Info(c, "Request made to DELETE author")
 
 	ID := ps.ByName("id")
 	i, err := strconv.Atoi(ID)
@@ -131,7 +131,7 @@ func (h *Handle) DeleteByID(w http.ResponseWriter, r *http.Request, ps httproute
 	}
 
 	author := &model.Author{}
-	err = h.as.GetByID(c, author, int32(i))
+	err = h.srv.GetByID(c, author, int32(i))
 	if err != nil {
 		h.base.WriteJson(c, w, http.StatusNotFound, "Unable to find record")
 
@@ -144,13 +144,13 @@ func (h *Handle) DeleteByID(w http.ResponseWriter, r *http.Request, ps httproute
 		return
 	}
 
-	if !h.as.HasPermission(userID, author) {
+	if !h.srv.HasPermission(userID, author) {
 		h.base.WriteJson(c, w, http.StatusForbidden, resp.GetNotAuthorisedResp())
 
 		return
 	}
 
-	if err = h.as.DeleteByID(c, author, int32(i)); err != nil {
+	if err = h.srv.DeleteByID(c, author, int32(i)); err != nil {
 		h.base.WriteJson(c, w, http.StatusInternalServerError, resp.ErrorProcessingRequestResp())
 
 		return
@@ -162,7 +162,7 @@ func (h *Handle) DeleteByID(w http.ResponseWriter, r *http.Request, ps httproute
 func (h *Handle) GetByID(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	c := r.Context()
 	userID := h.base.GetUser(c)
-	h.as.Log.Info(c, "Request made to Get author")
+	h.srv.Log.Info(c, "Request made to Get author")
 
 	ID := ps.ByName("id")
 	i, err := strconv.Atoi(ID)
@@ -173,7 +173,7 @@ func (h *Handle) GetByID(w http.ResponseWriter, r *http.Request, ps httprouter.P
 	}
 
 	author := &model.Author{}
-	err = h.as.GetByID(c, author, int32(i))
+	err = h.srv.GetByID(c, author, int32(i))
 	if err != nil {
 		h.base.WriteJson(c, w, http.StatusNotFound, "Unable to find record")
 
@@ -186,7 +186,7 @@ func (h *Handle) GetByID(w http.ResponseWriter, r *http.Request, ps httprouter.P
 		return
 	}
 
-	if !h.as.HasPermission(userID, author) {
+	if !h.srv.HasPermission(userID, author) {
 		h.base.WriteJson(c, w, http.StatusForbidden, resp.GetNotAuthorisedResp())
 
 		return
@@ -197,9 +197,9 @@ func (h *Handle) GetByID(w http.ResponseWriter, r *http.Request, ps httprouter.P
 
 func (h *Handle) GetAll(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	c := r.Context()
-	h.as.Log.Info(c, "Request made to Get authors")
+	h.srv.Log.Info(c, "Request made to Get authors")
 
-	authors, err := h.as.GetAll(c)
+	authors, err := h.srv.GetAll(c)
 	if err != nil {
 		h.base.WriteJson(c, w, http.StatusInternalServerError, "Unable to process request")
 
