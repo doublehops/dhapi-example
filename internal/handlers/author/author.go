@@ -2,6 +2,7 @@ package author
 
 import (
 	"encoding/json"
+	"github.com/doublehops/dhapi-example/internal/handlers/pagination"
 	"net/http"
 	"strconv"
 
@@ -199,7 +200,9 @@ func (h *Handle) GetAll(w http.ResponseWriter, r *http.Request, _ httprouter.Par
 	c := r.Context()
 	h.srv.Log.Info(c, "Request made to Get authors")
 
-	authors, err := h.srv.GetAll(c)
+	p := pagination.GetPaginationReq(r)
+
+	authors, err := h.srv.GetAll(c, p)
 	if err != nil {
 		h.base.WriteJson(c, w, http.StatusInternalServerError, "Unable to process request")
 

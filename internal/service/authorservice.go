@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"github.com/doublehops/dhapi-example/internal/app"
+	"github.com/doublehops/dhapi-example/internal/handlers/pagination"
 
 	"github.com/doublehops/dhapi/resp"
 
@@ -106,8 +107,8 @@ func (s AuthorService) GetByID(ctx context.Context, author *model.Author, ID int
 	return nil
 }
 
-func (s AuthorService) GetAll(ctx context.Context) ([]*model.Author, error) {
-	authors, err := s.authorRepo.GetAll(ctx, s.DB)
+func (s AuthorService) GetAll(ctx context.Context, p *pagination.RequestPagination) ([]*model.Author, error) {
+	authors, err := s.authorRepo.GetAll(ctx, s.DB, p)
 	if err != nil {
 		s.Log.Error(ctx, "unable to update new record. "+err.Error())
 	}

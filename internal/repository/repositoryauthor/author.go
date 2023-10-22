@@ -4,8 +4,10 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"github.com/doublehops/dhapi-example/internal/handlers/pagination"
 	"github.com/doublehops/dhapi-example/internal/logga"
 	"github.com/doublehops/dhapi-example/internal/model"
+	"github.com/doublehops/dhapi-example/internal/repository"
 )
 
 type RepositoryAuthor struct {
@@ -75,9 +77,11 @@ func (a *RepositoryAuthor) GetByID(ctx context.Context, DB *sql.DB, ID int32, mo
 	return nil
 }
 
-func (a *RepositoryAuthor) GetAll(ctx context.Context, DB *sql.DB) ([]*model.Author, error) {
+func (a *RepositoryAuthor) GetAll(ctx context.Context, DB *sql.DB, p *pagination.RequestPagination) ([]*model.Author, error) {
 	var authors []*model.Author
-	rows, err := DB.Query(selectAllQuery)
+	q := repository.SubstitutePaginationVars(selectAllQuery, p)
+	a.Log.Info(ctx, q)
+	rows, err := DB.Query(q)
 	if err != nil {
 		return authors, fmt.Errorf("unable to fetch rows")
 	}

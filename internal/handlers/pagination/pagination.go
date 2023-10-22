@@ -2,20 +2,17 @@ package pagination
 
 import (
 	"math"
+	"net/http"
 	"strconv"
-
-	"github.com/gin-gonic/gin"
-
-	"github.com/doublehops/cryptowatcher-2.0/internal/pkg/logga"
 )
 
-type MetaRequest struct {
+type RequestPagination struct {
 	Page    int `json:"page"`
 	PerPage int `json:"perPage"`
 	Offset  int `json:"offset"`
 }
 
-type MetaResponse struct {
+type ResponsePagination struct {
 	Page         int   `json:"page"`
 	PerPage      int   `json:"perPage"`
 	TotalPages   int   `json:"totalPages"`
@@ -27,15 +24,12 @@ var (
 	defaultPerPage = 10
 )
 
-// GetPaginationVars - find and return pagination vars for query and meta response.
-func GetPaginationVars(lg *logga.Logga, c *gin.Context) *MetaRequest {
-	l := lg.Lg.With().Str("pagination", "HandlePagination").Logger()
-	l.Info().Msg("Setting up pagination")
-
-	query := c.Request.URL.Query()
+// GetPaginationReq - find and return pagination request vars.
+func GetPaginationReq(r *http.Request) *RequestPagination {
+	query := r.URL.Query()
 	page, perPage, offset := getVars(query)
 
-	pg := MetaRequest{
+	pg := RequestPagination{
 		Page:    page,
 		PerPage: perPage,
 		Offset:  offset,
@@ -67,13 +61,13 @@ func getVars(query map[string][]string) (int, int, int) {
 	return page, perPage, offset
 }
 
-// GetMetaResponse - Get pagination data to send in API response.
-func GetMetaResponse(pg *MetaRequest, count int64) *MetaResponse {
+// GetPaginationResponse - Get pagination data to return in API response.
+func GetPaginationResponse(pg *RequestPagination, count int64) *ResponsePagination {
 	pageApprox := float64(count) / float64(pg.PerPage)
 	totalPages := math.Ceil(pageApprox)
 	tp := int(totalPages)
 
-	return &MetaResponse{
+	return &ResponsePagination{
 		Page:         pg.Page,
 		PerPage:      pg.PerPage,
 		TotalPages:   tp,

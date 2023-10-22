@@ -43,6 +43,12 @@ var selectByIDQuery = `SELECT
     WHERE id=?
     AND deleted_at IS NULL`
 
+var selectAllQueryCount = `SELECT 
+    count(*)
+    FROM author
+    WHERE deleted_at IS NULL
+`
+
 var selectAllQuery = `SELECT 
     id,
     user_id,
@@ -53,4 +59,5 @@ var selectAllQuery = `SELECT
     updated_at
     FROM author
     WHERE deleted_at IS NULL
+	__PAGINATION__
 `
