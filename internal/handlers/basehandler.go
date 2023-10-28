@@ -18,7 +18,7 @@ func (bh *BaseHandler) GetUser(ctx context.Context) int32 {
 	var ok bool
 
 	val := ctx.Value(app.UserIDKey)
-	if intValue, ok = val.(int32); ok {
+	if intValue, ok = val.(int32); !ok {
 		bh.Log.Error(ctx, "unable to convert userID to int32", nil)
 	}
 

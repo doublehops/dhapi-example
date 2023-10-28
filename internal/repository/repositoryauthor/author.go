@@ -4,11 +4,11 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	req "github.com/doublehops/dhapi-example/internal/request"
 
 	"github.com/doublehops/dhapi-example/internal/logga"
 	"github.com/doublehops/dhapi-example/internal/model"
 	"github.com/doublehops/dhapi-example/internal/repository"
+	req "github.com/doublehops/dhapi-example/internal/request"
 )
 
 type Author struct {
