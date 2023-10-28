@@ -126,7 +126,7 @@ func TestSendLogMessage(t *testing.T) {
 		name           string
 		config         *config.Logging
 		ctxArgs        map[string]interface{}
-		customArgs     []interface{}
+		customArgs     KVPs
 		expectedOutput logOutput
 	}{
 		{
@@ -167,9 +167,9 @@ func TestSendLogMessage(t *testing.T) {
 				OutputFormat: "json",
 				LogLevel:     "DEBUG",
 			},
-			customArgs: []interface{}{
-				"Name", "JohnS",
-				"Age", 33,
+			customArgs: KVPs{
+				"Name": "JohnS",
+				"Age":  33,
 			},
 			expectedOutput: logOutput{
 				Level: "INFO",
@@ -204,7 +204,7 @@ func TestSendLogMessage(t *testing.T) {
 				t.Errorf("Got unexpected error. %s", err)
 			}
 
-			l.Info(ctx, basicMessage, tt.customArgs...)
+			l.Info(ctx, basicMessage, tt.customArgs)
 
 			data, err := os.ReadFile(testbuffer.Filename)
 			if err != nil {

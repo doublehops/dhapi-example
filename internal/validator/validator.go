@@ -1,6 +1,8 @@
 package validator
 
-import "github.com/doublehops/dhapi/resp"
+import (
+	req "github.com/doublehops/dhapi-example/internal/request"
+)
 
 const (
 	RequiredPropertyError   = "this is a required property"
@@ -18,8 +20,8 @@ type Rule struct {
 
 type Error string
 
-func RunValidation(rules []Rule) resp.ErrMsgs {
-	errorMessages := make(resp.ErrMsgs)
+func RunValidation(rules []Rule) req.ErrMsgs {
+	errorMessages := make(req.ErrMsgs)
 
 	for _, prop := range rules {
 		var errors []string

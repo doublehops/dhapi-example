@@ -2,7 +2,6 @@ package author
 
 import (
 	"encoding/json"
-	"github.com/doublehops/dhapi/resp"
 	"net/http"
 	"strconv"
 
@@ -53,12 +52,12 @@ func (h *Handle) Create(w http.ResponseWriter, r *http.Request, ps httprouter.Pa
 
 	a, err := h.srv.Create(c, author)
 	if err != nil {
-		h.base.WriteJson(c, w, http.StatusInternalServerError, resp.GeneralErrResp(resp.ErrorProcessingRequest.Error()))
+		h.base.WriteJson(c, w, http.StatusInternalServerError, req.GeneralErrResp(req.ErrorProcessingRequest.Error()))
 
 		return
 	}
 
-	h.base.WriteJson(c, w, http.StatusOK, resp.GetSingleItemResp(a))
+	h.base.WriteJson(c, w, http.StatusOK, req.GetSingleItemResp(a))
 }
 
 func (h *Handle) UpdateByID(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
@@ -83,25 +82,25 @@ func (h *Handle) UpdateByID(w http.ResponseWriter, r *http.Request, ps httproute
 	}
 
 	if author.ID == 0 {
-		h.base.WriteJson(c, w, http.StatusNotFound, resp.GetNotFoundResp())
+		h.base.WriteJson(c, w, http.StatusNotFound, req.GetNotFoundResp())
 
 		return
 	}
 
 	if !h.srv.HasPermission(userID, author) {
-		h.base.WriteJson(c, w, http.StatusForbidden, resp.GetNotAuthorisedResp())
+		h.base.WriteJson(c, w, http.StatusForbidden, req.GetNotAuthorisedResp())
 
 		return
 	}
 
 	if err := json.NewDecoder(r.Body).Decode(author); err != nil {
-		h.base.WriteJson(c, w, http.StatusBadRequest, resp.UnableToParseResp())
+		h.base.WriteJson(c, w, http.StatusBadRequest, req.UnableToParseResp())
 
 		return
 	}
 
 	if errors := author.Validate(); len(errors) > 0 {
-		errs := resp.GetValidateErrResp(resp.ErrMsgs(errors), resp.ValidationError.Error())
+		errs := req.GetValidateErrResp(errors, req.ValidationError.Error())
 		h.base.WriteJson(c, w, http.StatusBadRequest, errs)
 
 		return
@@ -114,7 +113,7 @@ func (h *Handle) UpdateByID(w http.ResponseWriter, r *http.Request, ps httproute
 		return
 	}
 
-	h.base.WriteJson(c, w, http.StatusOK, resp.GetSingleItemResp(a))
+	h.base.WriteJson(c, w, http.StatusOK, req.GetSingleItemResp(a))
 }
 
 func (h *Handle) DeleteByID(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
@@ -139,19 +138,19 @@ func (h *Handle) DeleteByID(w http.ResponseWriter, r *http.Request, ps httproute
 	}
 
 	if author.ID == 0 {
-		h.base.WriteJson(c, w, http.StatusNotFound, resp.GetNotFoundResp())
+		h.base.WriteJson(c, w, http.StatusNotFound, req.GetNotFoundResp())
 
 		return
 	}
 
 	if !h.srv.HasPermission(userID, author) {
-		h.base.WriteJson(c, w, http.StatusForbidden, resp.GetNotAuthorisedResp())
+		h.base.WriteJson(c, w, http.StatusForbidden, req.GetNotAuthorisedResp())
 
 		return
 	}
 
 	if err = h.srv.DeleteByID(c, author, int32(i)); err != nil {
-		h.base.WriteJson(c, w, http.StatusInternalServerError, resp.ErrorProcessingRequestResp())
+		h.base.WriteJson(c, w, http.StatusInternalServerError, req.ErrorProcessingRequestResp())
 
 		return
 	}
@@ -181,18 +180,18 @@ func (h *Handle) GetByID(w http.ResponseWriter, r *http.Request, ps httprouter.P
 	}
 
 	if author.ID == 0 {
-		h.base.WriteJson(c, w, http.StatusNotFound, resp.GetNotFoundResp())
+		h.base.WriteJson(c, w, http.StatusNotFound, req.GetNotFoundResp())
 
 		return
 	}
 
 	if !h.srv.HasPermission(userID, author) {
-		h.base.WriteJson(c, w, http.StatusForbidden, resp.GetNotAuthorisedResp())
+		h.base.WriteJson(c, w, http.StatusForbidden, req.GetNotAuthorisedResp())
 
 		return
 	}
 
-	h.base.WriteJson(c, w, http.StatusOK, resp.GetSingleItemResp(author))
+	h.base.WriteJson(c, w, http.StatusOK, req.GetSingleItemResp(author))
 }
 
 func (h *Handle) GetAll(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {

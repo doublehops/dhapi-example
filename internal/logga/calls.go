@@ -14,7 +14,7 @@ func (l *Logga) Debug(ctx context.Context, msg string, KVPs KVPs) {
 // Info - args should be key/value pairs separated by a space. Example: "file", "migrate.go"
 func (l *Logga) Info(ctx context.Context, msg string, KVPs KVPs) {
 	args := getArguments(ctx, KVPs)
-	l.Log.Info(msg, args)
+	l.Log.Info(msg, args...)
 }
 
 // Warn - args should be key/value pairs separated by a space. Example: "file", "migrate.go"
@@ -26,7 +26,7 @@ func (l *Logga) Warn(ctx context.Context, msg string, KVPs KVPs) {
 // Error - args should be key/value pairs separated by a space. Example: "file", "migrate.go"
 func (l *Logga) Error(ctx context.Context, msg string, KVPs KVPs) {
 	args := getArguments(ctx, KVPs)
-	l.Log.Error(msg, args)
+	l.Log.Error(msg, args...)
 }
 
 func getArguments(ctx context.Context, KVPs KVPs) []any {
