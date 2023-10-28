@@ -2,13 +2,11 @@ package service
 
 import (
 	"context"
+
 	"github.com/doublehops/dhapi-example/internal/app"
-	req "github.com/doublehops/dhapi-example/internal/request"
-
-	"github.com/doublehops/dhapi/resp"
-
 	"github.com/doublehops/dhapi-example/internal/model"
 	"github.com/doublehops/dhapi-example/internal/repository/repositoryauthor"
+	req "github.com/doublehops/dhapi-example/internal/request"
 )
 
 type AuthorService struct {
@@ -35,7 +33,7 @@ func (s AuthorService) Create(ctx context.Context, author *model.Author) (*model
 	if err != nil {
 		s.Log.Error(ctx, "unable to save new record. "+err.Error(), nil)
 
-		return author, resp.CouldNotSaveRecord
+		return author, req.CouldNotSaveRecord
 	}
 
 	err = tx.Commit()

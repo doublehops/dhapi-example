@@ -1,14 +1,25 @@
 package resp
 
-type SingleItemResp struct {
-	Data interface{} `json:"data"`
+// CustomErrorResp for custom errors
+type CustomErrorResp struct {
+	Message string `json:"message"`
 }
 
+// ErrMsgs for mapping the error responses for validation issues.
+type ErrMsgs map[string][]string
+
+// SingleItemResp for single record responses.
+type SingleItemResp struct {
+	Data any `json:"data"`
+}
+
+// CollResp - Collection response.
 type CollResp struct {
-	Data interface{} `json:"data"`
+	Data any `json:"data"`
 	Request
 }
 
+// Request will be populated with request data and used as paginated data in the response.
 type Request struct {
 	Page       int    `json:"Page"`
 	PerPage    int    `json:"perPage"`
@@ -19,6 +30,7 @@ type Request struct {
 	Order      string `json:"-"`
 }
 
+// GeneralErrorResp is a function to return general errors including validation.
 type GeneralErrorResp struct {
 	Name    string  `json:"name"`
 	Message string  `json:"message"`
@@ -27,9 +39,3 @@ type GeneralErrorResp struct {
 	Type    string  `json:"type"`
 	Errors  ErrMsgs `json:"errors"`
 }
-
-type CustomErrorResp struct {
-	Message string `json:"message"`
-}
-
-type ErrMsgs map[string][]string

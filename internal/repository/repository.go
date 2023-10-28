@@ -5,6 +5,7 @@ import (
 	"fmt"
 )
 
+// GetRecordCount will retrieve the number of records for a given query for pagination responses.
 func GetRecordCount(DB *sql.DB, q string, params ...any) (int32, error) {
 	var (
 		err error
@@ -23,7 +24,10 @@ func GetRecordCount(DB *sql.DB, q string, params ...any) (int32, error) {
 	}
 
 	if row.Next() {
-		row.Scan(&cs.Count)
+		err = row.Scan(&cs.Count)
+		if err != nil {
+			return 0, fmt.Errorf("unable to scan query into var")
+		}
 	}
 
 	return cs.Count, nil

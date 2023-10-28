@@ -44,6 +44,7 @@ func GetNotAuthorisedResp() GeneralErrorResp {
 	}
 }
 
+// GetNotFoundResp for returning 404 messages.
 func GetNotFoundResp() GeneralErrorResp {
 	return GeneralErrorResp{
 		Name:    RecordNotFound.Error(),
