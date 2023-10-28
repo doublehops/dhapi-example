@@ -6,14 +6,6 @@ import (
 	"strconv"
 )
 
-type XXXPaginate struct {
-	Page         int   `json:"page"`
-	PerPage      int   `json:"perPage"`
-	Offset       int   `json:"offset"`
-	TotalPages   int   `json:"totalPages"`
-	TotalRecords int32 `json:"totalRecords"`
-}
-
 var (
 	defaultPage    = 1
 	defaultPerPage = 10
