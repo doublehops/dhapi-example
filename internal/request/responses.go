@@ -44,6 +44,7 @@ func GetNotAuthorisedResp() GeneralErrorResp {
 	}
 }
 
+// GetNotFoundResp for returning 404 messages.
 func GetNotFoundResp() GeneralErrorResp {
 	return GeneralErrorResp{
 		Name:    RecordNotFound.Error(),
@@ -54,10 +55,10 @@ func GetNotFoundResp() GeneralErrorResp {
 	}
 }
 
-func GetListResp(data interface{}, pagination Pagination) ListResp {
-	return ListResp{
-		Data:       data,
-		Pagination: pagination,
+func GetListResp(data interface{}, pagination *Request) CollResp {
+	return CollResp{
+		Data:    data,
+		Request: *pagination,
 	}
 }
 

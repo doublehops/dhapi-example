@@ -2,7 +2,7 @@
   "logging": {
     "writer": "stdout",
     "logLevel": "DEBUG",
-    "outputFormat": "json"
+    "outputFormat": "text"
   },
   "database": {
     "host": "127.0.0.1",

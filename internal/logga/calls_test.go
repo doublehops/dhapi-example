@@ -12,35 +12,35 @@ func TestGetArguments(t *testing.T) {
 	tests := []struct {
 		name         string
 		context      context.Context
-		args         []interface{}
+		args         KVPs
 		ctxVars      map[string]any
 		expectedArgs interface{}
 	}{
 		{
 			name:         "successWithAll",
 			context:      context.Background(),
-			args:         []any{"hello", "world"},
+			args:         KVPs{"hello": "world"},
 			ctxVars:      map[string]any{"traceID": "ABCD-1234", "userID": 123},
 			expectedArgs: []interface{}{"hello", "world", "traceID", "ABCD-1234", "userID", 123},
 		},
 		{
 			name:         "SuccessOnlyArgs",
 			context:      context.Background(),
-			args:         []any{"hello", "world"},
+			args:         KVPs{"hello": "world"},
 			ctxVars:      map[string]any{},
 			expectedArgs: []interface{}{"hello", "world"},
 		},
 		{
 			name:         "SuccessOnlyCtxArgs",
 			context:      context.Background(),
-			args:         []any{},
+			args:         KVPs{},
 			ctxVars:      map[string]any{"traceID": "ABCD-1234", "userID": 123},
 			expectedArgs: []interface{}{"traceID", "ABCD-1234", "userID", 123},
 		},
 		{
 			name:         "SuccessOnlyCtxArgs",
 			context:      nil,
-			args:         []any{"hello", "world"},
+			args:         KVPs{"hello": "world"},
 			ctxVars:      map[string]any{},
 			expectedArgs: []interface{}{"hello", "world"},
 		},
@@ -52,7 +52,7 @@ func TestGetArguments(t *testing.T) {
 			for key, value := range tt.ctxVars {
 				ctx = context.WithValue(ctx, key, value)
 			}
-			args := getArguments(ctx, tt.args...)
+			args := getArguments(ctx, tt.args)
 			if !reflect.DeepEqual(tt.expectedArgs, args) {
 				t.Errorf("args not as expected. Expected: %v; got: %v", tt.expectedArgs, args)
 			}
@@ -70,8 +70,8 @@ func TestCalls(t *testing.T) {
 
 	l, _ := New(cfg)
 
-	l.Info(ctx, "my message")
-	l.Debug(ctx, "my message")
-	l.Warn(ctx, "my message")
-	l.Error(ctx, "my message")
+	l.Info(ctx, "my message", nil)
+	l.Debug(ctx, "my message", nil)
+	l.Warn(ctx, "my message", nil)
+	l.Error(ctx, "my message", nil)
 }

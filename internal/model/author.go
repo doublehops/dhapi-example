@@ -1,8 +1,9 @@
 package model
 
 import (
-	"github.com/doublehops/dhapi/resp"
-	"github.com/doublehops/dhapi/validator"
+	"github.com/doublehops/dhapi-example/internal/validator"
+
+	req "github.com/doublehops/dhapi-example/internal/request"
 )
 
 type Author struct {
@@ -16,6 +17,6 @@ func (a *Author) getRules() []validator.Rule {
 	}
 }
 
-func (a *Author) Validate() resp.ErrMsgs {
-	return validator.RunValidation(a.getRules())
+func (a *Author) Validate() req.ErrMsgs {
+	return req.ErrMsgs(validator.RunValidation(a.getRules()))
 }

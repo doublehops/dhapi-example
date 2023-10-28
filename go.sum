@@ -12,8 +12,6 @@ github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/doublehops/cryptowatcher-2.0 v0.0.0-20230301104937-b68de36a2cb6 h1:+V56HytGTB+AKvF9g6oMIIuaboWjavdxMZP9zNgL5xs=
 github.com/doublehops/cryptowatcher-2.0 v0.0.0-20230301104937-b68de36a2cb6/go.mod h1:iQyHsQld9J2bhxsqvwtyGdUgGE6F8KIISznF39iM4b8=
-github.com/doublehops/go-migration v0.0.1 h1:w4KXPpd9jrIQXiiWYCpV/mLiGz1/nkENwqNRUCryKzA=
-github.com/doublehops/go-migration v0.0.1/go.mod h1:Nt/lmQp9+MxHg+nOjPqmKAANuQr51YkRreBeAU0Sd6Q=
 github.com/doublehops/go-migration v0.0.2 h1:TkdgdUCbM7N8SBkMNZfqZDU/DYdUVRBMjawIVIFSjXE=
 github.com/doublehops/go-migration v0.0.2/go.mod h1:Nt/lmQp9+MxHg+nOjPqmKAANuQr51YkRreBeAU0Sd6Q=
 github.com/gabriel-vasile/mimetype v1.4.2 h1:w5qFW6JKBz9Y393Y4q372O9A7cUSequkh1Q7OhCmWKU=
@@ -83,9 +81,9 @@ github.com/stretchr/testify v1.7.1/go.mod h1:6Fq8oRcR53rry900zMqJjRRixrwX3KX962/
 github.com/stretchr/testify v1.8.0/go.mod h1:yNjHg4UonilssWZ8iaSj1OCr/vHnekPRkoO+kdMU+MU=
 github.com/stretchr/testify v1.8.1/go.mod h1:w2LPCIKwWwSfY2zedu0+kehJoqGctiVI29o6fzry7u4=
 github.com/stretchr/testify v1.8.2/go.mod h1:w2LPCIKwWwSfY2zedu0+kehJoqGctiVI29o6fzry7u4=
-github.com/stretchr/testify v1.8.3 h1:RP3t2pwF7cMEbC1dqtB6poj3niw/9gnV4Cjg5oW5gtY=
 github.com/stretchr/testify v1.8.3/go.mod h1:sz/lmYIOXD/1dqDmKjjqLyZ2RngseejIcXlSw2iwfAo=
 github.com/stretchr/testify v1.8.4 h1:CcVxjf3Q8PM0mHUKJCdn+eZZtm5yQwehR5yeSVQQcUk=
+github.com/stretchr/testify v1.8.4/go.mod h1:sz/lmYIOXD/1dqDmKjjqLyZ2RngseejIcXlSw2iwfAo=
 github.com/twitchyliquid64/golang-asm v0.15.1 h1:SU5vSMR7hnwNxj24w34ZyCi/FmDZTkS4MhqMhdFk5YI=
 github.com/twitchyliquid64/golang-asm v0.15.1/go.mod h1:a1lVb/DtPvCB8fslRZhAngC2+aY1QWCk3Cedj/Gdt08=
 github.com/ugorji/go/codec v1.2.11 h1:BMaWp1Bb6fHwEtbplGBGJ498wD+LKlNSl25MjdZY4dU=

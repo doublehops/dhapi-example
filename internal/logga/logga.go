@@ -19,6 +19,8 @@ type Logga struct {
 	Log *slog.Logger
 }
 
+type KVPs map[string]any
+
 // New will return the log handler with the options defined in config.
 func New(cfg *config.Logging) (*Logga, error) {
 	level, err := getLogLevelFromConfig(cfg.LogLevel)

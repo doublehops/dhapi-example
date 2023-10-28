@@ -7,16 +7,15 @@ import (
 
 	"github.com/julienschmidt/httprouter"
 
-	"github.com/doublehops/dhapi/resp"
-
 	"github.com/doublehops/dhapi-example/internal/handlers"
 	"github.com/doublehops/dhapi-example/internal/model"
 	"github.com/doublehops/dhapi-example/internal/repository/repositoryauthor"
+	req "github.com/doublehops/dhapi-example/internal/request"
 	"github.com/doublehops/dhapi-example/internal/service"
 )
 
 type Handle struct {
-	repo *repositoryauthor.RepositoryAuthor
+	repo *repositoryauthor.Author
 	srv  *service.AuthorService
 	base *handlers.BaseHandler
 }
@@ -35,17 +34,17 @@ func New(app *service.App) *Handle {
 
 func (h *Handle) Create(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	c := r.Context()
-	h.srv.Log.Info(c, "Request made to CreateAuthor")
+	h.srv.Log.Info(c, "Request made to CreateAuthor", nil)
 
 	author := &model.Author{}
 	if err := json.NewDecoder(r.Body).Decode(author); err != nil {
-		h.base.WriteJson(c, w, http.StatusBadRequest, resp.UnableToParseResp())
+		h.base.WriteJson(c, w, http.StatusBadRequest, req.UnableToParseResp())
 
 		return
 	}
 
 	if errors := author.Validate(); len(errors) > 0 {
-		errs := resp.GetValidateErrResp(errors, resp.ValidationError.Error())
+		errs := req.GetValidateErrResp(errors, req.ValidationError.Error())
 		h.base.WriteJson(c, w, http.StatusBadRequest, errs)
 
 		return
@@ -53,18 +52,18 @@ func (h *Handle) Create(w http.ResponseWriter, r *http.Request, ps httprouter.Pa
 
 	a, err := h.srv.Create(c, author)
 	if err != nil {
-		h.base.WriteJson(c, w, http.StatusInternalServerError, resp.GeneralErrResp(resp.ErrorProcessingRequest.Error()))
+		h.base.WriteJson(c, w, http.StatusInternalServerError, req.GeneralErrResp(req.ErrorProcessingRequest.Error()))
 
 		return
 	}
 
-	h.base.WriteJson(c, w, http.StatusOK, resp.GetSingleItemResp(a))
+	h.base.WriteJson(c, w, http.StatusOK, req.GetSingleItemResp(a))
 }
 
 func (h *Handle) UpdateByID(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	c := r.Context()
 	userID := h.base.GetUser(c)
-	h.srv.Log.Info(c, "Request made to UpdateAuthor")
+	h.srv.Log.Info(c, "Request made to UpdateAuthor", nil)
 
 	ID := ps.ByName("id")
 	i, err := strconv.Atoi(ID)
@@ -83,25 +82,25 @@ func (h *Handle) UpdateByID(w http.ResponseWriter, r *http.Request, ps httproute
 	}
 
 	if author.ID == 0 {
-		h.base.WriteJson(c, w, http.StatusNotFound, resp.GetNotFoundResp())
+		h.base.WriteJson(c, w, http.StatusNotFound, req.GetNotFoundResp())
 
 		return
 	}
 
 	if !h.srv.HasPermission(userID, author) {
-		h.base.WriteJson(c, w, http.StatusForbidden, resp.GetNotAuthorisedResp())
+		h.base.WriteJson(c, w, http.StatusForbidden, req.GetNotAuthorisedResp())
 
 		return
 	}
 
 	if err := json.NewDecoder(r.Body).Decode(author); err != nil {
-		h.base.WriteJson(c, w, http.StatusBadRequest, resp.UnableToParseResp())
+		h.base.WriteJson(c, w, http.StatusBadRequest, req.UnableToParseResp())
 
 		return
 	}
 
 	if errors := author.Validate(); len(errors) > 0 {
-		errs := resp.GetValidateErrResp(errors, resp.ValidationError.Error())
+		errs := req.GetValidateErrResp(errors, req.ValidationError.Error())
 		h.base.WriteJson(c, w, http.StatusBadRequest, errs)
 
 		return
@@ -114,13 +113,13 @@ func (h *Handle) UpdateByID(w http.ResponseWriter, r *http.Request, ps httproute
 		return
 	}
 
-	h.base.WriteJson(c, w, http.StatusOK, resp.GetSingleItemResp(a))
+	h.base.WriteJson(c, w, http.StatusOK, req.GetSingleItemResp(a))
 }
 
 func (h *Handle) DeleteByID(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	c := r.Context()
 	userID := h.base.GetUser(c)
-	h.srv.Log.Info(c, "Request made to DELETE author")
+	h.srv.Log.Info(c, "Request made to DELETE author", nil)
 
 	ID := ps.ByName("id")
 	i, err := strconv.Atoi(ID)
@@ -139,19 +138,19 @@ func (h *Handle) DeleteByID(w http.ResponseWriter, r *http.Request, ps httproute
 	}
 
 	if author.ID == 0 {
-		h.base.WriteJson(c, w, http.StatusNotFound, resp.GetNotFoundResp())
+		h.base.WriteJson(c, w, http.StatusNotFound, req.GetNotFoundResp())
 
 		return
 	}
 
 	if !h.srv.HasPermission(userID, author) {
-		h.base.WriteJson(c, w, http.StatusForbidden, resp.GetNotAuthorisedResp())
+		h.base.WriteJson(c, w, http.StatusForbidden, req.GetNotAuthorisedResp())
 
 		return
 	}
 
 	if err = h.srv.DeleteByID(c, author, int32(i)); err != nil {
-		h.base.WriteJson(c, w, http.StatusInternalServerError, resp.ErrorProcessingRequestResp())
+		h.base.WriteJson(c, w, http.StatusInternalServerError, req.ErrorProcessingRequestResp())
 
 		return
 	}
@@ -162,7 +161,7 @@ func (h *Handle) DeleteByID(w http.ResponseWriter, r *http.Request, ps httproute
 func (h *Handle) GetByID(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	c := r.Context()
 	userID := h.base.GetUser(c)
-	h.srv.Log.Info(c, "Request made to Get author")
+	h.srv.Log.Info(c, "Request made to Get author", nil)
 
 	ID := ps.ByName("id")
 	i, err := strconv.Atoi(ID)
@@ -181,32 +180,32 @@ func (h *Handle) GetByID(w http.ResponseWriter, r *http.Request, ps httprouter.P
 	}
 
 	if author.ID == 0 {
-		h.base.WriteJson(c, w, http.StatusNotFound, resp.GetNotFoundResp())
+		h.base.WriteJson(c, w, http.StatusNotFound, req.GetNotFoundResp())
 
 		return
 	}
 
 	if !h.srv.HasPermission(userID, author) {
-		h.base.WriteJson(c, w, http.StatusForbidden, resp.GetNotAuthorisedResp())
+		h.base.WriteJson(c, w, http.StatusForbidden, req.GetNotAuthorisedResp())
 
 		return
 	}
 
-	h.base.WriteJson(c, w, http.StatusOK, resp.GetSingleItemResp(author))
+	h.base.WriteJson(c, w, http.StatusOK, req.GetSingleItemResp(author))
 }
 
 func (h *Handle) GetAll(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	c := r.Context()
-	h.srv.Log.Info(c, "Request made to Get authors")
+	h.srv.Log.Info(c, "Request made to Get authors", nil)
 
-	authors, err := h.srv.GetAll(c)
+	p := req.GetPaginationReq(r)
+
+	authors, err := h.srv.GetAll(c, p)
 	if err != nil {
 		h.base.WriteJson(c, w, http.StatusInternalServerError, "Unable to process request")
 
 		return
 	}
 
-	pagination := resp.Pagination{}
-
-	h.base.WriteJson(c, w, http.StatusOK, resp.GetListResp(authors, pagination))
+	h.base.WriteJson(c, w, http.StatusOK, req.GetListResp(authors, p))
 }
