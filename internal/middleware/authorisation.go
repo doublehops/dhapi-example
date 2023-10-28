@@ -1,4 +1,4 @@
-package middelware
+package middleware
 
 import (
 	"context"
@@ -15,7 +15,7 @@ func AuthMiddleware(next httprouter.Handle) httprouter.Handle {
 		var userID int32 = 4
 
 		r = r.WithContext(context.WithValue(r.Context(), app.UserIDKey, userID))
-		log.Println(">>>>> middelware")
+		log.Println(">>>>> middleware")
 		next(w, r, ps)
 	}
 }

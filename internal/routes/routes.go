@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"github.com/doublehops/dhapi-example/internal/middelware"
+	"github.com/doublehops/dhapi-example/internal/middleware"
 	"github.com/doublehops/dhapi-example/internal/service"
 	group "github.com/mythrnr/httprouter-group"
 
@@ -12,7 +12,7 @@ func GetV1Routes(app *service.App) *group.RouteGroup {
 	authorHandle := author.New(app)
 
 	authorGroup := group.New("/author")
-	authorGroup.GET(authorHandle.GetAll).Middleware(middelware.AuthMiddleware)
+	authorGroup.GET(authorHandle.GetAll).Middleware(middleware.AuthMiddleware)
 	authorGroup.Children(
 		group.New("/:id").GET(authorHandle.GetByID),
 		group.New("").POST(authorHandle.Create),
