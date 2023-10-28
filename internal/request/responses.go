@@ -54,10 +54,10 @@ func GetNotFoundResp() GeneralErrorResp {
 	}
 }
 
-func GetListResp(data interface{}, pagination Pagination) ListResp {
-	return ListResp{
-		Data:       data,
-		Pagination: pagination,
+func GetListResp(data interface{}, pagination *Request) CollResp {
+	return CollResp{
+		Data:    data,
+		Request: *pagination,
 	}
 }
 

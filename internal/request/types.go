@@ -4,16 +4,19 @@ type SingleItemResp struct {
 	Data interface{} `json:"data"`
 }
 
-type ListResp struct {
+type CollResp struct {
 	Data interface{} `json:"data"`
-	Pagination
+	Request
 }
 
-type Pagination struct {
-	CurrentPage int `json:"currentPage"`
-	PerPage     int `json:"perPage"`
-	PageCount   int `json:"pageCount"`
-	TotalCount  int `json:"totalCount"`
+type Request struct {
+	Page       int    `json:"Page"`
+	PerPage    int    `json:"perPage"`
+	PageCount  int    `json:"pageCount"`
+	TotalCount int32  `json:"totalCount"`
+	Offset     int    `json:"-"`
+	Sort       string `json:"-"`
+	Order      string `json:"-"`
 }
 
 type GeneralErrorResp struct {

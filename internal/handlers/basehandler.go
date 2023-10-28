@@ -19,7 +19,7 @@ func (bh *BaseHandler) GetUser(ctx context.Context) int32 {
 
 	val := ctx.Value(app.UserIDKey)
 	if intValue, ok = val.(int32); ok {
-		bh.Log.Error(ctx, "unable to convert userID to int32")
+		bh.Log.Error(ctx, "unable to convert userID to int32", nil)
 	}
 
 	return intValue
@@ -31,6 +31,6 @@ func (bh *BaseHandler) WriteJson(ctx context.Context, w http.ResponseWriter, sta
 
 	err := json.NewEncoder(w).Encode(res)
 	if err != nil {
-		bh.Log.Error(ctx, "unable to marshal to JSON. "+err.Error())
+		bh.Log.Error(ctx, "unable to marshal to JSON. "+err.Error(), nil)
 	}
 }

@@ -4,28 +4,29 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	"github.com/doublehops/dhapi-example/internal/handlers/pagination"
+	req "github.com/doublehops/dhapi-example/internal/request"
+
 	"github.com/doublehops/dhapi-example/internal/logga"
 	"github.com/doublehops/dhapi-example/internal/model"
 	"github.com/doublehops/dhapi-example/internal/repository"
 )
 
-type RepositoryAuthor struct {
+type Author struct {
 	Log *logga.Logga
 }
 
-func New(logger *logga.Logga) *RepositoryAuthor {
-	return &RepositoryAuthor{
+func New(logger *logga.Logga) *Author {
+	return &Author{
 		Log: logger,
 	}
 }
 
-func (a *RepositoryAuthor) Create(ctx context.Context, tx *sql.Tx, model *model.Author) error {
+func (a *Author) Create(ctx context.Context, tx *sql.Tx, model *model.Author) error {
 
 	result, err := tx.Exec(insertRecordSQL, model.UserID, model.Name, model.CreatedBy, model.UpdatedBy, model.CreatedAt, model.UpdatedAt)
 	if err != nil {
 		errMsg := fmt.Sprintf("there was an error saving record to db. %s", err)
-		a.Log.Error(ctx, errMsg)
+		a.Log.Error(ctx, errMsg, nil)
 
 		return fmt.Errorf(errMsg)
 	}
@@ -40,12 +41,12 @@ func (a *RepositoryAuthor) Create(ctx context.Context, tx *sql.Tx, model *model.
 	return nil
 }
 
-func (a *RepositoryAuthor) Update(ctx context.Context, tx *sql.Tx, model *model.Author) error {
+func (a *Author) Update(ctx context.Context, tx *sql.Tx, model *model.Author) error {
 
 	_, err := tx.Exec(updateRecordSQL, model.Name, model.UpdatedBy, model.UpdatedAt, model.ID)
 	if err != nil {
 		errMsg := fmt.Sprintf("there was an error saving record to db. %s", err)
-		a.Log.Error(ctx, errMsg)
+		a.Log.Error(ctx, errMsg, nil)
 
 		return fmt.Errorf(errMsg)
 	}
@@ -53,12 +54,12 @@ func (a *RepositoryAuthor) Update(ctx context.Context, tx *sql.Tx, model *model.
 	return nil
 }
 
-func (a *RepositoryAuthor) Delete(ctx context.Context, tx *sql.Tx, model *model.Author) error {
+func (a *Author) Delete(ctx context.Context, tx *sql.Tx, model *model.Author) error {
 
 	_, err := tx.Exec(deleteRecordSQL, model.UpdatedBy, model.UpdatedAt, model.DeletedAt, model.ID)
 	if err != nil {
 		errMsg := fmt.Sprintf("there was an error saving record to db. %s", err)
-		a.Log.Error(ctx, errMsg)
+		a.Log.Error(ctx, errMsg, nil)
 
 		return fmt.Errorf(errMsg)
 	}
@@ -66,7 +67,7 @@ func (a *RepositoryAuthor) Delete(ctx context.Context, tx *sql.Tx, model *model.
 	return nil
 }
 
-func (a *RepositoryAuthor) GetByID(ctx context.Context, DB *sql.DB, ID int32, model *model.Author) error {
+func (a *Author) GetByID(ctx context.Context, DB *sql.DB, ID int32, model *model.Author) error {
 	row := DB.QueryRow(selectByIDQuery, ID)
 
 	err := row.Scan(&model.ID, &model.UserID, &model.Name, &model.CreatedBy, &model.UpdatedBy, &model.CreatedAt, &model.UpdatedAt)
@@ -77,11 +78,20 @@ func (a *RepositoryAuthor) GetByID(ctx context.Context, DB *sql.DB, ID int32, mo
 	return nil
 }
 
-func (a *RepositoryAuthor) GetAll(ctx context.Context, DB *sql.DB, p *pagination.RequestPagination) ([]*model.Author, error) {
+func (a *Author) GetAll(ctx context.Context, DB *sql.DB, p *req.Request) ([]*model.Author, error) {
 	var authors []*model.Author
-	q := repository.SubstitutePaginationVars(selectAllQuery, p)
-	a.Log.Info(ctx, q)
-	rows, err := DB.Query(q)
+	a.Log.Debug(ctx, "GetAll()", logga.KVPs{"query": selectCollectionCountQuery})
+
+	count, err := repository.GetRecordCount(DB, selectCollectionCountQuery)
+	if err != nil {
+		a.Log.Error(ctx, "GetAll()", logga.KVPs{"err": err})
+
+		return authors, fmt.Errorf("unable to fetch record count")
+	}
+	p.SetRecordCount(count)
+
+	a.Log.Debug(ctx, "GetAll()", logga.KVPs{"query": selectCollectionQuery})
+	rows, err := DB.Query(selectCollectionQuery, p.Offset, p.PerPage)
 	if err != nil {
 		return authors, fmt.Errorf("unable to fetch rows")
 	}

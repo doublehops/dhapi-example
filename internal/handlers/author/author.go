@@ -2,22 +2,21 @@ package author
 
 import (
 	"encoding/json"
-	"github.com/doublehops/dhapi-example/internal/handlers/pagination"
+	"github.com/doublehops/dhapi/resp"
 	"net/http"
 	"strconv"
 
 	"github.com/julienschmidt/httprouter"
 
-	"github.com/doublehops/dhapi/resp"
-
 	"github.com/doublehops/dhapi-example/internal/handlers"
 	"github.com/doublehops/dhapi-example/internal/model"
 	"github.com/doublehops/dhapi-example/internal/repository/repositoryauthor"
+	req "github.com/doublehops/dhapi-example/internal/request"
 	"github.com/doublehops/dhapi-example/internal/service"
 )
 
 type Handle struct {
-	repo *repositoryauthor.RepositoryAuthor
+	repo *repositoryauthor.Author
 	srv  *service.AuthorService
 	base *handlers.BaseHandler
 }
@@ -36,17 +35,17 @@ func New(app *service.App) *Handle {
 
 func (h *Handle) Create(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	c := r.Context()
-	h.srv.Log.Info(c, "Request made to CreateAuthor")
+	h.srv.Log.Info(c, "Request made to CreateAuthor", nil)
 
 	author := &model.Author{}
 	if err := json.NewDecoder(r.Body).Decode(author); err != nil {
-		h.base.WriteJson(c, w, http.StatusBadRequest, resp.UnableToParseResp())
+		h.base.WriteJson(c, w, http.StatusBadRequest, req.UnableToParseResp())
 
 		return
 	}
 
 	if errors := author.Validate(); len(errors) > 0 {
-		errs := resp.GetValidateErrResp(errors, resp.ValidationError.Error())
+		errs := req.GetValidateErrResp(errors, req.ValidationError.Error())
 		h.base.WriteJson(c, w, http.StatusBadRequest, errs)
 
 		return
@@ -65,7 +64,7 @@ func (h *Handle) Create(w http.ResponseWriter, r *http.Request, ps httprouter.Pa
 func (h *Handle) UpdateByID(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	c := r.Context()
 	userID := h.base.GetUser(c)
-	h.srv.Log.Info(c, "Request made to UpdateAuthor")
+	h.srv.Log.Info(c, "Request made to UpdateAuthor", nil)
 
 	ID := ps.ByName("id")
 	i, err := strconv.Atoi(ID)
@@ -102,7 +101,7 @@ func (h *Handle) UpdateByID(w http.ResponseWriter, r *http.Request, ps httproute
 	}
 
 	if errors := author.Validate(); len(errors) > 0 {
-		errs := resp.GetValidateErrResp(errors, resp.ValidationError.Error())
+		errs := resp.GetValidateErrResp(resp.ErrMsgs(errors), resp.ValidationError.Error())
 		h.base.WriteJson(c, w, http.StatusBadRequest, errs)
 
 		return
@@ -121,7 +120,7 @@ func (h *Handle) UpdateByID(w http.ResponseWriter, r *http.Request, ps httproute
 func (h *Handle) DeleteByID(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	c := r.Context()
 	userID := h.base.GetUser(c)
-	h.srv.Log.Info(c, "Request made to DELETE author")
+	h.srv.Log.Info(c, "Request made to DELETE author", nil)
 
 	ID := ps.ByName("id")
 	i, err := strconv.Atoi(ID)
@@ -163,7 +162,7 @@ func (h *Handle) DeleteByID(w http.ResponseWriter, r *http.Request, ps httproute
 func (h *Handle) GetByID(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	c := r.Context()
 	userID := h.base.GetUser(c)
-	h.srv.Log.Info(c, "Request made to Get author")
+	h.srv.Log.Info(c, "Request made to Get author", nil)
 
 	ID := ps.ByName("id")
 	i, err := strconv.Atoi(ID)
@@ -198,9 +197,9 @@ func (h *Handle) GetByID(w http.ResponseWriter, r *http.Request, ps httprouter.P
 
 func (h *Handle) GetAll(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	c := r.Context()
-	h.srv.Log.Info(c, "Request made to Get authors")
+	h.srv.Log.Info(c, "Request made to Get authors", nil)
 
-	p := pagination.GetPaginationReq(r)
+	p := req.GetPaginationReq(r)
 
 	authors, err := h.srv.GetAll(c, p)
 	if err != nil {
@@ -209,7 +208,5 @@ func (h *Handle) GetAll(w http.ResponseWriter, r *http.Request, _ httprouter.Par
 		return
 	}
 
-	pagination := resp.Pagination{}
-
-	h.base.WriteJson(c, w, http.StatusOK, resp.GetListResp(authors, pagination))
+	h.base.WriteJson(c, w, http.StatusOK, req.GetListResp(authors, p))
 }

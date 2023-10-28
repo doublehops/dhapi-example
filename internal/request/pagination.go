@@ -1,4 +1,4 @@
-package pagination
+package resp
 
 import (
 	"math"
@@ -6,17 +6,12 @@ import (
 	"strconv"
 )
 
-type RequestPagination struct {
-	Page    int `json:"page"`
-	PerPage int `json:"perPage"`
-	Offset  int `json:"offset"`
-}
-
-type ResponsePagination struct {
+type XXXPaginate struct {
 	Page         int   `json:"page"`
 	PerPage      int   `json:"perPage"`
+	Offset       int   `json:"offset"`
 	TotalPages   int   `json:"totalPages"`
-	TotalRecords int64 `json:"totalRecords"`
+	TotalRecords int32 `json:"totalRecords"`
 }
 
 var (
@@ -25,17 +20,17 @@ var (
 )
 
 // GetPaginationReq - find and return pagination request vars.
-func GetPaginationReq(r *http.Request) *RequestPagination {
+func GetPaginationReq(r *http.Request) *Request {
 	query := r.URL.Query()
 	page, perPage, offset := getVars(query)
 
-	pg := RequestPagination{
+	pg := &Request{
 		Page:    page,
 		PerPage: perPage,
 		Offset:  offset,
 	}
 
-	return &pg
+	return pg
 }
 
 // getVars - Search request query for wanted var and return value, if not found, return default value.
@@ -61,16 +56,12 @@ func getVars(query map[string][]string) (int, int, int) {
 	return page, perPage, offset
 }
 
-// GetPaginationResponse - Get pagination data to return in API response.
-func GetPaginationResponse(pg *RequestPagination, count int64) *ResponsePagination {
-	pageApprox := float64(count) / float64(pg.PerPage)
+// SetRecordCount - Set pagination data to return in API response.
+func (r *Request) SetRecordCount(count int32) {
+	pageApprox := float64(count) / float64(r.PerPage)
 	totalPages := math.Ceil(pageApprox)
 	tp := int(totalPages)
 
-	return &ResponsePagination{
-		Page:         pg.Page,
-		PerPage:      pg.PerPage,
-		TotalPages:   tp,
-		TotalRecords: count,
-	}
+	r.PageCount = tp
+	r.TotalCount = count
 }
