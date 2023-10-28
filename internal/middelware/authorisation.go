@@ -12,7 +12,7 @@ import (
 // todo - needs implementation.
 func AuthMiddleware(next httprouter.Handle) httprouter.Handle {
 	return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-		var userID int32 = 1
+		var userID int32 = 4
 
 		r = r.WithContext(context.WithValue(r.Context(), app.UserIDKey, userID))
 		log.Println(">>>>> middelware")

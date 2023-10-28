@@ -51,8 +51,6 @@ func (s AuthorService) Create(ctx context.Context, author *model.Author) (*model
 }
 
 func (s AuthorService) Update(ctx context.Context, author *model.Author) (*model.Author, error) {
-	ctx = context.WithValue(ctx, app.UserIDKey, 2) // todo - set this in middleware.
-
 	author.SetUpdated(ctx)
 
 	tx, _ := s.DB.BeginTx(ctx, nil)
