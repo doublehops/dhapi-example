@@ -32,3 +32,13 @@ func GetRecordCount(DB *sql.DB, q string, params ...any) (int32, error) {
 
 	return cs.Count, nil
 }
+
+//func FormatWhereClauses(r []req.FilterRules) (string, []any) {
+//	var vars []any
+//	clause := " WHERE "
+//	for _, rule := range r {
+//
+//	}
+//
+//	return clause, vars
+//}

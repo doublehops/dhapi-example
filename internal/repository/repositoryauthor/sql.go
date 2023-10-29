@@ -57,6 +57,17 @@ var selectCollectionQuery = `SELECT
     updated_by,
     created_at,
     updated_at
+	__WHERE_CLAUSE__
+    FROM author
+`
+var selectCollectionQueryORIGINAL = `SELECT 
+    id,
+    user_id,
+    name,
+    created_by,
+    updated_by,
+    created_at,
+    updated_at
     FROM author
     WHERE deleted_at IS NULL
 	LIMIT ?, ?

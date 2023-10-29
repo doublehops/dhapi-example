@@ -1,4 +1,4 @@
-package resp
+package request
 
 // CustomErrorResp for custom errors
 type CustomErrorResp struct {
@@ -21,13 +21,14 @@ type CollResp struct {
 
 // Request will be populated with request data and used as paginated data in the response.
 type Request struct {
-	Page       int    `json:"Page"`
-	PerPage    int    `json:"perPage"`
-	PageCount  int    `json:"pageCount"`
-	TotalCount int32  `json:"totalCount"`
-	Offset     int    `json:"-"`
-	Sort       string `json:"-"`
-	Order      string `json:"-"`
+	Page       int          `json:"Page"`
+	PerPage    int          `json:"perPage"`
+	PageCount  int          `json:"pageCount"`
+	TotalCount int32        `json:"totalCount"`
+	Offset     int          `json:"-"`
+	Sort       string       `json:"-"`
+	Order      string       `json:"-"`
+	Filters    []FilterRule `json:"-"`
 }
 
 // GeneralErrorResp is a function to return general errors including validation.

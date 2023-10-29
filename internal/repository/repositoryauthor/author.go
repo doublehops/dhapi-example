@@ -90,8 +90,10 @@ func (a *Author) GetAll(ctx context.Context, DB *sql.DB, p *req.Request) ([]*mod
 	}
 	p.SetRecordCount(count)
 
-	a.Log.Debug(ctx, "GetAll()", logga.KVPs{"query": selectCollectionQuery})
-	rows, err := DB.Query(selectCollectionQuery, p.Offset, p.PerPage)
+	q := repository.BuildQuery(selectCollectionQuery, p.Filters)
+
+	a.Log.Debug(ctx, "GetAll()", logga.KVPs{"query": q})
+	rows, err := DB.Query(q, p.Offset, p.PerPage)
 	if err != nil {
 		return authors, fmt.Errorf("unable to fetch rows")
 	}

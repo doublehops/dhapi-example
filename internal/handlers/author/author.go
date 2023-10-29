@@ -194,11 +194,24 @@ func (h *Handle) GetByID(w http.ResponseWriter, r *http.Request, ps httprouter.P
 	h.base.WriteJson(c, w, http.StatusOK, req.GetSingleItemResp(author))
 }
 
-func (h *Handle) GetAll(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+func filterRules() []req.FilterRule {
+	return []req.FilterRule{
+		{
+			Field: "deletedAt",
+			Type:  req.FilterIsNull,
+		},
+		{
+			Field: "Name",
+			Type:  req.FilterLike,
+		},
+	}
+}
+
+func (h *Handle) GetAll(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	c := r.Context()
 	h.srv.Log.Info(c, "Request made to Get authors", nil)
 
-	p := req.GetPaginationReq(r)
+	p := req.GetRequestParams(r, ps, filterRules())
 
 	authors, err := h.srv.GetAll(c, p)
 	if err != nil {

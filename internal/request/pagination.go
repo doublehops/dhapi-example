@@ -1,6 +1,8 @@
-package resp
+package request
 
 import (
+	"context"
+	"github.com/julienschmidt/httprouter"
 	"math"
 	"net/http"
 	"strconv"
@@ -11,18 +13,36 @@ var (
 	defaultPerPage = 10
 )
 
-// GetPaginationReq - find and return pagination request vars.
-func GetPaginationReq(r *http.Request) *Request {
+// GetRequestParams - find and return pagination request vars.
+func GetRequestParams(r *http.Request, ps httprouter.Params, filters []FilterRule) *Request {
 	query := r.URL.Query()
 	page, perPage, offset := getVars(query)
+
+	f := getQueryParams(r.Context(), ps, filters)
 
 	pg := &Request{
 		Page:    page,
 		PerPage: perPage,
 		Offset:  offset,
+		Filters: f,
 	}
 
 	return pg
+}
+
+func getQueryParams(ctx context.Context, ps httprouter.Params, filters []FilterRule) []FilterRule {
+	var newFilters []FilterRule
+	for _, f := range filters {
+		val := ps.ByName(ps.ByName(f.Field))
+		if val == "" {
+			continue
+		}
+
+		f.Value = val
+		newFilters = append(newFilters, f)
+	}
+
+	return newFilters
 }
 
 // getVars - Search request query for wanted var and return value, if not found, return default value.
