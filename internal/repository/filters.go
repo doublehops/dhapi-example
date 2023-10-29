@@ -8,20 +8,31 @@ import (
 	req "github.com/doublehops/dhapi-example/internal/request"
 )
 
-func BuildQuery(query string, p *req.Request) (string, []any) {
+func BuildQuery(query string, p *req.Request, getCount bool) (string, []any) {
+	var pParams []any
 	q, params := addFilters(query, p.Filters)
-	q, pParams := addPagination(q, p)
 
-	params = append(params, pParams...)
+	if getCount {
+		q, pParams = addPagination(q, p, false)
+		q = replaceCount(q, true)
+	} else {
+		q, pParams = addPagination(q, p, true)
+		params = append(params, pParams...)
+		q = replaceCount(q, false)
+	}
 
 	return q, params
 }
 
-func addPagination(query string, pagination *req.Request) (string, []any) {
+func addPagination(query string, pagination *req.Request, includePagination bool) (string, []any) {
+	if !includePagination {
+		return replaceLimitClause(query, "", false), nil
+	}
+
 	q := " LIMIT ?, ?"
 	params := []any{pagination.Offset, pagination.PerPage}
 
-	return replaceLimitClause(query, q), params
+	return replaceLimitClause(query, q, true), params
 }
 
 func addFilters(query string, filters []req.FilterRule) (string, req.Params) {
@@ -61,8 +72,20 @@ func replaceWhereClause(q, whereClause string) string {
 	return strings.Replace(q, "__WHERE_CLAUSE__", whereClause, 1)
 }
 
-func replaceLimitClause(q, limitClause string) string {
+func replaceLimitClause(q, limitClause string, includePagination bool) string {
+	if !includePagination {
+		return strings.Replace(q, "__PAGINATION__", "", 1)
+	}
+
 	return strings.Replace(q, "__PAGINATION__", limitClause, 1)
+}
+
+func replaceCount(q string, getCount bool) string {
+	if getCount {
+		return strings.Replace(q, "__COUNT__", "count(*) count, ", 1)
+	}
+
+	return strings.Replace(q, "__COUNT__", "", 1)
 }
 
 //func getFieldValue(field string, instance any) (any, error) {

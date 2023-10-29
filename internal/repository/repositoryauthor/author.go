@@ -85,15 +85,16 @@ func (a *Author) GetAll(ctx context.Context, DB *sql.DB, p *req.Request) ([]*mod
 
 	a.Log.Debug(ctx, "GetAll()", logga.KVPs{"query": selectCollectionCountQuery})
 
-	count, err := repository.GetRecordCount(DB, selectCollectionCountQuery)
+	countQ, countParams := repository.BuildQuery(selectCollectionQuery, p, true)
+	count, err := repository.GetRecordCount(DB, countQ, countParams)
 	if err != nil {
 		a.Log.Error(ctx, "GetAll()", logga.KVPs{"err": err})
 
-		return authors, fmt.Errorf("unable to fetch record count")
+		//return authors, fmt.Errorf("unable to fetch record count")
 	}
 	p.SetRecordCount(count)
 
-	q, params := repository.BuildQuery(selectCollectionQuery, p)
+	q, params := repository.BuildQuery(selectCollectionQuery, p, false)
 
 	a.Log.Debug(ctx, "GetAll()", logga.KVPs{"query": q})
 	if len(params) == 0 {

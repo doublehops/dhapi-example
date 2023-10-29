@@ -50,6 +50,7 @@ var selectCollectionCountQuery = `SELECT
 `
 
 var selectCollectionQuery = `SELECT 
+    __COUNT__
     id,
     user_id,
     name,
