@@ -8,10 +8,20 @@ import (
 	req "github.com/doublehops/dhapi-example/internal/request"
 )
 
-func BuildQuery(query string, filters []req.FilterRule) (string, []any) {
-	q, params := addFilters(query, filters)
+func BuildQuery(query string, p *req.Request) (string, []any) {
+	q, params := addFilters(query, p.Filters)
+	q, pParams := addPagination(q, p)
+
+	params = append(params, pParams...)
 
 	return q, params
+}
+
+func addPagination(query string, pagination *req.Request) (string, []any) {
+	q := " LIMIT ?, ?"
+	params := []any{pagination.Offset, pagination.PerPage}
+
+	return replaceLimitClause(query, q), params
 }
 
 func addFilters(query string, filters []req.FilterRule) (string, req.Params) {
@@ -49,6 +59,10 @@ func addFilters(query string, filters []req.FilterRule) (string, req.Params) {
 
 func replaceWhereClause(q, whereClause string) string {
 	return strings.Replace(q, "__WHERE_CLAUSE__", whereClause, 1)
+}
+
+func replaceLimitClause(q, limitClause string) string {
+	return strings.Replace(q, "__PAGINATION__", limitClause, 1)
 }
 
 //func getFieldValue(field string, instance any) (any, error) {

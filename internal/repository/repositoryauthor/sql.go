@@ -59,6 +59,7 @@ var selectCollectionQuery = `SELECT
     updated_at
     FROM author
 	__WHERE_CLAUSE__
+	__PAGINATION__
 `
 var selectCollectionQueryORIGINAL = `SELECT 
     id,
