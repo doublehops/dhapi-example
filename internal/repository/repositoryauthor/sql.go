@@ -57,8 +57,8 @@ var selectCollectionQuery = `SELECT
     updated_by,
     created_at,
     updated_at
-	__WHERE_CLAUSE__
     FROM author
+	__WHERE_CLAUSE__
 `
 var selectCollectionQueryORIGINAL = `SELECT 
     id,

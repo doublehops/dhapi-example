@@ -201,7 +201,7 @@ func filterRules() []req.FilterRule {
 			Type:  req.FilterIsNull,
 		},
 		{
-			Field: "Name",
+			Field: "name",
 			Type:  req.FilterLike,
 		},
 	}
@@ -211,7 +211,7 @@ func (h *Handle) GetAll(w http.ResponseWriter, r *http.Request, ps httprouter.Pa
 	c := r.Context()
 	h.srv.Log.Info(c, "Request made to Get authors", nil)
 
-	p := req.GetRequestParams(r, ps, filterRules())
+	p := req.GetRequestParams(r, filterRules())
 
 	authors, err := h.srv.GetAll(c, p)
 	if err != nil {

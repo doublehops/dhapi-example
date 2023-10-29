@@ -2,9 +2,9 @@ package request
 
 import (
 	"context"
-	"github.com/julienschmidt/httprouter"
 	"math"
 	"net/http"
+	"net/url"
 	"strconv"
 )
 
@@ -14,11 +14,11 @@ var (
 )
 
 // GetRequestParams - find and return pagination request vars.
-func GetRequestParams(r *http.Request, ps httprouter.Params, filters []FilterRule) *Request {
+func GetRequestParams(r *http.Request, filters []FilterRule) *Request {
 	query := r.URL.Query()
 	page, perPage, offset := getVars(query)
 
-	f := getQueryParams(r.Context(), ps, filters)
+	f := getFilterParams(r.Context(), query, filters)
 
 	pg := &Request{
 		Page:    page,
@@ -30,10 +30,10 @@ func GetRequestParams(r *http.Request, ps httprouter.Params, filters []FilterRul
 	return pg
 }
 
-func getQueryParams(ctx context.Context, ps httprouter.Params, filters []FilterRule) []FilterRule {
+func getFilterParams(ctx context.Context, query url.Values, filters []FilterRule) []FilterRule {
 	var newFilters []FilterRule
 	for _, f := range filters {
-		val := ps.ByName(ps.ByName(f.Field))
+		val := query.Get(f.Field)
 		if val == "" {
 			continue
 		}

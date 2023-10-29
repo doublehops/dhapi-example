@@ -8,17 +8,19 @@ import (
 	req "github.com/doublehops/dhapi-example/internal/request"
 )
 
-func BuildQuery(query string, filters []req.FilterRule) string {
-	q := addFilters(query, filters)
+func BuildQuery(query string, filters []req.FilterRule) (string, []any) {
+	q, params := addFilters(query, filters)
 
-	return q
+	return q, params
 }
 
-func addFilters(query string, filters []req.FilterRule) string {
+func addFilters(query string, filters []req.FilterRule) (string, req.Params) {
 	if len(filters) == 0 {
-		return replaceWhereClause(query, "")
+		return replaceWhereClause(query, ""), nil
 	}
-	
+
+	var params req.Params
+
 	var whereClauses []string
 	for _, f := range filters {
 		field := ConvertStr(f.Field)
@@ -27,18 +29,21 @@ func addFilters(query string, filters []req.FilterRule) string {
 		case req.FilterEquals:
 			clause := fmt.Sprintf("%s = ?", field)
 			whereClauses = append(whereClauses, clause)
+			params = append(params, f.Value)
 		case req.FilterLike:
-			clause := field + " LIKE %?%"
+			clause := field + " LIKE '%' ? '%'"
 			whereClauses = append(whereClauses, clause)
+			params = append(params, f.Value)
 		case req.FilterIsNull:
 			clause := field + " IS NULL"
 			whereClauses = append(whereClauses, clause)
+			params = append(params, f.Value)
 		}
 	}
 
 	str := " WHERE " + strings.Join(whereClauses, " AND ")
 
-	return replaceWhereClause(query, str)
+	return replaceWhereClause(query, str), params
 }
 
 func replaceWhereClause(q, whereClause string) string {

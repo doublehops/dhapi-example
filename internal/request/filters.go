@@ -2,16 +2,18 @@ package request
 
 type FilterType string
 
-var FilterEquals FilterType
-var FilterLike FilterType
-var FilterIsNull FilterType
-var FilterRange FilterType
+var FilterEquals FilterType = "FilterEquals"
+var FilterLike FilterType = "FilterLike"
+var FilterIsNull FilterType = "FilterIsNull"
+var FilterRange FilterType = "FilterRange"
 
 type FilterRule struct {
 	Field string
 	Type  FilterType
 	Value any
 }
+
+type Params []any
 
 //type WhereClause struct {
 //	Definition string
