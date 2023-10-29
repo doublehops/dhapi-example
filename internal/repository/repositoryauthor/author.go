@@ -79,18 +79,16 @@ func (a *Author) GetByID(ctx context.Context, DB *sql.DB, ID int32, model *model
 }
 
 func (a *Author) GetAll(ctx context.Context, DB *sql.DB, p *req.Request) ([]*model.Author, error) {
-	var authors []*model.Author
-	var rows *sql.Rows
-	var err error
-
-	a.Log.Debug(ctx, "GetAll()", logga.KVPs{"query": selectCollectionCountQuery})
+	var (
+		authors []*model.Author
+		rows    *sql.Rows
+		err     error
+	)
 
 	countQ, countParams := repository.BuildQuery(selectCollectionQuery, p, true)
 	count, err := repository.GetRecordCount(DB, countQ, countParams)
 	if err != nil {
 		a.Log.Error(ctx, "GetAll()", logga.KVPs{"err": err})
-
-		//return authors, fmt.Errorf("unable to fetch record count")
 	}
 	p.SetRecordCount(count)
 
