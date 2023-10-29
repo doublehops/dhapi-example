@@ -93,6 +93,9 @@ func (a *Author) GetAll(ctx context.Context, DB *sql.DB, p *req.Request) ([]*mod
 	}
 	p.SetRecordCount(count)
 
+	//p.Filters[0].Value = "%tom%"
+	a.Log.Debug(ctx, "Filter value", logga.KVPs{"val": p.Filters[0].Value})
+
 	q, params := repository.BuildQuery(selectCollectionQuery, p.Filters)
 
 	a.Log.Debug(ctx, "GetAll()", logga.KVPs{"query": q})

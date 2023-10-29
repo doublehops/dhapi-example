@@ -31,9 +31,10 @@ func addFilters(query string, filters []req.FilterRule) (string, req.Params) {
 			whereClauses = append(whereClauses, clause)
 			params = append(params, f.Value)
 		case req.FilterLike:
-			clause := field + " LIKE '%' ? '%'"
+			clause := field + " LIKE ?"
 			whereClauses = append(whereClauses, clause)
-			params = append(params, f.Value)
+			val := fmt.Sprintf("%%%v%%", f.Value) // Will be equivalent to '%val%'
+			params = append(params, val)
 		case req.FilterIsNull:
 			clause := field + " IS NULL"
 			whereClauses = append(whereClauses, clause)
