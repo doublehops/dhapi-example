@@ -44,7 +44,6 @@ var selectByIDQuery = `SELECT
     AND deleted_at IS NULL`
 
 var selectCollectionQuery = `SELECT 
-    __COUNT__
     id,
     user_id,
     name,
@@ -52,5 +51,10 @@ var selectCollectionQuery = `SELECT
     updated_by,
     created_at,
     updated_at
+    FROM author
+`
+
+var selectCollectionCountQuery = `SELECT 
+    COUNT(*) count
     FROM author
 `

@@ -85,7 +85,7 @@ func (a *Author) GetAll(ctx context.Context, DB *sql.DB, p *req.Request) ([]*mod
 		err     error
 	)
 
-	countQ, countParams := repository.BuildQuery(selectCollectionQuery, p, true)
+	countQ, countParams := repository.BuildQuery(selectCollectionCountQuery, p, true)
 	count, err := repository.GetRecordCount(DB, countQ, countParams)
 	if err != nil {
 		a.Log.Error(ctx, "GetAll()", logga.KVPs{"err": err})

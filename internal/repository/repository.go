@@ -6,6 +6,7 @@ import (
 )
 
 // GetRecordCount will retrieve the number of records for a given query for pagination responses.
+// The function expects only one column in the query. An example would be `SELECT COUNT(*) count FROM {table}1`.
 func GetRecordCount(DB *sql.DB, q string, params []any) (int32, error) {
 	var (
 		err error
@@ -22,25 +23,14 @@ func GetRecordCount(DB *sql.DB, q string, params []any) (int32, error) {
 		return 0, fmt.Errorf("unable to run count query. %s", err)
 	}
 
-	columns, err := row.Columns()
-	colCount := len(columns)
-	values := make([]interface{}, colCount)
-	valuesPtrs := make([]interface{}, colCount)
+	var count int32
 
-	if row.Next() {
-		for i := range columns {
-			valuesPtrs[i] = &values[i]
-
-		}
-
-		err = row.Scan(valuesPtrs...)
+	for row.Next() {
+		err = row.Scan(&count)
 		if err != nil {
 			return 0, fmt.Errorf("unable to scan query result. %s", err)
 		}
-		count := values[0].(int64) // We only want the first column.
-
-		return int32(count), nil
 	}
 
-	return 0, fmt.Errorf("unable to find count")
+	return count, err
 }
