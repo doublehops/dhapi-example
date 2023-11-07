@@ -18,13 +18,11 @@ const (
 
 func BuildQuery(query string, p *req.Request, getCount bool) (string, []any) {
 	var pParams []any
-	var sortParams []any
 
 	q, params := addFilters(query, p.Filters)
 
 	if !getCount {
-		q, sortParams = addSorting(q, p.Sort, p.Order)
-		params = append(params, sortParams...)
+		q = addSorting(q, p.Sort, p.Order)
 
 		q, pParams = addPagination(q, p, true)
 		params = append(params, pParams...)
@@ -33,28 +31,28 @@ func BuildQuery(query string, p *req.Request, getCount bool) (string, []any) {
 	return q, params
 }
 
-func addSorting(q, sort, order string) (string, []any) {
+func addSorting(q, sort, order string) string {
 	o := ASC
 
 	var sq string
 
 	if sort == "" {
-		return q, nil
+		return q
 	}
 
 	s := camelToSnake(sort)
 	if order != "" {
 		o = Order(order)
 		if o != ASC && o != DESC {
-			sq = " ORDER BY ?"
+			sq = fmt.Sprintf(" ORDER BY %s %s", s, o)
 
-			return q + sq, []any{s}
+			return q + sq
 		}
 	}
 
-	sq = " ORDER BY ? " + string(o)
+	sq = fmt.Sprintf(" ORDER BY %s %s", s, o)
 
-	return q + sq, []any{s}
+	return q + sq
 }
 
 func addPagination(query string, pagination *req.Request, includePagination bool) (string, []any) {
