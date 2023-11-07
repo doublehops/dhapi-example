@@ -79,20 +79,29 @@ func (a *Author) GetByID(ctx context.Context, DB *sql.DB, ID int32, model *model
 }
 
 func (a *Author) GetAll(ctx context.Context, DB *sql.DB, p *req.Request) ([]*model.Author, error) {
-	var authors []*model.Author
-	a.Log.Debug(ctx, "GetAll()", logga.KVPs{"query": selectCollectionCountQuery})
+	var (
+		authors []*model.Author
+		rows    *sql.Rows
+		err     error
+	)
 
-	count, err := repository.GetRecordCount(DB, selectCollectionCountQuery)
+	countQ, countParams := repository.BuildQuery(selectCollectionCountQuery, p, true)
+	count, err := repository.GetRecordCount(DB, countQ, countParams)
 	if err != nil {
 		a.Log.Error(ctx, "GetAll()", logga.KVPs{"err": err})
-
-		return authors, fmt.Errorf("unable to fetch record count")
 	}
 	p.SetRecordCount(count)
 
-	a.Log.Debug(ctx, "GetAll()", logga.KVPs{"query": selectCollectionQuery})
-	rows, err := DB.Query(selectCollectionQuery, p.Offset, p.PerPage)
+	q, params := repository.BuildQuery(selectCollectionQuery, p, false)
+
+	a.Log.Debug(ctx, "GetAll()", logga.KVPs{"query": q})
+	if len(params) == 0 {
+		rows, err = DB.Query(q)
+	} else {
+		rows, err = DB.Query(q, params...)
+	}
 	if err != nil {
+		a.Log.Error(ctx, "GetAll() unable to fetch rows", logga.KVPs{"err": err})
 		return authors, fmt.Errorf("unable to fetch rows")
 	}
 	defer rows.Close()

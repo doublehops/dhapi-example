@@ -1,8 +1,10 @@
-package resp
+package request
 
 import (
+	"context"
 	"math"
 	"net/http"
+	"net/url"
 	"strconv"
 )
 
@@ -11,18 +13,42 @@ var (
 	defaultPerPage = 10
 )
 
-// GetPaginationReq - find and return pagination request vars.
-func GetPaginationReq(r *http.Request) *Request {
+// GetRequestParams - find and return pagination request vars.
+func GetRequestParams(r *http.Request, filters []FilterRule) *Request {
 	query := r.URL.Query()
 	page, perPage, offset := getVars(query)
+
+	f := getFilterParams(r.Context(), query, filters)
 
 	pg := &Request{
 		Page:    page,
 		PerPage: perPage,
 		Offset:  offset,
+		Filters: f,
 	}
 
 	return pg
+}
+
+func getFilterParams(ctx context.Context, query url.Values, filters []FilterRule) []FilterRule {
+	var newFilters []FilterRule
+	for _, f := range filters {
+		val := query.Get(f.Field)
+
+		if f.Type == FilterIsNull {
+			newFilters = append(newFilters, f)
+			continue
+		}
+
+		if val == "" {
+			continue
+		}
+
+		f.Value = val
+		newFilters = append(newFilters, f)
+	}
+
+	return newFilters
 }
 
 // getVars - Search request query for wanted var and return value, if not found, return default value.
