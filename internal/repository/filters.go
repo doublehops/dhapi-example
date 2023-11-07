@@ -2,6 +2,7 @@ package repository
 
 import (
 	"fmt"
+	"log"
 	"strings"
 	"unicode"
 
@@ -13,7 +14,7 @@ func BuildQuery(query string, p *req.Request, getCount bool) (string, []any) {
 	q, params := addFilters(query, p.Filters)
 
 	if getCount {
-		q, pParams = addPagination(q, p, false)
+		//q, pParams = addPagination(q, p, false)
 		q = replaceCount(q, true)
 	} else {
 		q, pParams = addPagination(q, p, true)
@@ -26,19 +27,15 @@ func BuildQuery(query string, p *req.Request, getCount bool) (string, []any) {
 
 func addPagination(query string, pagination *req.Request, includePagination bool) (string, []any) {
 	if !includePagination {
-		return replaceLimitClause(query, "", false), nil
+		log.Fatal("we should not be here")
 	}
 
-	q := " LIMIT ?, ?"
 	params := []any{pagination.Offset, pagination.PerPage}
 
-	return replaceLimitClause(query, q, true), params
+	return query + " LIMIT ?, ?", params
 }
 
 func addFilters(query string, filters []req.FilterRule) (string, req.Params) {
-	if len(filters) == 0 {
-		return replaceWhereClause(query, ""), nil
-	}
 
 	var params req.Params
 
@@ -65,19 +62,7 @@ func addFilters(query string, filters []req.FilterRule) (string, req.Params) {
 
 	str := " WHERE " + strings.Join(whereClauses, " AND ")
 
-	return replaceWhereClause(query, str), params
-}
-
-func replaceWhereClause(q, whereClause string) string {
-	return strings.Replace(q, "__WHERE_CLAUSE__", whereClause, 1)
-}
-
-func replaceLimitClause(q, limitClause string, includePagination bool) string {
-	if !includePagination {
-		return strings.Replace(q, "__PAGINATION__", "", 1)
-	}
-
-	return strings.Replace(q, "__PAGINATION__", limitClause, 1)
+	return query + str, params
 }
 
 func replaceCount(q string, getCount bool) string {
