@@ -72,17 +72,6 @@ func replaceCount(q string, getCount bool) string {
 	return strings.Replace(q, "__COUNT__", "", 1)
 }
 
-//func getFieldValue(field string, instance any) (any, error) {
-//	rv := reflect.ValueOf(instance)
-//
-//	val := rv.FieldByName(field)
-//	if !val.IsValid() {
-//		return nil, fmt.Errorf("unable to find value of %s", field)
-//	}
-//
-//	return val.Interface(), nil
-//}
-
 // ConvertStr will convert camelcase string to snake case for SQL query.
 func ConvertStr(field string) string {
 	var str string

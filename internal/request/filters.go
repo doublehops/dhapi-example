@@ -14,8 +14,3 @@ type FilterRule struct {
 }
 
 type Params []any
-
-//type WhereClause struct {
-//	Definition string
-//	Value      any
-//}
