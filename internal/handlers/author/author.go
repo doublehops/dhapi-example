@@ -207,11 +207,22 @@ func filterRules() []req.FilterRule {
 	}
 }
 
+// getSortableFields will return a list of fields that a collection of records can be sorted by. This is necessary because
+// not all fields should this be available to, and it will prevent SQL injection.
+func getSortableFields() []string {
+	return []string{
+		"id",
+		"name",
+		"createdAt",
+		"updatedAt",
+	}
+}
+
 func (h *Handle) GetAll(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	c := r.Context()
 	h.srv.Log.Info(c, "Request made to Get authors", nil)
 
-	p := req.GetRequestParams(r, filterRules())
+	p := req.GetRequestParams(r, filterRules(), getSortableFields())
 
 	authors, err := h.srv.GetAll(c, p)
 	if err != nil {

@@ -24,20 +24,9 @@ github.com/bytedance/sonic/utf8
 # github.com/chenzhuoyu/base64x v0.0.0-20221115062448-fe3a3abad311
 ## explicit; go 1.15
 github.com/chenzhuoyu/base64x
-# github.com/doublehops/cryptowatcher-2.0 v0.0.0-20230301104937-b68de36a2cb6
-## explicit; go 1.19
-github.com/doublehops/cryptowatcher-2.0/internal/dbinterface
-github.com/doublehops/cryptowatcher-2.0/internal/models/currency
-github.com/doublehops/cryptowatcher-2.0/internal/models/history
-github.com/doublehops/cryptowatcher-2.0/internal/pkg/handlers/currency
-github.com/doublehops/cryptowatcher-2.0/internal/pkg/handlers/history
-github.com/doublehops/cryptowatcher-2.0/internal/pkg/handlers/pagination
-github.com/doublehops/cryptowatcher-2.0/internal/pkg/logga
-github.com/doublehops/cryptowatcher-2.0/internal/types/database
-# github.com/doublehops/dhapi v0.0.0-20230929034722-5387dc0c935f => /home/b/workspace/dhapi-2
+# github.com/doublehops/go-common v0.0.0-20230910011642-8556bd635e3f
 ## explicit; go 1.21
-github.com/doublehops/dhapi/resp
-github.com/doublehops/dhapi/validator
+github.com/doublehops/go-common/str
 # github.com/doublehops/go-migration v0.0.2
 ## explicit; go 1.16
 github.com/doublehops/go-migration
@@ -82,6 +71,8 @@ github.com/goccy/go-json/internal/encoder/vm_color_indent
 github.com/goccy/go-json/internal/encoder/vm_indent
 github.com/goccy/go-json/internal/errors
 github.com/goccy/go-json/internal/runtime
+# github.com/google/go-cmp v0.5.8
+## explicit; go 1.13
 # github.com/json-iterator/go v1.1.12
 ## explicit; go 1.12
 github.com/json-iterator/go
@@ -94,9 +85,6 @@ github.com/klauspost/cpuid/v2
 # github.com/leodido/go-urn v1.2.4
 ## explicit; go 1.16
 github.com/leodido/go-urn
-# github.com/mattn/go-colorable v0.1.13
-## explicit; go 1.15
-github.com/mattn/go-colorable
 # github.com/mattn/go-isatty v0.0.19
 ## explicit; go 1.15
 github.com/mattn/go-isatty
@@ -116,11 +104,6 @@ github.com/pelletier/go-toml/v2/internal/characters
 github.com/pelletier/go-toml/v2/internal/danger
 github.com/pelletier/go-toml/v2/internal/tracker
 github.com/pelletier/go-toml/v2/unstable
-# github.com/rs/zerolog v1.29.0
-## explicit; go 1.15
-github.com/rs/zerolog
-github.com/rs/zerolog/internal/cbor
-github.com/rs/zerolog/internal/json
 # github.com/twitchyliquid64/golang-asm v0.15.1
 ## explicit; go 1.13
 github.com/twitchyliquid64/golang-asm/asm/arch

@@ -7,6 +7,8 @@ import (
 	"net/url"
 	"strconv"
 	"strings"
+
+	"github.com/doublehops/go-common/str"
 )
 
 var (
@@ -15,7 +17,7 @@ var (
 )
 
 // GetRequestParams - find and return pagination request vars.
-func GetRequestParams(r *http.Request, filters []FilterRule) *Request {
+func GetRequestParams(r *http.Request, filters []FilterRule, sortableFields []string) *Request {
 	query := r.URL.Query()
 	page, perPage, offset := getPaginationVars(query)
 
@@ -23,6 +25,11 @@ func GetRequestParams(r *http.Request, filters []FilterRule) *Request {
 
 	sort := query.Get("sortBy")
 	order := query.Get("order")
+
+	// Do not include sort field if it's not in allowed list.
+	if !str.SliceContains(sort, sortableFields) {
+		order = ""
+	}
 
 	pg := &Request{
 		Page:    page,
