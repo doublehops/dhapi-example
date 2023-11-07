@@ -34,6 +34,12 @@ func getFilterParams(ctx context.Context, query url.Values, filters []FilterRule
 	var newFilters []FilterRule
 	for _, f := range filters {
 		val := query.Get(f.Field)
+
+		if f.Type == FilterIsNull {
+			newFilters = append(newFilters, f)
+			continue
+		}
+
 		if val == "" {
 			continue
 		}

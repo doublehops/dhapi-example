@@ -56,7 +56,6 @@ func addFilters(query string, filters []req.FilterRule) (string, req.Params) {
 		case req.FilterIsNull:
 			clause := field + " IS NULL"
 			whereClauses = append(whereClauses, clause)
-			params = append(params, f.Value)
 		}
 	}
 

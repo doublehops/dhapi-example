@@ -53,5 +53,4 @@ var selectCollectionQuery = `SELECT
     created_at,
     updated_at
     FROM author
-	__WHERE_CLAUSE__
 `
