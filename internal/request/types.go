@@ -21,14 +21,15 @@ type CollResp struct {
 
 // Request will be populated with request data and used as paginated data in the response.
 type Request struct {
-	Page       int          `json:"Page"`
-	PerPage    int          `json:"perPage"`
-	PageCount  int          `json:"pageCount"`
-	TotalCount int32        `json:"totalCount"`
-	Offset     int          `json:"-"`
-	Sort       string       `json:"-"`
-	Order      string       `json:"-"`
-	Filters    []FilterRule `json:"-"`
+	Page           int          `json:"Page"`
+	PerPage        int          `json:"perPage"`
+	PageCount      int          `json:"pageCount"`
+	TotalCount     int32        `json:"totalCount"`
+	Offset         int          `json:"-"`
+	Sort           string       `json:"-"`
+	Order          string       `json:"-"`
+	Filters        []FilterRule `json:"-"`
+	SortableFields []string     `json:"-"` // This should contain a list of columns this model can be sorted on. This prevents SQL injection.
 }
 
 // GeneralErrorResp is a function to return general errors including validation.

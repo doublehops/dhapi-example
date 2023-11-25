@@ -6,6 +6,9 @@ import (
 	"net/http"
 	"net/url"
 	"strconv"
+	"strings"
+
+	"github.com/doublehops/go-common/str"
 )
 
 var (
@@ -14,17 +17,27 @@ var (
 )
 
 // GetRequestParams - find and return pagination request vars.
-func GetRequestParams(r *http.Request, filters []FilterRule) *Request {
+func GetRequestParams(r *http.Request, filters []FilterRule, sortableFields []string) *Request {
 	query := r.URL.Query()
-	page, perPage, offset := getVars(query)
+	page, perPage, offset := getPaginationVars(query)
 
 	f := getFilterParams(r.Context(), query, filters)
+
+	sort := query.Get("sortBy")
+	order := query.Get("order")
+
+	// Do not include sort field if it's not in allowed list.
+	if !str.SliceContains(sort, sortableFields) {
+		order = ""
+	}
 
 	pg := &Request{
 		Page:    page,
 		PerPage: perPage,
 		Offset:  offset,
 		Filters: f,
+		Sort:    sort,
+		Order:   strings.ToUpper(order),
 	}
 
 	return pg
@@ -51,8 +64,8 @@ func getFilterParams(ctx context.Context, query url.Values, filters []FilterRule
 	return newFilters
 }
 
-// getVars - Search request query for wanted var and return value, if not found, return default value.
-func getVars(query map[string][]string) (int, int, int) {
+// getPaginationVars - Search request query for wanted var and return value, if not found, return default value.
+func getPaginationVars(query map[string][]string) (int, int, int) {
 	page := defaultPage
 	perPage := defaultPerPage
 	offset := 0

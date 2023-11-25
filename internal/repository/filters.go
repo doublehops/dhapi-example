@@ -9,20 +9,50 @@ import (
 	req "github.com/doublehops/dhapi-example/internal/request"
 )
 
+type Order string
+
+const (
+	ASC  Order = "ASC"
+	DESC Order = "DESC"
+)
+
 func BuildQuery(query string, p *req.Request, getCount bool) (string, []any) {
 	var pParams []any
+
 	q, params := addFilters(query, p.Filters)
 
-	if getCount {
-		//q, pParams = addPagination(q, p, false)
-		q = replaceCount(q, true)
-	} else {
+	if !getCount {
+		q = addSorting(q, p.Sort, p.Order)
+
 		q, pParams = addPagination(q, p, true)
 		params = append(params, pParams...)
-		q = replaceCount(q, false)
 	}
 
 	return q, params
+}
+
+func addSorting(q, sort, order string) string {
+	o := ASC
+
+	var sq string
+
+	if sort == "" {
+		return q
+	}
+
+	s := camelToSnake(sort)
+	if order != "" {
+		o = Order(order)
+		if o != ASC && o != DESC {
+			sq = fmt.Sprintf(" ORDER BY %s %s", s, o)
+
+			return q + sq
+		}
+	}
+
+	sq = fmt.Sprintf(" ORDER BY %s %s", s, o)
+
+	return q + sq
 }
 
 func addPagination(query string, pagination *req.Request, includePagination bool) (string, []any) {
@@ -41,7 +71,7 @@ func addFilters(query string, filters []req.FilterRule) (string, req.Params) {
 
 	var whereClauses []string
 	for _, f := range filters {
-		field := ConvertStr(f.Field)
+		field := camelToSnake(f.Field)
 
 		switch f.Type {
 		case req.FilterEquals:
@@ -64,27 +94,13 @@ func addFilters(query string, filters []req.FilterRule) (string, req.Params) {
 	return query + str, params
 }
 
-func replaceCount(q string, getCount bool) string {
-	if getCount {
-		return strings.Replace(q, "__COUNT__", "count(*) count, ", 1)
-	}
-
-	return strings.Replace(q, "__COUNT__", "", 1)
-}
-
-// ConvertStr will convert camelcase string to snake case for SQL query.
-func ConvertStr(field string) string {
-	var str string
-
-	// Iterate through the input string
-	for i, runeValue := range field {
-		// If the character is an uppercase letter (but not the first character in the string)
-		// add an underscore before it
-		if i > 0 && unicode.IsUpper(runeValue) {
-			str += "_"
+func camelToSnake(s string) string {
+	var snakeCase strings.Builder
+	for i, r := range s {
+		if unicode.IsUpper(r) && i > 0 {
+			snakeCase.WriteRune('_')
 		}
-		// Then, whether or not we added an underscore, append the lowercase of the current character
-		str += string(unicode.ToLower(runeValue))
+		snakeCase.WriteRune(unicode.ToLower(r))
 	}
-	return str
+	return snakeCase.String()
 }
