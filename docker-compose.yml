@@ -2,20 +2,17 @@ version: "3"
 
 services:
   db:
-    image: "mariadb:10.5"
+    image: "postgres"
     restart: "always"
-    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     volumes:
-      - ./.db-data:/var/lib/mysql
-      - ./docker/provision/mysql/init:/docker-entrypoint-initdb.d
+      - ./.db-data:/var/lib/postgresql
+      - ./docker/provision/postgres/init:/docker-entrypoint-initdb.d
     ports:
-      - "3306:3306"
+      - "5432:5432"
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-#    entrypoint: "mysql -u dev -ppass12 -h 127.0.0.1 dhapi < db/migrations/000001_init_schema.up.sql"
+      POSTGRES_DB: ${DATABASE_NAME}
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
     networks:
       - net1
 #  web:

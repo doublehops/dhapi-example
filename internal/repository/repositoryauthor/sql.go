@@ -1,5 +1,20 @@
 package repositoryauthor
 
+var cc = `INSERT INTO author (
+	user_id,
+	name,
+    created_by,
+    updated_by,
+    created_at,
+    updated_at
+	  ) VALUES (
+	$1,
+	$2,
+	$3,
+	$4
+	)
+`
+
 var insertRecordSQL = `INSERT INTO author (
 	user_id,
 	name,
@@ -8,27 +23,27 @@ var insertRecordSQL = `INSERT INTO author (
     created_at,
     updated_at
 	  ) VALUES (
-	?,
-	?,
-	?,
-	?,
-	?,
-	?
+	$1,
+	$2,
+	$3,
+	$4,
+	$5,
+	$6
 	)
 `
 
 var updateRecordSQL = `UPDATE author SET 
-	name=?,
-    updated_by=?,
-    updated_at=?
-	WHERE id=?
+	name=$1,
+    updated_by=$2,
+    updated_at=$3
+	WHERE id=$4
 `
 
 var deleteRecordSQL = `UPDATE author SET 
-    updated_by=?,
-    updated_at=?,
-    deleted_at=?
-	WHERE id=?
+    updated_by=$1,
+    updated_at=$2,
+    deleted_at=$3
+	WHERE id=$4
 `
 
 var selectByIDQuery = `SELECT 
@@ -40,7 +55,7 @@ var selectByIDQuery = `SELECT
     created_at,
     updated_at
     FROM author
-    WHERE id=?
+    WHERE id=$1
     AND deleted_at IS NULL`
 
 var selectCollectionQuery = `SELECT 
