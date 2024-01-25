@@ -8,25 +8,25 @@ import (
 // Debug - args should be key/value pairs separated by a space. Example: "file", "migrate.go"
 func (l *Logga) Debug(ctx context.Context, msg string, KVPs KVPs) {
 	args := getArguments(ctx, KVPs)
-	l.Log.Debug(msg, args...)
+	l.Log.DebugContext(ctx, msg, args...)
 }
 
 // Info - args should be key/value pairs separated by a space. Example: "file", "migrate.go"
 func (l *Logga) Info(ctx context.Context, msg string, KVPs KVPs) {
 	args := getArguments(ctx, KVPs)
-	l.Log.Info(msg, args...)
+	l.Log.InfoContext(ctx, msg, args...)
 }
 
 // Warn - args should be key/value pairs separated by a space. Example: "file", "migrate.go"
 func (l *Logga) Warn(ctx context.Context, msg string, KVPs KVPs) {
 	args := getArguments(ctx, KVPs)
-	l.Log.Warn(msg, args...)
+	l.Log.WarnContext(ctx, msg, args...)
 }
 
 // Error - args should be key/value pairs separated by a space. Example: "file", "migrate.go"
 func (l *Logga) Error(ctx context.Context, msg string, KVPs KVPs) {
 	args := getArguments(ctx, KVPs)
-	l.Log.Error(msg, args...)
+	l.Log.ErrorContext(ctx, msg, args...)
 }
 
 func getArguments(ctx context.Context, KVPs KVPs) []any {
