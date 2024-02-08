@@ -2,7 +2,7 @@
 
 CREATE TABLE user (
     id INT(11) NOT NULL,
-    email_address VARCHAR(100) NOT NULL,
+    email_address VARCHAR(100) NOT NULL UNIQUE,
     password VARCHAR(255),
     active TINYINT(4),
     email_address_verified_token VARCHAR(255),
