@@ -1,0 +1,23 @@
+package templates
+
+import (
+	"{{.Module}}/internal/model"
+	"{{.Module}}/internal/validator"
+
+	req "{{.Module}}/internal/request"
+)
+
+type {{.PascalCase}} struct {
+	model.BaseModel
+	{{.Properties}}
+}
+
+func ({{.FirstInitial}} *{{.PascalCase}}) getRules() []validator.Rule {
+	return []validator.Rule{
+		{{.ValidationRules}}
+	}
+}
+
+func ({{.FirstInitial}} *{{.PascalCase}}) Validate() req.ErrMsgs {
+	return validator.RunValidation({{.FirstInitial}}.getRules())
+}
