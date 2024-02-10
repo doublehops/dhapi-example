@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"flag"
 	"fmt"
@@ -12,8 +13,6 @@ import (
 	"os"
 
 	_ "github.com/go-sql-driver/mysql"
-
-	migrate "github.com/doublehops/go-migration"
 )
 
 /*
@@ -28,9 +27,9 @@ func main() {
 }
 
 func run() error {
-	var args migrate.Action
+	var modelName string
 
-	flag.StringVar(&args.Action, "model", "", "the database table/model to scaffold")
+	flag.StringVar(&modelName, "model", "", "the database table/model to scaffold")
 
 	configFile := flag.String("config", "config.json", "Scaffold file to use")
 	flag.Parse()
@@ -41,18 +40,13 @@ func run() error {
 		return fmt.Errorf("error starting. %s", err.Error())
 	}
 
-	scf, err := GetScaffoldConfig()
-	if err != nil {
-		return fmt.Errorf("error getting scaffolding config. %s", err.Error())
-	}
-
-	scf.Run()
-
 	// Setup logger.
 	l, err := logga.New(&cfg.Logging)
 	if err != nil {
 		return fmt.Errorf("error configuring logger. %s", err.Error())
 	}
+
+	l.Info(context.TODO(), "flags", logga.KVPs{"model": modelName})
 
 	// Setup db connection.
 	DB, err := db.New(l, cfg.DB)
@@ -65,22 +59,22 @@ func run() error {
 		return fmt.Errorf("there was an error with os.Getwd(). %s", err.Error())
 	}
 
-	args.Path = dir + "/migrations"
-	args.DB = DB
-
-	err = args.Migrate()
+	scf, err := GetScaffoldConfig()
 	if err != nil {
-		return fmt.Errorf("there was an error initialising migration. %s", err.Error())
+		return fmt.Errorf("error getting scaffold config. %s", err.Error())
 	}
+
+	s := scaffold.New(scf, modelName, DB, l)
+	s.Run(dir)
 
 	return nil
 }
 
-func GetScaffoldConfig() (*scaffold.Scaffold, error) {
-	sc := &scaffold.Scaffold{}
+func GetScaffoldConfig() (scaffold.ConfigPaths, error) {
+	cp := scaffold.ConfigPaths{}
 	pwd, err := os.Getwd()
 	if err != nil {
-		return sc, fmt.Errorf("there was an error with os.Getwd(). %s", err.Error())
+		return cp, fmt.Errorf("there was an error with os.Getwd(). %s", err.Error())
 	}
 
 	relPath := pwd + "/config.json"
@@ -89,12 +83,12 @@ func GetScaffoldConfig() (*scaffold.Scaffold, error) {
 	if err != nil {
 		log.Printf("unable to read config file - %s. %s", relPath, err.Error())
 
-		return nil, fmt.Errorf("unable to read config file `%s`. %w", relPath, err)
+		return cp, fmt.Errorf("unable to read config file `%s`. %w", relPath, err)
 	}
 
-	if err = json.Unmarshal(f, sc); err != nil {
-		return sc, err
+	if err = json.Unmarshal(f, &cp); err != nil {
+		return cp, err
 	}
 
-	return sc, nil
+	return cp, nil
 }
