@@ -1,22 +1,48 @@
 package scaffold
 
 import (
+	"errors"
 	"fmt"
+	"io"
+	"os"
 	"strings"
+	"text/template"
+
+	"github.com/doublehops/go-common/str"
 )
 
-const modelTemplate = "./templates/model.tmpl"
+const modelTemplate = "./internal/scaffold/templates/model.tmpl"
 
-func (s *Scaffold) buildStruct(ms modelStrings, columns map[string]string) string {
-	var properties string
-	for colName, colType := range columns {
-		colName = ToPascalCase(colName)
-		fmt.Printf("%s %s\n", colName, colType)
-		propType := getPropertyType(colType)
-		properties += fmt.Sprintf("%s %s `json:\"%s\"`\n", ms.PascalCase, propType, ms.SnakeCase)
+func (s *Scaffold) createModel(tmpl Template, columns map[string]string) error {
+
+	tmpl.ModelStructProperties = getPropertyTypes(tmpl, columns)
+	filename := fmt.Sprintf("%s.go", tmpl.LowerCase)
+
+	err := s.writeFile(filename, tmpl)
+	if err != nil {
+		return err
 	}
 
-	return ""
+	return nil
+}
+
+func getPropertyTypes(tmpl Template, columns map[string]string) string {
+	var properties string
+
+	ignoreColumns := []string{"created_at", "updated_at", "deleted_at"}
+
+	for colName, colType := range columns {
+		if str.SliceContains(colName, ignoreColumns) {
+			continue
+		}
+
+		colName = ToPascalCase(colName)
+		propType := getPropertyType(colType)
+
+		properties += fmt.Sprintf("%s %s `json:\"%s\"`\n", colName, propType, tmpl.SnakeCase)
+	}
+
+	return properties
 }
 
 // getPropertyType will check which column type the property is and return a corresponding
@@ -33,4 +59,28 @@ func getPropertyType(propType string) string {
 	}
 
 	return "string"
+}
+
+func (s *Scaffold) writeFile(filename string, tmpl Template) error {
+	src := fmt.Sprintf(modelTemplate)
+	f, err := os.Open(src)
+	if err != nil {
+		return errors.New("unable to open template. " + err.Error())
+	}
+
+	source, err := io.ReadAll(f)
+
+	dest := fmt.Sprintf("%s/%s/%s", s.pwd, s.Config.Paths.Model, filename)
+	f, err = os.Create(dest)
+	if err != nil {
+		return errors.New("unable to open destination. " + err.Error())
+	}
+
+	t, err := template.New("model").Parse(string(source))
+	err = t.Execute(f, tmpl)
+	if err != nil {
+		return errors.New("unable to write template. " + err.Error())
+	}
+
+	return nil
 }

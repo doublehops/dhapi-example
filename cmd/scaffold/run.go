@@ -34,6 +34,11 @@ func run() error {
 	configFile := flag.String("config", "config.json", "Scaffold file to use")
 	flag.Parse()
 
+	pwd, err := os.Getwd()
+	if err != nil {
+		return fmt.Errorf("there was an error with os.Getwd(). %s", err.Error())
+	}
+
 	// Setup config.
 	cfg, err := config.New(*configFile)
 	if err != nil {
@@ -54,30 +59,29 @@ func run() error {
 		return fmt.Errorf("error creating database connection. %s", err.Error())
 	}
 
-	dir, err := os.Getwd()
-	if err != nil {
-		return fmt.Errorf("there was an error with os.Getwd(). %s", err.Error())
-	}
+	//dir, err := os.Getwd()
+	//if err != nil {
+	//	return fmt.Errorf("there was an error with os.Getwd(). %s", err.Error())
+	//}
 
-	scf, err := GetScaffoldConfig()
+	scf, err := GetScaffoldConfig(pwd)
 	if err != nil {
 		return fmt.Errorf("error getting scaffold config. %s", err.Error())
 	}
 
-	s := scaffold.New(scf, modelName, DB, l)
-	s.Run(dir)
+	s := scaffold.New(pwd, scf, modelName, DB, l)
+	err = s.Run()
+	if err != nil {
+		return err
+	}
 
 	return nil
 }
 
-func GetScaffoldConfig() (scaffold.ConfigPaths, error) {
-	cp := scaffold.ConfigPaths{}
-	pwd, err := os.Getwd()
-	if err != nil {
-		return cp, fmt.Errorf("there was an error with os.Getwd(). %s", err.Error())
-	}
+func GetScaffoldConfig(pwd string) (scaffold.Config, error) {
+	cp := scaffold.Config{}
 
-	relPath := pwd + "/config.json"
+	relPath := pwd + "/cmd/scaffold/config.json"
 
 	f, err := os.ReadFile(relPath)
 	if err != nil {

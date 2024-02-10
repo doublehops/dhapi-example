@@ -12,41 +12,52 @@ import (
 	"strings"
 )
 
-type Scaffold struct {
-	DB *sql.DB
-	l  *logga.Logga
+const goModuleFile = "./go.mod"
 
-	tableName   string
-	ConfigPaths `json:"paths"`
+type Scaffold struct {
+	DB  *sql.DB
+	l   *logga.Logga
+	pwd string
+
+	tableName string
+	Config
 }
 
-type ConfigPaths struct {
+type Config struct {
+	Paths Paths `json:"paths"`
+}
+
+type Paths struct {
 	Handlers   string `json:"handlers"`
 	Model      string `json:"model"`
 	Repository string `json:"repository"`
 	Service    string `json:"service"`
 }
 
-type modelStrings struct {
+type Template struct {
 	Name         string
 	FirstInitial string
 	CamelCase    string
 	PascalCase   string
 	SnakeCase    string
 	LowerCase    string
-	ModuleName   string
+	Module       string
+
+	ModelStructProperties string
+	ValidationRules       string
 }
 
-func New(cfg ConfigPaths, tableName string, db *sql.DB, logga *logga.Logga) *Scaffold {
+func New(pwd string, cfg Config, tableName string, db *sql.DB, logga *logga.Logga) *Scaffold {
 	return &Scaffold{
-		DB:          db,
-		l:           logga,
-		tableName:   tableName,
-		ConfigPaths: cfg,
+		pwd:       pwd,
+		DB:        db,
+		l:         logga,
+		tableName: tableName,
+		Config:    cfg,
 	}
 }
 
-func (s *Scaffold) Run(path string) error {
+func (s *Scaffold) Run() error {
 	ctx := context.Background()
 
 	columns, err := s.getTableDefinition()
@@ -61,31 +72,34 @@ func (s *Scaffold) Run(path string) error {
 		return errors.New("failed to run. " + err.Error())
 	}
 
-	ms := modelStrings{
+	ms := Template{
 		Name:         s.tableName,
 		FirstInitial: GetFirstRune(s.tableName),
 		CamelCase:    ToCamelCase(s.tableName),
 		PascalCase:   ToPascalCase(s.tableName),
 		SnakeCase:    s.tableName,
-		LowerCase:    ToLowerCase(s.tableName),
-		ModuleName:   moduleName,
+		LowerCase:    RemoveUnderscores(s.tableName),
+		Module:       moduleName,
 	}
 
-	s.buildStruct(ms, columns)
+	err = s.createModel(ms, columns)
+	if err != nil {
+		return err
+	}
 
 	return nil
 }
 
 // getModuleName will get the module name from go.mod to use to populate the templates.
 func getModuleName() (string, error) {
-	f, err := os.Open("../../../go.mod")
+	f, err := os.Open(goModuleFile)
 	if err != nil {
 		return "", errors.New("Opening go.mod failed. " + err.Error())
 	}
 	rawBytes, err := io.ReadAll(f)
 	lines := strings.Split(string(rawBytes), "\n")
 
-	module := strings.Replace(lines[0], "module ", "", 0)
+	module := strings.Replace(lines[0], "module ", "", 1)
 
 	return module, nil
 }

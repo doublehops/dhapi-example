@@ -39,12 +39,6 @@ func ToCamelCase(str string) string {
 	return strings.Join(words, "")
 }
 
-func ToLowerCase(str string) string {
-	caser := cases.Title(language.English)
-	words := strings.Split(str, "_")
-	for i, word := range words {
-		words[i] = caser.String(word)
-	}
-
-	return strings.Join(words, "")
+func RemoveUnderscores(str string) string {
+	return strings.Replace(str, "_", "", 99)
 }

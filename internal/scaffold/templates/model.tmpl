@@ -1,15 +1,13 @@
-package templates
+package model
 
 import (
-	"{{.Module}}/internal/model"
 	"{{.Module}}/internal/validator"
-
 	req "{{.Module}}/internal/request"
 )
 
 type {{.PascalCase}} struct {
-	model.BaseModel
-	{{.Properties}}
+	BaseModel
+	{{.ModelStructProperties}}
 }
 
 func ({{.FirstInitial}} *{{.PascalCase}}) getRules() []validator.Rule {
