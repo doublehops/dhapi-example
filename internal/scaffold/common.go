@@ -1,6 +1,7 @@
 package scaffold
 
 import (
+	"os/exec"
 	"strings"
 
 	"golang.org/x/text/cases"
@@ -41,4 +42,9 @@ func ToCamelCase(str string) string {
 
 func RemoveUnderscores(str string) string {
 	return strings.Replace(str, "_", "", 99)
+}
+
+func Gofmt(filename string) error {
+	cmd := exec.Command("gofmt", "-w", filename)
+	return cmd.Run()
 }

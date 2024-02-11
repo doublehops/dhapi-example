@@ -102,5 +102,9 @@ func (s *Scaffold) writeFile(filename string, tmpl Template) error {
 		return errors.New("unable to write template. " + err.Error())
 	}
 
+	if err = Gofmt(dest); err != nil {
+		return errors.New("unable to run gofmt. " + err.Error())
+	}
+
 	return nil
 }
