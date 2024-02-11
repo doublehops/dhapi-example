@@ -34,7 +34,7 @@ type Paths struct {
 	Service    string `json:"service"`
 }
 
-type Template struct {
+type Model struct {
 	Name         string
 	FirstInitial string
 	CamelCase    string
@@ -45,7 +45,26 @@ type Template struct {
 
 	ModelStructProperties string
 	ValidationRules       string
+
+	Columns []column
 }
+
+type column struct {
+	Original        string
+	Type            columnType
+	PascalCase      string
+	CamelCase       string
+	CapitalisedAbbr string
+}
+
+type columnType string
+
+const (
+	typeInt      columnType = "int"
+	typeString   columnType = "string"
+	typeBool     columnType = "bool"
+	typeDatetime columnType = "*datetime"
+)
 
 func New(pwd string, cfg Config, tableName string, db *sql.DB, logga *logga.Logga) *Scaffold {
 	return &Scaffold{
@@ -72,7 +91,7 @@ func (s *Scaffold) Run() error {
 		return errors.New("failed to run. " + err.Error())
 	}
 
-	ms := Template{
+	ms := Model{
 		Name:         s.tableName,
 		FirstInitial: GetFirstRune(s.tableName),
 		CamelCase:    ToCamelCase(s.tableName),
@@ -80,9 +99,11 @@ func (s *Scaffold) Run() error {
 		SnakeCase:    s.tableName,
 		LowerCase:    RemoveUnderscores(s.tableName),
 		Module:       moduleName,
+
+		Columns: getColumnDefinitions(columns),
 	}
 
-	err = s.createModel(ms, columns)
+	err = s.createModel(ms)
 	if err != nil {
 		return err
 	}
@@ -138,4 +159,22 @@ func (s *Scaffold) getTableDefinition() (map[string]string, error) {
 	}
 
 	return cols, nil
+}
+
+func getColumnDefinitions(columns map[string]string) []column {
+	var cols []column
+
+	for colName, colType := range columns {
+		col := column{
+			Original:        colName,
+			Type:            getPropertyType(colType),
+			PascalCase:      ToPascalCase(colName),
+			CamelCase:       ToCamelCase(colName),
+			CapitalisedAbbr: CapitaliseAbbr(ToPascalCase(colName)),
+		}
+
+		cols = append(cols, col)
+	}
+
+	return cols
 }

@@ -2,6 +2,7 @@ package scaffold
 
 import (
 	"os/exec"
+	"regexp"
 	"strings"
 
 	"golang.org/x/text/cases"
@@ -42,6 +43,14 @@ func ToCamelCase(str string) string {
 
 func RemoveUnderscores(str string) string {
 	return strings.Replace(str, "_", "", 99)
+}
+
+// CapitaliseAbbr will capitalise abbreviations of things like `id` Or `id` to `ID`.
+func CapitaliseAbbr(str string) string {
+	regex := "Id$"
+	r := regexp.MustCompile(regex)
+
+	return r.ReplaceAllString(str, "ID")
 }
 
 func Gofmt(filename string) error {
