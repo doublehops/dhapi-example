@@ -2,7 +2,7 @@ package author
 
 import (
 	"encoding/json"
-	"github.com/doublehops/dhapi-example/internal/scaffold/templates"
+	"github.com/doublehops/dhapi-example/internal/model"
 	"net/http"
 	"strconv"
 
@@ -36,7 +36,7 @@ func (h *Handle) Create(w http.ResponseWriter, r *http.Request, ps httprouter.Pa
 	ctx := r.Context()
 	h.srv.Log.Info(ctx, "Request made to CreateAuthor", nil)
 
-	author := &templates.Author{}
+	author := &model.Author{}
 	if err := json.NewDecoder(r.Body).Decode(author); err != nil {
 		h.base.WriteJson(ctx, w, http.StatusBadRequest, req.UnableToParseResp())
 
@@ -73,7 +73,7 @@ func (h *Handle) UpdateByID(w http.ResponseWriter, r *http.Request, ps httproute
 		return
 	}
 
-	author := &templates.Author{}
+	author := &model.Author{}
 	err = h.srv.GetByID(ctx, author, int32(i))
 	if err != nil {
 		h.base.WriteJson(ctx, w, http.StatusBadRequest, err)
@@ -129,7 +129,7 @@ func (h *Handle) DeleteByID(w http.ResponseWriter, r *http.Request, ps httproute
 		return
 	}
 
-	author := &templates.Author{}
+	author := &model.Author{}
 	err = h.srv.GetByID(ctx, author, int32(i))
 	if err != nil {
 		h.base.WriteJson(ctx, w, http.StatusNotFound, "Unable to find record")
@@ -171,7 +171,7 @@ func (h *Handle) GetByID(w http.ResponseWriter, r *http.Request, ps httprouter.P
 		return
 	}
 
-	author := &templates.Author{}
+	author := &model.Author{}
 	err = h.srv.GetByID(ctx, author, int32(i))
 	if err != nil {
 		h.base.WriteJson(ctx, w, http.StatusNotFound, "Unable to find record")
