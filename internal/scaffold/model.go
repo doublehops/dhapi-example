@@ -15,7 +15,8 @@ const modelTemplate = "./internal/scaffold/templates/model.tmpl"
 
 func (s *Scaffold) createModel(tmpl Template, columns map[string]string) error {
 
-	tmpl.ModelStructProperties = getPropertyTypes(tmpl, columns)
+	tmpl.ModelStructProperties = getPropertyTypes(columns)
+	tmpl.ValidationRules = s.getValidationRules(tmpl, columns)
 	filename := fmt.Sprintf("%s.go", tmpl.LowerCase)
 
 	err := s.writeFile(filename, tmpl)
@@ -26,7 +27,7 @@ func (s *Scaffold) createModel(tmpl Template, columns map[string]string) error {
 	return nil
 }
 
-func getPropertyTypes(tmpl Template, columns map[string]string) string {
+func getPropertyTypes(columns map[string]string) string {
 	var properties string
 
 	ignoreColumns := []string{"created_at", "updated_at", "deleted_at"}
@@ -38,11 +39,30 @@ func getPropertyTypes(tmpl Template, columns map[string]string) string {
 
 		colName = ToPascalCase(colName)
 		propType := getPropertyType(colType)
+		jsonVal := ToCamelCase(colName)
 
-		properties += fmt.Sprintf("%s %s `json:\"%s\"`\n", colName, propType, tmpl.SnakeCase)
+		properties += fmt.Sprintf("%s %s `json:\"%s\"`\n", colName, propType, jsonVal)
 	}
 
 	return properties
+}
+
+func (s *Scaffold) getValidationRules(tmpl Template, columns map[string]string) string {
+	var rules string
+
+	ignoreColumns := []string{"created_at", "updated_at", "deleted_at"}
+
+	for colName, _ := range columns {
+		if str.SliceContains(colName, ignoreColumns) {
+			continue
+		}
+
+		colName = ToPascalCase(colName)
+
+		rules += fmt.Sprintf("{\"%s\", %s.%s, true, []validator.ValidationFuncs{validator.LengthInRange(3, 8, \"\")}},\n", colName, tmpl.FirstInitial, colName)
+	}
+
+	return rules
 }
 
 // getPropertyType will check which column type the property is and return a corresponding
