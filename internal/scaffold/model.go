@@ -1,28 +1,37 @@
 package scaffold
 
 import (
-	"errors"
+	"context"
 	"fmt"
-	"io"
-	"os"
-	"strings"
-	"text/template"
-
 	"github.com/doublehops/go-common/str"
+	"strings"
 )
 
 const modelTemplate = "./internal/scaffold/templates/model.tmpl"
 
-func (s *Scaffold) createModel(m Model) error {
+func (s *Scaffold) createModel(ctx context.Context, m Model) error {
 
 	m.ModelStructProperties = getStructProperties(m.Columns)
 	m.ValidationRules = s.getValidationRules(m)
-	filename := fmt.Sprintf("%s.go", m.LowerCase)
+	path := fmt.Sprintf("%s/%s", s.Config.Paths.Model, m.LowerCase)
+	fullPath := fmt.Sprintf("%s/%s", s.pwd, path)
+	filename := fmt.Sprintf("%s/%s.go", fullPath, m.LowerCase)
 
-	err := s.writeFile(filename, m)
+	err := MkDir(s.pwd, path)
 	if err != nil {
+		s.l.Error(ctx, err.Error(), nil)
+
 		return err
 	}
+
+	err = s.writeFile(modelTemplate, filename, m)
+	if err != nil {
+		s.l.Error(ctx, err.Error(), nil)
+
+		return err
+	}
+
+	s.l.Info(ctx, "model has been written: "+filename, nil)
 
 	return nil
 }
@@ -76,30 +85,30 @@ func getPropertyType(propType string) columnType {
 	return typeString
 }
 
-func (s *Scaffold) writeFile(filename string, tmpl Model) error {
-	src := fmt.Sprintf(modelTemplate)
-	f, err := os.Open(src)
-	if err != nil {
-		return errors.New("unable to open template. " + err.Error())
-	}
-
-	source, err := io.ReadAll(f)
-
-	dest := fmt.Sprintf("%s/%s/%s", s.pwd, s.Config.Paths.Model, filename)
-	f, err = os.Create(dest)
-	if err != nil {
-		return errors.New("unable to open destination. " + err.Error())
-	}
-
-	t, err := template.New("model").Parse(string(source))
-	err = t.Execute(f, tmpl)
-	if err != nil {
-		return errors.New("unable to write template. " + err.Error())
-	}
-
-	if err = Gofmt(dest); err != nil {
-		return errors.New("unable to run gofmt. " + err.Error())
-	}
-
-	return nil
-}
+//func (s *Scaffold) writeModelFile(filename string, tmpl Model) error {
+//	src := fmt.Sprintf(modelTemplate)
+//	f, err := os.Open(src)
+//	if err != nil {
+//		return errors.New("unable to open template. " + err.Error())
+//	}
+//
+//	source, err := io.ReadAll(f)
+//
+//	dest := fmt.Sprintf("%s/%s/%s", s.pwd, s.Config.Paths.Model, filename)
+//	f, err = os.Create(dest)
+//	if err != nil {
+//		return errors.New("unable to open destination. " + err.Error())
+//	}
+//
+//	t, err := template.New("model").Parse(string(source))
+//	err = t.Execute(f, tmpl)
+//	if err != nil {
+//		return errors.New("unable to write template. " + err.Error())
+//	}
+//
+//	if err = Gofmt(dest); err != nil {
+//		return errors.New("unable to run gofmt. " + err.Error())
+//	}
+//
+//	return nil
+//}

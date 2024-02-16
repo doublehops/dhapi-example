@@ -1,12 +1,13 @@
 package model
 
 import (
+	"{{.Module}}/internal/model"
 	"{{.Module}}/internal/validator"
 	req "{{.Module}}/internal/request"
 )
 
 type {{.PascalCase}} struct {
-	BaseModel
+	model.BaseModel
 	{{.ModelStructProperties}}
 }
 

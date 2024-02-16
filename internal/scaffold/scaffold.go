@@ -43,6 +43,12 @@ type Model struct {
 	LowerCase    string
 	Module       string
 
+	ServiceFilename    string
+	RepositoryFilename string
+
+	ServiceName    string
+	RepositoryName string
+
 	ModelStructProperties string
 	ValidationRules       string
 
@@ -52,6 +58,7 @@ type Model struct {
 type column struct {
 	Original        string
 	Type            columnType
+	LowerCase       string
 	PascalCase      string
 	CamelCase       string
 	CapitalisedAbbr string
@@ -100,10 +107,22 @@ func (s *Scaffold) Run() error {
 		LowerCase:    RemoveUnderscores(s.tableName),
 		Module:       moduleName,
 
+		ServiceFilename:    "service" + RemoveUnderscores(s.tableName) + ".go",
+		RepositoryFilename: "repository" + RemoveUnderscores(s.tableName) + ".go",
+
+		ServiceName: ToPascalCase(s.tableName) + "Service",
+
 		Columns: getColumnDefinitions(columns),
 	}
 
-	err = s.createModel(ms)
+	// Create model.
+	err = s.createModel(ctx, ms)
+	if err != nil {
+		return err
+	}
+
+	// Create handler.
+	err = s.createHandler(ctx, ms)
 	if err != nil {
 		return err
 	}
@@ -168,6 +187,7 @@ func getColumnDefinitions(columns map[string]string) []column {
 		col := column{
 			Original:        colName,
 			Type:            getPropertyType(colType),
+			LowerCase:       strings.ToLower(ToCamelCase(colName)),
 			PascalCase:      ToPascalCase(colName),
 			CamelCase:       ToCamelCase(colName),
 			CapitalisedAbbr: CapitaliseAbbr(ToPascalCase(colName)),
