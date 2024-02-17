@@ -7,16 +7,17 @@ import (
 
 	"github.com/julienschmidt/httprouter"
 
-	"github.com/doublehops/dhapi-example/internal/model"
+	"github.com/doublehops/dhapi-example/internal/model/mynewtable"
 	"github.com/doublehops/dhapi-example/internal/repository/mynewtable"
 	req "github.com/doublehops/dhapi-example/internal/request"
 	"github.com/doublehops/dhapi-example/internal/service"
+	"github.com/doublehops/dhapi-example/internal/tools"
 )
 
 type Handle struct {
 	repo *repository.MyNewTable
 	srv  *service.MyNewTableService
-	base *handlers.BaseHandler
+	base *BaseHandler
 }
 
 func New(app *service.App) *Handle {
@@ -25,15 +26,15 @@ func New(app *service.App) *Handle {
 	return &Handle{
 		repo: repo,
 		srv:  service.New(app, repo),
-		base: &handlers.BaseHandler{
+		base: &BaseHandler{
 			Log: app.Log,
 		},
 	}
 }
-
+12
 func (h *Handle) Create(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	ctx := r.Context()
-	h.srv.Log.Info(ctx, "Request made to %s", tools.CurrentFunction())
+	h.base.Log.Info(ctx, "Request made to "+tools.CurrentFunction(), nil)
 
 	record := &model.MyNewTable{}
 	if err := json.NewDecoder(r.Body).Decode(record); err != nil {
@@ -62,7 +63,7 @@ func (h *Handle) Create(w http.ResponseWriter, r *http.Request, ps httprouter.Pa
 func (h *Handle) UpdateByID(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	ctx := r.Context()
 	userID := h.base.GetUser(ctx)
-	h.srv.Log.Info(ctx, "Request made to UpdateMyNewTable", nil)
+	h.base.Log.Info(ctx, "Request made to UpdateMyNewTable", nil)
 
 	ID := ps.ByName("id")
 	i, err := strconv.Atoi(ID)
@@ -118,7 +119,7 @@ func (h *Handle) UpdateByID(w http.ResponseWriter, r *http.Request, ps httproute
 func (h *Handle) DeleteByID(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	ctx := r.Context()
 	userID := h.base.GetUser(ctx)
-	h.srv.Log.Info(ctx, "Request made to DELETE myNewTable", nil)
+	h.base.Log.Info(ctx, "Request made to DELETE myNewTable", nil)
 
 	ID := ps.ByName("id")
 	i, err := strconv.Atoi(ID)
@@ -160,7 +161,7 @@ func (h *Handle) DeleteByID(w http.ResponseWriter, r *http.Request, ps httproute
 func (h *Handle) GetByID(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	ctx := r.Context()
 	userID := h.base.GetUser(ctx)
-	h.srv.Log.Info(ctx, "Request made to Get myNewTable", nil)
+	h.base.Log.Info(ctx, "Request made to Get myNewTable", nil)
 
 	ID := ps.ByName("id")
 	i, err := strconv.Atoi(ID)
@@ -219,7 +220,7 @@ func getSortableFields() []string {
 
 func (h *Handle) GetAll(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	ctx := r.Context()
-	h.srv.Log.Info(ctx, "Request made to Get myNewTable", nil)
+	h.base.Log.Info(ctx, "Request made to Get myNewTable", nil)
 
 	p := req.GetRequestParams(r, filterRules(), getSortableFields())
 
