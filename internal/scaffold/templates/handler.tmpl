@@ -8,15 +8,15 @@ import (
 	"github.com/julienschmidt/httprouter"
 
 	"{{.Module}}/internal/model/{{.LowerCase}}"
-	"{{.Module}}/internal/repository/{{.LowerCase}}"
+	"{{.Module}}/internal/repository/{{.LowerCase}}repository"
 	req "{{.Module}}/internal/request"
-	"{{.Module}}/internal/service"
+	"{{.Module}}/internal/service/{{.LowerCase}}service"
 	"{{.Module}}/internal/tools"
 )
 
 type Handle struct {
-	repo *repository.{{.PascalCase}}
-	srv  *service.{{.ServiceName}}
+	repo *{{.LowerCase}}repository.{{.PascalCase}}
+	srv  *{{.LowerCase}}service.{{.ServiceName}}
 	base *BaseHandler
 }
 
@@ -25,7 +25,7 @@ func New(app *service.App) *Handle {
 
 	return &Handle{
 		repo: repo,
-		srv:  service.New(app, repo),
+		srv:  {{.LowerCase}}service.New(app, repo),
 		base: &BaseHandler{
 			Log: app.Log,
 		},

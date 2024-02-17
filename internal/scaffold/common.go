@@ -94,25 +94,11 @@ func (s *Scaffold) writeFile(src, dest string, tmpl Model) error {
 }
 
 // MkDir will recursively make the directory only if it doesn't already exist.
-func MkDir(pwd, path string) error {
-	dirs := strings.Split(path, "/")
+func MkDir(path string) error {
 
-	dir := pwd
-	for _, d := range dirs {
-		dir += "/" + d
-		res, err := os.Stat(dir)
-		if err != nil && !os.IsNotExist(err) {
-			return errors.New("error checking directory exists. " + err.Error())
-		}
-
-		if res != nil {
-			continue
-		}
-
-		err = os.Mkdir(dir, 0755)
-		if err != nil {
-			return errors.New("unable to make directory. " + err.Error())
-		}
+	err := os.MkdirAll(path, 0755)
+	if err != nil {
+		return err
 	}
 
 	return nil

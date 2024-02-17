@@ -13,11 +13,10 @@ func (s *Scaffold) createModel(ctx context.Context, m Model) error {
 
 	m.ModelStructProperties = getStructProperties(m.Columns)
 	m.ValidationRules = s.getValidationRules(m)
-	path := fmt.Sprintf("%s/%s", s.Config.Paths.Model, m.LowerCase)
-	fullPath := fmt.Sprintf("%s/%s", s.pwd, path)
-	filename := fmt.Sprintf("%s/%s.go", fullPath, m.LowerCase)
+	path := fmt.Sprintf("%s/%s/%s", s.pwd, s.Config.Paths.Model, m.LowerCase)
+	filename := fmt.Sprintf("%s/%s.go", path, m.LowerCase)
 
-	err := MkDir(s.pwd, path)
+	err := MkDir(path)
 	if err != nil {
 		s.l.Error(ctx, err.Error(), nil)
 

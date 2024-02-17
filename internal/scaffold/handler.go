@@ -14,14 +14,7 @@ func (s *Scaffold) createHandler(ctx context.Context, m Model) error {
 	path := fmt.Sprintf("%s/%s", s.pwd, s.Config.Paths.Handlers)
 	filename := fmt.Sprintf("%s/%s.go", path, m.LowerCase)
 
-	err := MkDir(s.pwd, path)
-	if err != nil {
-		s.l.Error(ctx, err.Error(), nil)
-
-		return err
-	}
-
-	err = s.writeFile(handlerTemplate, filename, m)
+	err := s.writeFile(handlerTemplate, filename, m)
 	if err != nil {
 		s.l.Error(ctx, err.Error(), nil)
 
