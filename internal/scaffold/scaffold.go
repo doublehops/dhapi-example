@@ -134,6 +134,12 @@ func (s *Scaffold) Run() error {
 		return err
 	}
 
+	// Create service.
+	err = s.createService(ctx, ms)
+	if err != nil {
+		return err
+	}
+
 	// Create handler.
 	err = s.createHandler(ctx, ms)
 	if err != nil {
