@@ -54,6 +54,11 @@ type Model struct {
 	ValidationRules       string
 
 	Columns []column
+
+	SQLCreate   string
+	SQLCreateQs string
+	SQLUpdate   string
+	SQLSelect   string
 }
 
 type column struct {

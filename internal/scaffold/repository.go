@@ -32,6 +32,9 @@ func (s *Scaffold) createRepository(ctx context.Context, m Model) error {
 	}
 
 	// Write repository SQL file.
+
+	s.ColumnSQLParams(&m)
+
 	err = s.writeFile(repositorySQLTemplate, sqlFilename, m)
 	if err != nil {
 		s.l.Error(ctx, err.Error(), nil)
@@ -42,4 +45,32 @@ func (s *Scaffold) createRepository(ctx context.Context, m Model) error {
 	s.l.Info(ctx, "repository has been written: "+repositoryFilename, nil)
 
 	return nil
+}
+
+func (s *Scaffold) ColumnSQLParams(m *Model) {
+	var (
+		insertCols = ""
+		insertQs   = ""
+		updateStmt = ""
+		selectStmt = ""
+	)
+
+	for _, col := range m.Columns {
+		insertCols += fmt.Sprintf("\t%s,\n", col.Original)
+		insertQs += fmt.Sprintf("\t?,\n")
+		updateStmt += fmt.Sprintf("\t%s=?\n", col.Original)
+		selectStmt += fmt.Sprintf("\t%s,\n", col.Original)
+	}
+
+	// Remove two last chars of each string. Ie: comma and carriage return.
+
+	insertCols = insertCols[:len(insertCols)-2]
+	insertQs = insertQs[:len(insertQs)-2]
+	updateStmt = updateStmt[:len(updateStmt)-2]
+	selectStmt = selectStmt[:len(selectStmt)-2]
+
+	m.SQLCreate = insertCols
+	m.SQLCreateQs = insertQs
+	m.SQLUpdate = updateStmt
+	m.SQLCreate = selectStmt
 }

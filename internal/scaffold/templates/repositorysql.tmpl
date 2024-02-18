@@ -1,26 +1,14 @@
 package repository{{.LowerCase}}
 
 var insertRecordSQL = `INSERT INTO {{.Name}} (
-	user_id,
-	name,
-    created_by,
-    updated_by,
-    created_at,
-    updated_at
+{{.SQLCreate}}
 	  ) VALUES (
-	?,
-	?,
-	?,
-	?,
-	?,
-	?
+{{.SQLCreateQs}}
 	)
 `
 
 var updateRecordSQL = `UPDATE {{.Name}} SET
-	name=?,
-    updated_by=?,
-    updated_at=?
+{{.SQLUpdate}}
 	WHERE id=?
 `
 
@@ -32,29 +20,17 @@ var deleteRecordSQL = `UPDATE {{.Name}} SET
 `
 
 var selectByIDQuery = `SELECT 
-    id,
-    user_id,
-    name,
-    created_by,
-    updated_by,
-    created_at,
-    updated_at
+{{.SQLSelect}}
     FROM {{.Name}}
     WHERE id=?
     AND deleted_at IS NULL`
 
 var selectCollectionQuery = `SELECT 
-    id,
-    user_id,
-    name,
-    created_by,
-    updated_by,
-    created_at,
-    updated_at
+{{.SQLSelect}}
     FROM {{.Name}}
 `
 
 var selectCollectionCountQuery = `SELECT 
     COUNT(*) count
-    FROM author
+    FROM {{.Name}}
 `
