@@ -4,9 +4,8 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	"github.com/doublehops/dhapi-example/internal/scaffold/templates"
-
 	"github.com/doublehops/dhapi-example/internal/logga"
+	"github.com/doublehops/dhapi-example/internal/model"
 	"github.com/doublehops/dhapi-example/internal/repository"
 	req "github.com/doublehops/dhapi-example/internal/request"
 )
@@ -21,7 +20,7 @@ func New(logger *logga.Logga) *Author {
 	}
 }
 
-func (a *Author) Create(ctx context.Context, tx *sql.Tx, model *templates.Author) error {
+func (a *Author) Create(ctx context.Context, tx *sql.Tx, model *model.Author) error {
 
 	result, err := tx.Exec(insertRecordSQL, model.UserID, model.Name, model.CreatedBy, model.UpdatedBy, model.CreatedAt, model.UpdatedAt)
 	if err != nil {
@@ -41,7 +40,7 @@ func (a *Author) Create(ctx context.Context, tx *sql.Tx, model *templates.Author
 	return nil
 }
 
-func (a *Author) Update(ctx context.Context, tx *sql.Tx, model *templates.Author) error {
+func (a *Author) Update(ctx context.Context, tx *sql.Tx, model *model.Author) error {
 
 	_, err := tx.Exec(updateRecordSQL, model.Name, model.UpdatedBy, model.UpdatedAt, model.ID)
 	if err != nil {
@@ -54,7 +53,7 @@ func (a *Author) Update(ctx context.Context, tx *sql.Tx, model *templates.Author
 	return nil
 }
 
-func (a *Author) Delete(ctx context.Context, tx *sql.Tx, model *templates.Author) error {
+func (a *Author) Delete(ctx context.Context, tx *sql.Tx, model *model.Author) error {
 
 	_, err := tx.Exec(deleteRecordSQL, model.UpdatedBy, model.UpdatedAt, model.DeletedAt, model.ID)
 	if err != nil {
@@ -67,7 +66,7 @@ func (a *Author) Delete(ctx context.Context, tx *sql.Tx, model *templates.Author
 	return nil
 }
 
-func (a *Author) GetByID(ctx context.Context, DB *sql.DB, ID int32, model *templates.Author) error {
+func (a *Author) GetByID(ctx context.Context, DB *sql.DB, ID int32, model *model.Author) error {
 	row := DB.QueryRow(selectByIDQuery, ID)
 
 	err := row.Scan(&model.ID, &model.UserID, &model.Name, &model.CreatedBy, &model.UpdatedBy, &model.CreatedAt, &model.UpdatedAt)
@@ -78,9 +77,9 @@ func (a *Author) GetByID(ctx context.Context, DB *sql.DB, ID int32, model *templ
 	return nil
 }
 
-func (a *Author) GetAll(ctx context.Context, DB *sql.DB, p *req.Request) ([]*templates.Author, error) {
+func (a *Author) GetAll(ctx context.Context, DB *sql.DB, p *req.Request) ([]*model.Author, error) {
 	var (
-		authors []*templates.Author
+		authors []*model.Author
 		rows    *sql.Rows
 		err     error
 	)
@@ -107,7 +106,7 @@ func (a *Author) GetAll(ctx context.Context, DB *sql.DB, p *req.Request) ([]*tem
 	defer rows.Close()
 
 	for rows.Next() {
-		var record templates.Author
+		var record model.Author
 		if err = rows.Scan(&record.ID, &record.UserID, &record.Name, &record.CreatedBy, &record.UpdatedBy, &record.CreatedAt, &record.UpdatedAt); err != nil {
 			return authors, fmt.Errorf("unable to fetch rows. %s", err)
 		}
