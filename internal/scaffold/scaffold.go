@@ -35,13 +35,14 @@ type Paths struct {
 }
 
 type Model struct {
-	Name         string
-	FirstInitial string
-	CamelCase    string
-	PascalCase   string
-	SnakeCase    string
-	LowerCase    string
-	Module       string
+	Name           string
+	FirstInitial   string
+	CamelCase      string
+	PascalCase     string
+	SnakeCase      string
+	LowerCase      string
+	Initialisation string
+	Module         string
 
 	ServiceFilename    string
 	RepositoryFilename string
@@ -99,13 +100,14 @@ func (s *Scaffold) Run() error {
 	}
 
 	ms := Model{
-		Name:         s.tableName,
-		FirstInitial: GetFirstRune(s.tableName),
-		CamelCase:    ToCamelCase(s.tableName),
-		PascalCase:   ToPascalCase(s.tableName),
-		SnakeCase:    s.tableName,
-		LowerCase:    RemoveUnderscores(s.tableName),
-		Module:       moduleName,
+		Name:           s.tableName,
+		FirstInitial:   GetFirstRune(s.tableName),
+		CamelCase:      ToCamelCase(s.tableName),
+		PascalCase:     ToPascalCase(s.tableName),
+		SnakeCase:      s.tableName,
+		LowerCase:      RemoveUnderscores(s.tableName),
+		Initialisation: ToInitialisation(s.tableName),
+		Module:         moduleName,
 
 		ServiceFilename:    "service" + RemoveUnderscores(s.tableName) + ".go",
 		RepositoryFilename: "repository" + RemoveUnderscores(s.tableName) + ".go",
@@ -117,6 +119,12 @@ func (s *Scaffold) Run() error {
 
 	// Create model.
 	err = s.createModel(ctx, ms)
+	if err != nil {
+		return err
+	}
+
+	// Create repository.
+	err = s.createRepository(ctx, ms)
 	if err != nil {
 		return err
 	}

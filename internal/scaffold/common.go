@@ -3,6 +3,7 @@ package scaffold
 import (
 	"context"
 	"errors"
+	"fmt"
 	"github.com/doublehops/dhapi-example/internal/logga"
 	"io"
 	"os"
@@ -32,6 +33,17 @@ func ToPascalCase(str string) string {
 	}
 
 	return strings.Join(words, "")
+}
+
+func ToInitialisation(str string) string {
+	initials := ""
+	words := strings.Split(str, "_")
+	for _, word := range words {
+		initial := fmt.Sprintf("%c", word[0])
+		initials += initial
+	}
+
+	return initials
 }
 
 func ToCamelCase(str string) string {
