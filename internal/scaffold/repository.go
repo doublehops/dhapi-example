@@ -31,8 +31,9 @@ func (s *Scaffold) createRepository(ctx context.Context, m Model) error {
 		return err
 	}
 
-	// Write repository SQL file.
+	s.l.Info(ctx, "repository has been written: "+repositoryFilename, nil)
 
+	// Write repository SQL file.
 	s.ColumnSQLParams(&m)
 
 	err = s.writeFile(repositorySQLTemplate, sqlFilename, m)
@@ -42,7 +43,7 @@ func (s *Scaffold) createRepository(ctx context.Context, m Model) error {
 		return err
 	}
 
-	s.l.Info(ctx, "repository has been written: "+repositoryFilename, nil)
+	s.l.Info(ctx, "repository SQL has been written: "+repositoryFilename, nil)
 
 	return nil
 }
