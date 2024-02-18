@@ -63,8 +63,7 @@ func (s *Scaffold) ColumnSQLParams(m *Model) {
 		selectStmt += fmt.Sprintf("\t%s,\n", col.Original)
 	}
 
-	// Remove two last chars of each string. Ie: comma and carriage return.
-
+	// Remove two last chars (comma and carriage return) of each string.
 	insertCols = insertCols[:len(insertCols)-2]
 	insertQs = insertQs[:len(insertQs)-2]
 	updateStmt = updateStmt[:len(updateStmt)-2]
