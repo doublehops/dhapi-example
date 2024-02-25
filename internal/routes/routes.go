@@ -6,6 +6,7 @@ import (
 	group "github.com/mythrnr/httprouter-group"
 
 	"github.com/doublehops/dhapi-example/internal/handlers/author"
+	"github.com/doublehops/dhapi-example/internal/handlers/mynewtable"
 )
 
 func GetV1Routes(app *service.App) *group.RouteGroup {
@@ -22,8 +23,17 @@ func GetV1Routes(app *service.App) *group.RouteGroup {
 
 	// New routes created by scaffolding can be added here.
 
-	g := group.New("/v1").Children(
-		authorGroup,
+	myNewTableGroup := group.New("/my-new-table")
+	myNewTableGroup.GET(mynewtable.GetAll).Middleware(middleware.AuthMiddleware)
+	myNewTableGroup.Children(
+		group.New("/:id").GET(mynewtable.GetByID),
+		group.New("").POST(mynewtable.Create),
+		group.New("/:id").PUT(mynewtable.UpdateByID),
+		group.New("/:id").DELETE(mynewtable.DeleteByID),
+	)
+
+	g = group.New("/v1").Children(
+		myNewTableGroup,
 	)
 
 	return g

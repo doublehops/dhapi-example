@@ -1,4 +1,4 @@
-package handlers
+package {{.LowerCase}}
 
 import (
 	"encoding/json"
@@ -21,7 +21,7 @@ type Handle struct {
 }
 
 func New(app *service.App) *Handle {
-	repo := {{.LowerCase}}.New(app.Log)
+	repo := {{.LowerCase}}service.New(app.Log)
 
 	return &Handle{
 		repo: repo,

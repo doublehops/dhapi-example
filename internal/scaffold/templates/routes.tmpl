@@ -5,7 +5,7 @@
 
 	------------------------------------------------------
 
-    "{{.Module}}/internal/handlers/{{.LowerCase}}"
+	"{{.Module}}/internal/handlers/{{.LowerCase}}"
 
 	------------------------------------------------------
 
@@ -13,13 +13,19 @@
 
 	------------------------------------------------------
 
-	authorGroup := group.New("/{{.KebabCase}}")
-	authorGroup.GET({{.CamelCase}}Handle.GetAll).Middleware(middleware.AuthMiddleware)
-	authorGroup.Children(
+	{{.CamelCase}}Handle := {{.LowerCase}}.New(app)
+
+	{{.CamelCase}}Group := group.New("/{{.KebabCase}}")
+	{{.CamelCase}}Group.GET({{.CamelCase}}Handle.GetAll).Middleware(middleware.AuthMiddleware)
+	{{.CamelCase}}Group.Children(
 		group.New("/:id").GET({{.CamelCase}}Handle.GetByID),
 		group.New("").POST({{.CamelCase}}Handle.Create),
 		group.New("/:id").PUT({{.CamelCase}}Handle.UpdateByID),
 		group.New("/:id").DELETE({{.CamelCase}}Handle.DeleteByID),
+	)
+
+	g = group.New("/v1").Children(
+		{{.CamelCase}}Group,
 	)
 
 	------------------------------------------------------

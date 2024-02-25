@@ -10,7 +10,7 @@ const serviceTemplate = "./internal/scaffold/templates/service.tmpl"
 func (s *Scaffold) createService(ctx context.Context, m Model) error {
 
 	m.ModelStructProperties = getStructProperties(m.Columns)
-	path := fmt.Sprintf("%s/%s/%s", s.pwd, s.Config.Paths.Service, m.LowerCase)
+	path := fmt.Sprintf("%s/%s/%s", s.pwd, s.Config.Paths.Service, m.LowerCase+"service")
 	filename := fmt.Sprintf("%s/%sservice.go", path, m.LowerCase)
 
 	err := MkDir(path)
@@ -27,7 +27,7 @@ func (s *Scaffold) createService(ctx context.Context, m Model) error {
 		return err
 	}
 
-	s.l.Info(ctx, "model has been written: "+filename, nil)
+	s.l.Info(ctx, "service has been written: "+filename, nil)
 
 	return nil
 }
