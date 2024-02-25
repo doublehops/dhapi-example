@@ -7,9 +7,11 @@ import (
 
 	"github.com/julienschmidt/httprouter"
 
-	"{{.Module}}/internal/model/{{.LowerCase}}"
+	"{{.Module}}/internal/handlers"
 	"{{.Module}}/internal/repository/{{.LowerCase}}repository"
+	model "{{.Module}}/internal/model/{{.LowerCase}}"
 	req "{{.Module}}/internal/request"
+	"{{.Module}}/internal/service"
 	"{{.Module}}/internal/service/{{.LowerCase}}service"
 	"{{.Module}}/internal/tools"
 )
@@ -17,16 +19,16 @@ import (
 type Handle struct {
 	repo *{{.LowerCase}}repository.{{.PascalCase}}
 	srv  *{{.LowerCase}}service.{{.ServiceName}}
-	base *BaseHandler
+	base *handlers.BaseHandler
 }
 
 func New(app *service.App) *Handle {
-	repo := {{.LowerCase}}service.New(app.Log)
+	repo := {{.LowerCase}}repository.New(app.Log)
 
 	return &Handle{
 		repo: repo,
 		srv:  {{.LowerCase}}service.New(app, repo),
-		base: &BaseHandler{
+		base: &handlers.BaseHandler{
 			Log: app.Log,
 		},
 	}
@@ -106,7 +108,7 @@ func (h *Handle) UpdateByID(w http.ResponseWriter, r *http.Request, ps httproute
 		return
 	}
 
-	err := h.srv.Update(ctx, record)
+	record, err = h.srv.Update(ctx, record)
 	if err != nil {
 		h.base.WriteJson(ctx, w, http.StatusInternalServerError, "Unable to process request")
 

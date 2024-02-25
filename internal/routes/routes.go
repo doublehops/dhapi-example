@@ -21,15 +21,21 @@ func GetV1Routes(app *service.App) *group.RouteGroup {
 		group.New("/:id").DELETE(authorHandle.DeleteByID),
 	)
 
+	g := group.New("/v1").Children(
+		authorGroup,
+	)
+
 	// New routes created by scaffolding can be added here.
 
+	myNewTableHandle := mynewtable.New(app)
+
 	myNewTableGroup := group.New("/my-new-table")
-	myNewTableGroup.GET(mynewtable.GetAll).Middleware(middleware.AuthMiddleware)
+	myNewTableGroup.GET(myNewTableHandle.GetAll).Middleware(middleware.AuthMiddleware)
 	myNewTableGroup.Children(
-		group.New("/:id").GET(mynewtable.GetByID),
-		group.New("").POST(mynewtable.Create),
-		group.New("/:id").PUT(mynewtable.UpdateByID),
-		group.New("/:id").DELETE(mynewtable.DeleteByID),
+		group.New("/:id").GET(myNewTableHandle.GetByID),
+		group.New("").POST(myNewTableHandle.Create),
+		group.New("/:id").PUT(myNewTableHandle.UpdateByID),
+		group.New("/:id").DELETE(myNewTableHandle.DeleteByID),
 	)
 
 	g = group.New("/v1").Children(
