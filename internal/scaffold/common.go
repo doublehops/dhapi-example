@@ -35,6 +35,12 @@ func ToPascalCase(str string) string {
 	return strings.Join(words, "")
 }
 
+func ToKebabCase(str string) string {
+	str = strings.Replace(str, "_", "-", 99)
+
+	return str
+}
+
 func ToInitialisation(str string) string {
 	initials := ""
 	words := strings.Split(str, "_")

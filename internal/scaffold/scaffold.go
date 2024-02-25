@@ -41,6 +41,7 @@ type Model struct {
 	PascalCase     string
 	SnakeCase      string
 	LowerCase      string
+	KebabCase      string
 	Initialisation string
 	Module         string
 
@@ -109,6 +110,7 @@ func (s *Scaffold) Run() error {
 		FirstInitial:   GetFirstRune(s.tableName),
 		CamelCase:      ToCamelCase(s.tableName),
 		PascalCase:     ToPascalCase(s.tableName),
+		KebabCase:      ToKebabCase(s.tableName),
 		SnakeCase:      s.tableName,
 		LowerCase:      RemoveUnderscores(s.tableName),
 		Initialisation: ToInitialisation(s.tableName),
@@ -142,6 +144,12 @@ func (s *Scaffold) Run() error {
 
 	// Create handler.
 	err = s.createHandler(ctx, ms)
+	if err != nil {
+		return err
+	}
+
+	// Create handler.
+	err = s.printRoutes(ctx, ms)
 	if err != nil {
 		return err
 	}

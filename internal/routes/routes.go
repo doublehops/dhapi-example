@@ -20,6 +20,8 @@ func GetV1Routes(app *service.App) *group.RouteGroup {
 		group.New("/:id").DELETE(authorHandle.DeleteByID),
 	)
 
+	// New routes created by scaffolding can be added here.
+
 	g := group.New("/v1").Children(
 		authorGroup,
 	)

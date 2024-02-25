@@ -1,0 +1,25 @@
+	If there are no errors, the scaffolding is complete. You will need to add the manual changes
+	below to make the endpoints available.
+
+	// Add the following import to ./internal/routes/routes.go
+
+	------------------------------------------------------
+
+    "{{.Module}}/internal/handlers/{{.LowerCase}}"
+
+	------------------------------------------------------
+
+	// Add the following routes to ./internal/routes/routes.go
+
+	------------------------------------------------------
+
+	authorGroup := group.New("/{{.KebabCase}}")
+	authorGroup.GET({{.CamelCase}}Handle.GetAll).Middleware(middleware.AuthMiddleware)
+	authorGroup.Children(
+		group.New("/:id").GET({{.CamelCase}}Handle.GetByID),
+		group.New("").POST({{.CamelCase}}Handle.Create),
+		group.New("/:id").PUT({{.CamelCase}}Handle.UpdateByID),
+		group.New("/:id").DELETE({{.CamelCase}}Handle.DeleteByID),
+	)
+
+	------------------------------------------------------
