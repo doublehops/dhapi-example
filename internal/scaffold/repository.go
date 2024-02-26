@@ -49,6 +49,7 @@ func (s *Scaffold) createRepository(ctx context.Context, m Model) error {
 }
 
 func (s *Scaffold) ColumnSQLParams(m *Model) {
+
 	var (
 		insertCols = ""
 		insertQs   = ""

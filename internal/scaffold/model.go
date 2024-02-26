@@ -55,17 +55,33 @@ func getStructProperties(columns []column) string {
 func (s *Scaffold) getValidationRules(m Model) string {
 	var rules string
 
-	ignoreColumns := []string{"created_at", "updated_at", "deleted_at"}
+	ignoreColumns := []string{"id", "created_at", "updated_at", "deleted_at"}
 
 	for _, col := range m.Columns {
 		if str.SliceContains(col.Original, ignoreColumns) {
 			continue
 		}
 
-		rules += fmt.Sprintf("{\"%s\", %s.%s, true, []validator.ValidationFuncs{validator.LengthInRange(3, 8, \"\")}},\n", col.CamelCase, m.FirstInitial, col.CapitalisedAbbr)
+		rules += getRule(col, m)
 	}
 
 	return rules
+}
+
+func getRule(col column, m Model) string {
+	var rule string
+
+	switch col.Type {
+	case "string":
+		rule = fmt.Sprintf("{\"%s\", %s.%s, true, []validator.ValidationFuncs{validator.LengthInRange(3, 8, \"\")}},\n", col.CamelCase, m.FirstInitial, col.CapitalisedAbbr)
+	case "int":
+		rule = fmt.Sprintf("{\"%s\", %s.%s, true, []validator.ValidationFuncs{validator.IsInt(\"\")}},\n", col.CamelCase, m.FirstInitial, col.CapitalisedAbbr)
+	default:
+		rule = fmt.Sprintf("{\"%s\", %s.%s, true, []validator.ValidationFuncs{validator.LengthInRange(3, 8, \"\")}},\n", col.CamelCase, m.FirstInitial, col.CapitalisedAbbr)
+	}
+
+	// Return for string column.
+	return rule
 }
 
 // getPropertyType will check which column type the property is and return a corresponding

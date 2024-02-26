@@ -1,6 +1,6 @@
 package repositoryauthor
 
-var insertRecordSQL = `INSERT INTO {{.Name}} (
+var insertRecordSQL = `INSERT INTO author (
 	user_id,
 	name,
     created_by,

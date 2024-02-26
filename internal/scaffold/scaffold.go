@@ -99,6 +99,10 @@ func (s *Scaffold) Run() error {
 		return errors.New("failed to run. " + err.Error())
 	}
 
+	//for k, _ := range columns {
+	//	s.l.Info(nil, ">>>>> 000 column: "+k, nil)
+	//}
+
 	moduleName, err := getModuleName()
 	if err != nil {
 		s.l.Error(ctx, err.Error(), nil)
@@ -171,13 +175,19 @@ func getModuleName() (string, error) {
 	return module, nil
 }
 
-func (s *Scaffold) getTableDefinition() (map[string]string, error) {
-	cols := map[string]string{}
+type ColumnDefinition struct {
+	columnName string
+	columnType string
+}
+
+func (s *Scaffold) getTableDefinition() ([]ColumnDefinition, error) {
+
+	cols := []ColumnDefinition{}
 
 	q := "DESCRIBE " + s.tableName
 	rows, err := s.DB.Query(q)
 	if err != nil {
-		return nil, errors.New("error executing query. " + err.Error())
+		return cols, errors.New("error executing query. " + err.Error())
 	}
 	defer rows.Close()
 
@@ -201,23 +211,23 @@ func (s *Scaffold) getTableDefinition() (map[string]string, error) {
 
 		columnName := fmt.Sprintf("%s", values[0])
 		columnType := fmt.Sprintf("%s", values[1])
-		cols[columnName] = columnType
+		cols = append(cols, ColumnDefinition{columnName: columnName, columnType: columnType})
 	}
 
 	return cols, nil
 }
 
-func getColumnDefinitions(columns map[string]string) []column {
+func getColumnDefinitions(columns []ColumnDefinition) []column {
 	var cols []column
 
-	for colName, colType := range columns {
+	for _, col := range columns {
 		col := column{
-			Original:        colName,
-			Type:            getPropertyType(colType),
-			LowerCase:       strings.ToLower(ToCamelCase(colName)),
-			PascalCase:      ToPascalCase(colName),
-			CamelCase:       ToCamelCase(colName),
-			CapitalisedAbbr: CapitaliseAbbr(ToPascalCase(colName)),
+			Original:        col.columnName,
+			Type:            getPropertyType(col.columnType),
+			LowerCase:       strings.ToLower(ToCamelCase(col.columnName)),
+			PascalCase:      ToPascalCase(col.columnName),
+			CamelCase:       ToCamelCase(col.columnName),
+			CapitalisedAbbr: CapitaliseAbbr(ToPascalCase(col.columnName)),
 		}
 
 		cols = append(cols, col)
