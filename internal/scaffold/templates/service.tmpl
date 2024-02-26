@@ -5,17 +5,17 @@ import (
 
 	"{{.Module}}/internal/model/{{.LowerCase}}"
 	"{{.Module}}/internal/app"
-	"{{.Module}}/internal/repository/repository{{.LowerCase}}"
+	"{{.Module}}/internal/repository/{{.LowerCase}}repository"
 	"{{.Module}}/internal/service"
 	req "{{.Module}}/internal/request"
 )
 
 type {{.PascalCase}}Service struct {
 	*service.App
-	{{.CamelCase}}Repo *repository{{.LowerCase}}.{{.PascalCase}}
+	{{.CamelCase}}Repo *{{.LowerCase}}repository.{{.PascalCase}}
 }
 
-func New(app *service.App, {{.LowerCase}}Repo *repository{{.LowerCase}}.{{.PascalCase}}) *{{.PascalCase}}Service {
+func New(app *service.App, {{.LowerCase}}Repo *{{.LowerCase}}repository.{{.PascalCase}}) *{{.PascalCase}}Service {
 	return &{{.PascalCase}}Service{
 		App:        app,
 		{{.CamelCase}}Repo: {{.LowerCase}}Repo,

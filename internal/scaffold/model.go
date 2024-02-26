@@ -37,7 +37,7 @@ func (s *Scaffold) createModel(ctx context.Context, m Model) error {
 
 func getStructProperties(columns []column) string {
 
-	ignoreColumns := []string{"created_at", "updated_at", "deleted_at"}
+	ignoreColumns := []string{"id", "created_at", "updated_at", "deleted_at"}
 
 	var properties string
 
@@ -83,31 +83,3 @@ func getPropertyType(propType string) columnType {
 
 	return typeString
 }
-
-//func (s *Scaffold) writeModelFile(filename string, tmpl Model) error {
-//	src := fmt.Sprintf(modelTemplate)
-//	f, err := os.Open(src)
-//	if err != nil {
-//		return errors.New("unable to open template. " + err.Error())
-//	}
-//
-//	source, err := io.ReadAll(f)
-//
-//	dest := fmt.Sprintf("%s/%s/%s", s.pwd, s.Config.Paths.Model, filename)
-//	f, err = os.Create(dest)
-//	if err != nil {
-//		return errors.New("unable to open destination. " + err.Error())
-//	}
-//
-//	t, err := template.New("model").Parse(string(source))
-//	err = t.Execute(f, tmpl)
-//	if err != nil {
-//		return errors.New("unable to write template. " + err.Error())
-//	}
-//
-//	if err = Gofmt(dest); err != nil {
-//		return errors.New("unable to run gofmt. " + err.Error())
-//	}
-//
-//	return nil
-//}
