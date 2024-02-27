@@ -52,16 +52,27 @@ func (s *Scaffold) createRepository(ctx context.Context, m Model) error {
 func (s *Scaffold) getQueryFields(cols []column) (string, string, string) {
 	var insertColumns []string
 	var selectColumns []string
+	var updateColumns []string
+
 	for _, f := range cols {
 		insertCol := fmt.Sprintf("model.%s", f.CapitalisedAbbr)
 		insertColumns = append(insertColumns, insertCol)
 
 		selectCol := fmt.Sprintf("&record.%s", f.CapitalisedAbbr)
 		selectColumns = append(selectColumns, selectCol)
+
+		// Don't add `id` column to beginning of update statement.
+		if f.Original == "id" {
+			continue
+		}
+		updateCol := fmt.Sprintf("model.%s", f.CapitalisedAbbr)
+		updateColumns = append(updateColumns, updateCol)
 	}
 
+	updateColumns = append(updateColumns, "model.ID")
+
 	insertFields := strings.Join(insertColumns[1:], ", ")
-	updateFields := strings.Join(insertColumns, ", ")
+	updateFields := strings.Join(updateColumns, ", ")
 	scanFields := strings.Join(selectColumns, ", ")
 
 	return insertFields, updateFields, scanFields
@@ -85,7 +96,7 @@ func (s *Scaffold) setColumnSQLParams(m *Model) {
 
 		insertCols += fmt.Sprintf("\t%s,\n", col.Original)
 		insertQs += fmt.Sprintf("\t?,\n")
-		updateStmt += fmt.Sprintf("\t%s=?\n", col.Original)
+		updateStmt += fmt.Sprintf("\t%s=?,\n", col.Original)
 	}
 
 	// Remove two last chars (comma and carriage return) of each string.
