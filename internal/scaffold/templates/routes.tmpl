@@ -29,3 +29,12 @@
 	)
 
 	------------------------------------------------------
+
+	You should now be able to run the cURL queries to test it. You may want to remove the authorization checks in the handlers or
+	you may receive an authorization 403 error.
+
+	- Create record: `curl -X POST http://localhost:8080/v1/my-new-table --data '{"name":"johnno"}'`
+	- List records: `curl -X GET http://localhost:8080/v1/my-new-table`
+	- Get record: `curl -X GET http://localhost:8080/v1/my-new-table/1`
+	- Update record: `curl -X PUT http://localhost:8080/v1/my-new-table/1 --data '{"name":"bobby"}'`
+	- Delete record: `curl -X DELETE http://localhost:8080/v1/my-new-table/1'`
