@@ -1,7 +1,7 @@
 	If there are no errors, the scaffolding is complete. You will need to add the manual changes
 	below to make the endpoints available.
 
-	// Add the following import to ./internal/routes/routes.go
+	// Add the following import to head of ./internal/routes/routes.go
 
 	------------------------------------------------------
 
@@ -9,7 +9,7 @@
 
 	------------------------------------------------------
 
-	// Add the following routes to ./internal/routes/routes.go
+	// Add the following group of routes to ./internal/routes/routes.go
 
 	------------------------------------------------------
 
@@ -24,8 +24,12 @@
 		group.New("/:id").DELETE({{.CamelCase}}Handle.DeleteByID),
 	)
 
+	And then add include the new route group into the existing `group.New` route list.
+
+	------------------------------------------------------
+
 	g = group.New("/v1").Children(
-		{{.CamelCase}}Group,
+		{{.CamelCase}}Group, // new line here.
 	)
 
 	------------------------------------------------------

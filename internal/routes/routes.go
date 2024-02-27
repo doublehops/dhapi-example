@@ -37,6 +37,7 @@ func GetV1Routes(app *service.App) *group.RouteGroup {
 	g := group.New("/v1").Children(
 		authorGroup,
 		myNewTableGroup,
+		// Add new groups here.
 	)
 
 	return g
