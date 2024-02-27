@@ -13,7 +13,6 @@ var updateRecordSQL = `UPDATE {{.Name}} SET
 `
 
 var deleteRecordSQL = `UPDATE {{.Name}} SET
-    updated_by=?,
     updated_at=?,
     deleted_at=?
 	WHERE id=?

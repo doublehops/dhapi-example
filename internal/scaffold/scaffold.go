@@ -53,6 +53,9 @@ type Model struct {
 
 	ModelStructProperties string
 	ValidationRules       string
+	InsertFields          string
+	UpdateFields          string
+	ScanFields            string
 
 	Columns []column
 

@@ -24,7 +24,7 @@ func New(logger *logga.Logga) *{{.PascalCase}} {
 
 func ({{.Initialisation}} *{{.PascalCase}}) Create(ctx context.Context, tx *sql.Tx, model *model.{{.PascalCase}}) error {
 
-	result, err := tx.Exec(insertRecordSQL, model.UserID, model.Name, model.CreatedBy, model.UpdatedBy, model.CreatedAt, model.UpdatedAt)
+	result, err := tx.Exec(insertRecordSQL, {{.InsertFields}})
 	if err != nil {
 		errMsg := fmt.Sprintf("there was an error saving record to db. %s", err)
 		{{.Initialisation}}.Log.Error(ctx, errMsg, nil)
@@ -44,7 +44,7 @@ func ({{.Initialisation}} *{{.PascalCase}}) Create(ctx context.Context, tx *sql.
 
 func ({{.Initialisation}} *{{.PascalCase}}) Update(ctx context.Context, tx *sql.Tx, model *model.{{.PascalCase}}) error {
 
-	_, err := tx.Exec(updateRecordSQL, model.Name, model.UpdatedBy, model.UpdatedAt, model.ID)
+	_, err := tx.Exec(updateRecordSQL, {{.UpdateFields}})
 	if err != nil {
 		errMsg := fmt.Sprintf("there was an error saving record to db. %s", err)
 		{{.Initialisation}}.Log.Error(ctx, errMsg, nil)
@@ -68,10 +68,10 @@ func ({{.Initialisation}} *{{.PascalCase}}) Delete(ctx context.Context, tx *sql.
 	return nil
 }
 
-func ({{.Initialisation}} *{{.PascalCase}}) GetByID(ctx context.Context, DB *sql.DB, ID int32, model *model.{{.PascalCase}}) error {
+func ({{.Initialisation}} *{{.PascalCase}}) GetByID(ctx context.Context, DB *sql.DB, ID int32, record *model.{{.PascalCase}}) error {
 	row := DB.QueryRow(selectByIDQuery, ID)
 
-	err := row.Scan(&model.ID, &model.UserID, &model.Name, &model.CreatedBy, &model.UpdatedBy, &model.CreatedAt, &model.UpdatedAt)
+	err := row.Scan({{.ScanFields}})
 	if err != nil {
 		return fmt.Errorf("unable to fetch record %d", ID)
 	}
@@ -109,7 +109,7 @@ func ({{.Initialisation}} *{{.PascalCase}}) GetAll(ctx context.Context, DB *sql.
 
 	for rows.Next() {
 		var record model.{{.PascalCase}}
-		if err = rows.Scan(&record.ID, &record.UserID, &record.Name, &record.CreatedBy, &record.UpdatedBy, &record.CreatedAt, &record.UpdatedAt); err != nil {
+		if err = rows.Scan({{.ScanFields}}); err != nil {
 			return records, fmt.Errorf("unable to fetch rows. %s", err)
 		}
 
