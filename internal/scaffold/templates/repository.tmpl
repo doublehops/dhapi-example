@@ -57,7 +57,7 @@ func ({{.Initialisation}} *{{.PascalCase}}) Update(ctx context.Context, tx *sql.
 
 func ({{.Initialisation}} *{{.PascalCase}}) Delete(ctx context.Context, tx *sql.Tx, model *model.{{.PascalCase}}) error {
 
-	_, err := tx.Exec(deleteRecordSQL, model.UpdatedBy, model.UpdatedAt, model.DeletedAt, model.ID)
+	_, err := tx.Exec(deleteRecordSQL, model.UpdatedAt, model.DeletedAt, model.ID)
 	if err != nil {
 		errMsg := fmt.Sprintf("there was an error saving record to db. %s", err)
 		{{.Initialisation}}.Log.Error(ctx, errMsg, nil)
