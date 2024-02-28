@@ -4,6 +4,7 @@ const (
 	MinValueDefaultMessage = "is below required amount"
 	MaxValueDefaultMessage = "is above required amount"
 	InRangeDefaultMessage  = "is not within required range"
+	NotIntegerMessage      = "is not an integer"
 )
 
 func MinValue(minValue int, errorMessage string) ValidationFuncs {
@@ -49,6 +50,22 @@ func MaxValue(maxValue int, errorMessage string) ValidationFuncs {
 		}
 
 		if v > maxValue {
+			return false, errorMessage
+		}
+
+		return true, ""
+	}
+}
+
+func IsInt(errorMessage string) ValidationFuncs {
+	return func(required bool, value interface{}) (bool, string) {
+		if errorMessage == "" {
+			errorMessage = NotIntegerMessage
+		}
+
+		var ok bool
+
+		if _, ok = value.(int); !ok {
 			return false, errorMessage
 		}
 

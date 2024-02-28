@@ -1,0 +1,8 @@
+{
+  "paths": {
+    "handlers": "internal/handlers",
+    "model": "internal/model",
+    "repository": "internal/repository",
+    "service": "internal/service"
+  }
+}

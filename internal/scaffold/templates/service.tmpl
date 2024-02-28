@@ -1,0 +1,117 @@
+package {{.LowerCase}}service
+
+import (
+	"context"
+	"fmt"
+
+	"{{.Module}}/internal/model/{{.LowerCase}}"
+	"{{.Module}}/internal/app"
+	"{{.Module}}/internal/repository/{{.LowerCase}}repository"
+	"{{.Module}}/internal/service"
+	req "{{.Module}}/internal/request"
+)
+
+type {{.PascalCase}}Service struct {
+	*service.App
+	{{.CamelCase}}Repo *{{.LowerCase}}repository.{{.PascalCase}}
+}
+
+func New(app *service.App, {{.LowerCase}}Repo *{{.LowerCase}}repository.{{.PascalCase}}) *{{.PascalCase}}Service {
+	return &{{.PascalCase}}Service{
+		App:        app,
+		{{.CamelCase}}Repo: {{.LowerCase}}Repo,
+	}
+}
+
+func (s {{.PascalCase}}Service) Create(ctx context.Context, record *model.{{.PascalCase}}) (*model.{{.PascalCase}}, error) {
+	ctx = context.WithValue(ctx, app.UserIDKey, 1) // todo - set this in middleware.
+
+	record.SetCreated(ctx)
+
+	tx, _ := s.DB.BeginTx(ctx, nil)
+	defer tx.Rollback()
+
+	err := s.{{.CamelCase}}Repo.Create(ctx, tx, record)
+	if err != nil {
+		s.Log.Error(ctx, "unable to save new record. "+err.Error(), nil)
+
+		return record, req.CouldNotSaveRecord
+	}
+
+	err = tx.Commit()
+	if err != nil {
+		s.Log.Error(ctx, "unable to commit transaction"+err.Error(), nil)
+	}
+
+	a := &model.{{.PascalCase}}{}
+	err = s.{{.CamelCase}}Repo.GetByID(ctx, s.DB, record.ID, a)
+	if err != nil {
+		s.Log.Error(ctx, "unable to retrieve record. "+err.Error(), nil)
+	}
+
+	return a, nil
+}
+
+func (s {{.PascalCase}}Service) Update(ctx context.Context, record *model.{{.PascalCase}}) (*model.{{.PascalCase}}, error) {
+	record.SetUpdated(ctx)
+
+	tx, _ := s.DB.BeginTx(ctx, nil)
+	defer tx.Rollback()
+
+	err := s.{{.CamelCase}}Repo.Update(ctx, tx, record)
+	if err != nil {
+		s.Log.Error(ctx, "unable to update record. "+err.Error(), nil)
+	}
+
+	err = tx.Commit()
+	if err != nil {
+		s.Log.Error(ctx, "unable to commit transaction"+err.Error(), nil)
+	}
+
+	a := &model.{{.PascalCase}}{}
+	err = s.{{.CamelCase}}Repo.GetByID(ctx, s.DB, record.ID, a)
+	if err != nil {
+		s.Log.Error(ctx, "unable to retrieve record. "+err.Error(), nil)
+	}
+
+	return a, nil
+}
+
+func (s {{.PascalCase}}Service) DeleteByID(ctx context.Context, record *model.{{.PascalCase}}, ID int32) error {
+	tx, _ := s.DB.BeginTx(ctx, nil)
+	defer tx.Rollback()
+
+	record.SetDeleted(ctx)
+
+	err := s.{{.CamelCase}}Repo.Delete(ctx, tx, record)
+	if err != nil {
+		s.Log.Error(ctx, "unable to delete record. "+err.Error(), nil)
+
+		return fmt.Errorf("unable to delete record")
+	}
+
+	err = tx.Commit()
+	if err != nil {
+		s.Log.Error(ctx, "unable to commit transaction"+err.Error(), nil)
+	}
+
+	return nil
+}
+
+func (s {{.PascalCase}}Service) GetByID(ctx context.Context, record *model.{{.PascalCase}}, ID int32) error {
+	err := s.{{.CamelCase}}Repo.GetByID(ctx, s.DB, ID, record)
+	if err != nil {
+		s.Log.Error(ctx, "unable to retrieve record. "+err.Error(), nil)
+	}
+
+	return nil
+}
+
+func (s {{.PascalCase}}Service) GetAll(ctx context.Context, r *req.Request) ([]*model.{{.PascalCase}}, error) {
+	records, err := s.{{.CamelCase}}Repo.GetAll(ctx, s.DB, r)
+	if err != nil {
+		s.Log.Error(ctx, "unable to retrieve records. "+err.Error(), nil)
+	}
+
+	return records, nil
+}

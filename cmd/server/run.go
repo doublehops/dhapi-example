@@ -50,12 +50,15 @@ func run() error {
 	}
 
 	router := httprouter.New()
-	routes := routes.GetV1Routes(App)
+	rts := routes.GetV1Routes(App)
 
-	for _, r := range routes.Routes() {
+	l.Info(nil, "Adding routes", nil)
+	for _, r := range rts.Routes() {
 		fmt.Printf(">>> %s %s\n", r.Method(), r.Path())
 		router.Handle(r.Method(), r.Path(), r.Handler())
 	}
+
+	l.Info(nil, "Starting server on port :8080", nil)
 
 	err = http.ListenAndServe(":8080", router)
 	if err != nil {

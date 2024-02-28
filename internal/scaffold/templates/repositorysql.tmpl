@@ -1,0 +1,35 @@
+package {{.LowerCase}}repository
+
+var insertRecordSQL = `INSERT INTO {{.Name}} (
+{{.SQLCreate}}
+	  ) VALUES (
+{{.SQLCreateQs}}
+	)
+`
+
+var updateRecordSQL = `UPDATE {{.Name}} SET
+{{.SQLUpdate}}
+	WHERE id=?
+`
+
+var deleteRecordSQL = `UPDATE {{.Name}} SET
+    updated_at=?,
+    deleted_at=?
+	WHERE id=?
+`
+
+var selectByIDQuery = `SELECT 
+{{.SQLSelect}}
+    FROM {{.Name}}
+    WHERE id=?
+    AND deleted_at IS NULL`
+
+var selectCollectionQuery = `SELECT 
+{{.SQLSelect}}
+    FROM {{.Name}}
+`
+
+var selectCollectionCountQuery = `SELECT 
+    COUNT(*) count
+    FROM {{.Name}}
+`

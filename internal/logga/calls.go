@@ -3,32 +3,54 @@ package logga
 import (
 	"context"
 	"github.com/doublehops/dhapi-example/internal/app"
+	"github.com/doublehops/dhapi-example/internal/tools"
 )
 
 // Debug - args should be key/value pairs separated by a space. Example: "file", "migrate.go"
-func (l *Logga) Debug(ctx context.Context, msg string, KVPs KVPs) {
-	args := getArguments(ctx, KVPs)
+func (l *Logga) Debug(ctx context.Context, msg string, KVP KVPs) {
+	if KVP == nil {
+		KVP = KVPs{}
+	}
+	f := tools.CurrentFunction()
+	KVP["func"] = f
+	args := getArguments(ctx, KVP)
 	l.Log.DebugContext(ctx, msg, args...)
 }
 
 // Info - args should be key/value pairs separated by a space. Example: "file", "migrate.go"
-func (l *Logga) Info(ctx context.Context, msg string, KVPs KVPs) {
-	args := getArguments(ctx, KVPs)
+func (l *Logga) Info(ctx context.Context, msg string, KVP KVPs) {
+	if KVP == nil {
+		KVP = KVPs{}
+	}
+	f := tools.CurrentFunction()
+	KVP["func"] = f
+	args := getArguments(ctx, KVP)
 	l.Log.InfoContext(ctx, msg, args...)
 }
 
 // Warn - args should be key/value pairs separated by a space. Example: "file", "migrate.go"
-func (l *Logga) Warn(ctx context.Context, msg string, KVPs KVPs) {
-	args := getArguments(ctx, KVPs)
+func (l *Logga) Warn(ctx context.Context, msg string, KVP KVPs) {
+	if KVP == nil {
+		KVP = KVPs{}
+	}
+	f := tools.CurrentFunction()
+	KVP["func"] = f
+	args := getArguments(ctx, KVP)
 	l.Log.WarnContext(ctx, msg, args...)
 }
 
 // Error - args should be key/value pairs separated by a space. Example: "file", "migrate.go"
-func (l *Logga) Error(ctx context.Context, msg string, KVPs KVPs) {
-	args := getArguments(ctx, KVPs)
+func (l *Logga) Error(ctx context.Context, msg string, KVP KVPs) {
+	if KVP == nil {
+		KVP = KVPs{}
+	}
+	f := tools.CurrentFunction()
+	KVP["func"] = f
+	args := getArguments(ctx, KVP)
 	l.Log.ErrorContext(ctx, msg, args...)
 }
 
+// getArguments will get retrieve additional values from context and KVPs.
 func getArguments(ctx context.Context, KVPs KVPs) []any {
 	ctxArgs := getContextAtts(ctx)
 
@@ -44,6 +66,7 @@ func getArguments(ctx context.Context, KVPs KVPs) []any {
 	return args
 }
 
+// getContextAtts will retrieve known variables from context to add the log messages.
 func getContextAtts(ctx context.Context) []any {
 	var args []interface{}
 

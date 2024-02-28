@@ -1,3 +1,4 @@
+.SILENT:
 
 run:
 	go run cmd/server/run.go -config ./config.json
@@ -17,3 +18,7 @@ docker_up:
 
 docker_down:
 	docker-compose -f docker-compose.yml down
+
+# make scaffold model=<table_name>
+scaffold:
+	go run ./cmd/scaffold/run.go -config ./config.json -table $(table)

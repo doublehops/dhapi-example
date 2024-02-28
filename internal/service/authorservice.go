@@ -2,9 +2,9 @@ package service
 
 import (
 	"context"
+	"github.com/doublehops/dhapi-example/internal/model"
 
 	"github.com/doublehops/dhapi-example/internal/app"
-	"github.com/doublehops/dhapi-example/internal/model"
 	"github.com/doublehops/dhapi-example/internal/repository/repositoryauthor"
 	req "github.com/doublehops/dhapi-example/internal/request"
 )
