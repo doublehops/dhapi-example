@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+
 	"github.com/doublehops/dhapi-example/internal/logga"
 	"github.com/doublehops/dhapi-example/internal/model"
 	"github.com/doublehops/dhapi-example/internal/repository"
@@ -21,7 +22,6 @@ func New(logger *logga.Logga) *Author {
 }
 
 func (a *Author) Create(ctx context.Context, tx *sql.Tx, model *model.Author) error {
-
 	result, err := tx.Exec(insertRecordSQL, model.UserID, model.Name, model.CreatedBy, model.UpdatedBy, model.CreatedAt, model.UpdatedAt)
 	if err != nil {
 		errMsg := fmt.Sprintf("there was an error saving record to db. %s", err)
@@ -41,7 +41,6 @@ func (a *Author) Create(ctx context.Context, tx *sql.Tx, model *model.Author) er
 }
 
 func (a *Author) Update(ctx context.Context, tx *sql.Tx, model *model.Author) error {
-
 	_, err := tx.Exec(updateRecordSQL, model.Name, model.UpdatedBy, model.UpdatedAt, model.ID)
 	if err != nil {
 		errMsg := fmt.Sprintf("there was an error saving record to db. %s", err)
@@ -54,7 +53,6 @@ func (a *Author) Update(ctx context.Context, tx *sql.Tx, model *model.Author) er
 }
 
 func (a *Author) Delete(ctx context.Context, tx *sql.Tx, model *model.Author) error {
-
 	_, err := tx.Exec(deleteRecordSQL, model.UpdatedBy, model.UpdatedAt, model.DeletedAt, model.ID)
 	if err != nil {
 		errMsg := fmt.Sprintf("there was an error saving record to db. %s", err)

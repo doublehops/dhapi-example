@@ -5,11 +5,12 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	"github.com/doublehops/dhapi-example/internal/logga"
 	"io"
 	"log"
 	"os"
 	"strings"
+
+	"github.com/doublehops/dhapi-example/internal/logga"
 )
 
 const goModuleFile = "./go.mod"
@@ -181,7 +182,6 @@ type ColumnDefinition struct {
 
 // getTableDefinition will get the table and column definitions which will be used to build all files.
 func (s *Scaffold) getTableDefinition() ([]ColumnDefinition, error) {
-
 	cols := []ColumnDefinition{}
 
 	q := "DESCRIBE " + s.tableName

@@ -14,7 +14,6 @@ const routeTemplate = "./internal/scaffold/templates/routes.tmpl"
 
 // printRoutes will print the routes for the user to manually add to the routes table.
 func (s *Scaffold) printRoutes(ctx context.Context, m Model) error {
-
 	m.ModelStructProperties = getStructProperties(m.Columns)
 
 	f, err := os.Open(routeTemplate)

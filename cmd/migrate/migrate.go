@@ -3,11 +3,12 @@ package main
 import (
 	"flag"
 	"fmt"
+	"log"
+	"os"
+
 	"github.com/doublehops/dhapi-example/internal/config"
 	"github.com/doublehops/dhapi-example/internal/db"
 	"github.com/doublehops/dhapi-example/internal/logga"
-	"log"
-	"os"
 
 	_ "github.com/go-sql-driver/mysql"
 

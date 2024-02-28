@@ -3,15 +3,15 @@ package scaffold
 import (
 	"context"
 	"fmt"
-	"github.com/doublehops/go-common/str"
 	"strings"
+
+	"github.com/doublehops/go-common/str"
 )
 
 const modelTemplate = "./internal/scaffold/templates/model.tmpl"
 
 // createModel will create the model.
 func (s *Scaffold) createModel(ctx context.Context, m Model) error {
-
 	s.l.Info(ctx, ">>>>>>>> in createModel()", nil)
 	m.ModelStructProperties = getStructProperties(m.Columns)
 	m.ValidationRules = s.getValidationRules(m)

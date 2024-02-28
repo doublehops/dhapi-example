@@ -2,9 +2,10 @@ package author
 
 import (
 	"encoding/json"
-	"github.com/doublehops/dhapi-example/internal/model"
 	"net/http"
 	"strconv"
+
+	"github.com/doublehops/dhapi-example/internal/model"
 
 	"github.com/julienschmidt/httprouter"
 

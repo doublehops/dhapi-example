@@ -119,8 +119,7 @@ func (s *Scaffold) writeFile(src, dest string, tmpl Model) error {
 
 // MkDir will recursively make the directory only if it doesn't already exist.
 func MkDir(path string) error {
-
-	err := os.MkdirAll(path, 0755)
+	err := os.MkdirAll(path, 0o755)
 	if err != nil {
 		return err
 	}

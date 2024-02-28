@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+
 	"github.com/doublehops/dhapi-example/internal/model"
 
 	"github.com/doublehops/dhapi-example/internal/app"
