@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/doublehops/dhapi-example/internal/logga"
 	"io"
 	"os"
 	"os/exec"
@@ -12,6 +11,7 @@ import (
 	"strings"
 	"text/template"
 
+	"github.com/doublehops/dhapi-example/internal/logga"
 	"golang.org/x/text/cases"
 	"golang.org/x/text/language"
 )
@@ -25,6 +25,7 @@ func GetFirstRune(str string) string {
 	return ""
 }
 
+// ToPascalCase will convert string to pascal case.  Eg. JohnSmith.
 func ToPascalCase(str string) string {
 	caser := cases.Title(language.English)
 	words := strings.Split(str, "_")
@@ -35,12 +36,14 @@ func ToPascalCase(str string) string {
 	return strings.Join(words, "")
 }
 
+// ToKebabCase will convert string to kebab case. Eg. john-smith.
 func ToKebabCase(str string) string {
 	str = strings.Replace(str, "_", "-", 99)
 
 	return str
 }
 
+// ToInitialisation will convert string its initials. Eg: JS.
 func ToInitialisation(str string) string {
 	initials := ""
 	words := strings.Split(str, "_")
@@ -52,6 +55,7 @@ func ToInitialisation(str string) string {
 	return initials
 }
 
+// ToCamelCase will convert string to camel case. Eg. johnSmith
 func ToCamelCase(str string) string {
 	caser := cases.Title(language.English)
 	words := strings.Split(str, "_")
@@ -65,6 +69,7 @@ func ToCamelCase(str string) string {
 	return strings.Join(words, "")
 }
 
+// RemoveUnderscores will remove underscores from string.
 func RemoveUnderscores(str string) string {
 	return strings.Replace(str, "_", "", 99)
 }
@@ -82,6 +87,7 @@ func Gofmt(filename string) error {
 	return cmd.Run()
 }
 
+// writeFile will write the template and file to disk.
 func (s *Scaffold) writeFile(src, dest string, tmpl Model) error {
 	ctx := context.Background()
 

@@ -7,6 +7,7 @@ import (
 
 const serviceTemplate = "./internal/scaffold/templates/service.tmpl"
 
+// createService will create the service.
 func (s *Scaffold) createService(ctx context.Context, m Model) error {
 
 	m.ModelStructProperties = getStructProperties(m.Columns)

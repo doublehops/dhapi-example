@@ -9,8 +9,10 @@ import (
 
 const modelTemplate = "./internal/scaffold/templates/model.tmpl"
 
+// createModel will create the model.
 func (s *Scaffold) createModel(ctx context.Context, m Model) error {
 
+	s.l.Info(ctx, ">>>>>>>> in createModel()", nil)
 	m.ModelStructProperties = getStructProperties(m.Columns)
 	m.ValidationRules = s.getValidationRules(m)
 	path := fmt.Sprintf("%s/%s/%s", s.pwd, s.Config.Paths.Model, m.LowerCase)
@@ -35,8 +37,8 @@ func (s *Scaffold) createModel(ctx context.Context, m Model) error {
 	return nil
 }
 
+// getStructProperties will build the struct properties.
 func getStructProperties(columns []column) string {
-
 	ignoreColumns := []string{"id", "created_at", "updated_at", "deleted_at"}
 
 	var properties string
@@ -52,6 +54,7 @@ func getStructProperties(columns []column) string {
 	return properties
 }
 
+// getValidationRules will build the validation rules defined by the column names.
 func (s *Scaffold) getValidationRules(m Model) string {
 	var rules string
 
@@ -68,6 +71,7 @@ func (s *Scaffold) getValidationRules(m Model) string {
 	return rules
 }
 
+// getRule will return a validation rule based on the column type.
 func getRule(col column, m Model) string {
 	var rule string
 
@@ -80,7 +84,6 @@ func getRule(col column, m Model) string {
 		rule = fmt.Sprintf("{\"%s\", %s.%s, true, []validator.ValidationFuncs{validator.LengthInRange(3, 8, \"\")}},\n", col.CamelCase, m.FirstInitial, col.CapitalisedAbbr)
 	}
 
-	// Return for string column.
 	return rule
 }
 

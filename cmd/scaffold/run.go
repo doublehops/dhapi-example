@@ -5,14 +5,15 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
-	"github.com/doublehops/dhapi-example/internal/config"
-	"github.com/doublehops/dhapi-example/internal/db"
-	"github.com/doublehops/dhapi-example/internal/logga"
-	"github.com/doublehops/dhapi-example/internal/scaffold"
 	"log"
 	"os"
 
 	_ "github.com/go-sql-driver/mysql"
+
+	"github.com/doublehops/dhapi-example/internal/config"
+	"github.com/doublehops/dhapi-example/internal/db"
+	"github.com/doublehops/dhapi-example/internal/logga"
+	"github.com/doublehops/dhapi-example/internal/scaffold"
 )
 
 /*
@@ -26,7 +27,10 @@ func main() {
 	}
 }
 
+// run will begin the scaffolding.
 func run() error {
+	ctx := context.Background()
+
 	var tableName string
 
 	flag.StringVar(&tableName, "table", "", "the database table (and model) to scaffold")
@@ -56,17 +60,18 @@ func run() error {
 	// Setup db connection.
 	DB, err := db.New(l, cfg.DB)
 	if err != nil {
-		return fmt.Errorf("error creating database connection. %s", err.Error())
-	}
+		errMsg := fmt.Sprintf("error creating database connection. %s", err.Error())
+		l.Error(ctx, errMsg, nil)
 
-	//dir, err := os.Getwd()
-	//if err != nil {
-	//	return fmt.Errorf("there was an error with os.Getwd(). %s", err.Error())
-	//}
+		return fmt.Errorf(errMsg)
+	}
 
 	scf, err := GetScaffoldConfig(pwd)
 	if err != nil {
-		return fmt.Errorf("error getting scaffold config. %s", err.Error())
+		errMsg := fmt.Sprintf("error getting scaffold config. %s", err.Error())
+		l.Error(ctx, errMsg, nil)
+
+		return fmt.Errorf(errMsg)
 	}
 
 	s := scaffold.New(pwd, scf, tableName, DB, l)
@@ -78,6 +83,7 @@ func run() error {
 	return nil
 }
 
+// GetScaffoldConfig will pull the config from the config file.
 func GetScaffoldConfig(pwd string) (scaffold.Config, error) {
 	cp := scaffold.Config{}
 

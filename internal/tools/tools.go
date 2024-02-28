@@ -4,12 +4,19 @@ import (
 	"runtime"
 )
 
+// CurrentFunction will return the function two calls back to be added to log messages.
 func CurrentFunction() string {
-	counter, _, _, success := runtime.Caller(1)
+	counter, _, _, success := runtime.Caller(2)
 
 	if !success {
 		return ""
 	}
 
-	return runtime.FuncForPC(counter).Name()
+	c := runtime.FuncForPC(counter)
+
+	if c == nil {
+		return "<unknown>"
+	}
+
+	return c.Name()
 }

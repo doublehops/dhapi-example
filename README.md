@@ -38,7 +38,7 @@ Scaffolding is a tool that will read the table definition in the database and cr
 repository layers so that you can get started creating the new endpoints for a new model much faster than creating each file manually.
 Make sure the database is running and app database settings configured.
 
-To run
+To run:
 ```
 make scaffold -table=<table_name>
 ```

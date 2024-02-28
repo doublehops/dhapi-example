@@ -7,6 +7,7 @@ import (
 
 const handlerTemplate = "./internal/scaffold/templates/handler.tmpl"
 
+// createHandler will create the handler file for the model.
 func (s *Scaffold) createHandler(ctx context.Context, m Model) error {
 
 	m.ModelStructProperties = getStructProperties(m.Columns)
@@ -28,7 +29,7 @@ func (s *Scaffold) createHandler(ctx context.Context, m Model) error {
 		return err
 	}
 
-	s.l.Info(context.TODO(), "handler has been written: "+filename, nil)
+	s.l.Info(ctx, "handler has been written: "+filename, nil)
 
 	return nil
 }

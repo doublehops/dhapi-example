@@ -6,9 +6,12 @@ import (
 	"strings"
 )
 
-const repositoryTemplate = "./internal/scaffold/templates/repository.tmpl"
-const repositorySQLTemplate = "./internal/scaffold/templates/repositorysql.tmpl"
+const (
+	repositoryTemplate    = "./internal/scaffold/templates/repository.tmpl"
+	repositorySQLTemplate = "./internal/scaffold/templates/repositorysql.tmpl"
+)
 
+// createRepository will create the repository.
 func (s *Scaffold) createRepository(ctx context.Context, m Model) error {
 
 	m.ModelStructProperties = getStructProperties(m.Columns)
@@ -49,6 +52,7 @@ func (s *Scaffold) createRepository(ctx context.Context, m Model) error {
 	return nil
 }
 
+// getQueryFields will build a string for the various SQL queries for the given table.
 func (s *Scaffold) getQueryFields(cols []column) (string, string, string) {
 	var insertColumns []string
 	var selectColumns []string
@@ -78,6 +82,7 @@ func (s *Scaffold) getQueryFields(cols []column) (string, string, string) {
 	return insertFields, updateFields, scanFields
 }
 
+// setColumnSQLParams will build the parameter count for each SQL query.
 func (s *Scaffold) setColumnSQLParams(m *Model) {
 
 	var (

@@ -179,6 +179,7 @@ type ColumnDefinition struct {
 	columnType string
 }
 
+// getTableDefinition will get the table and column definitions which will be used to build all files.
 func (s *Scaffold) getTableDefinition() ([]ColumnDefinition, error) {
 
 	cols := []ColumnDefinition{}
@@ -215,6 +216,8 @@ func (s *Scaffold) getTableDefinition() ([]ColumnDefinition, error) {
 
 	return cols, nil
 }
+
+// getColumnDefinitions will get the definitions of each column.
 
 func getColumnDefinitions(columns []ColumnDefinition) []column {
 	var cols []column

@@ -17,14 +17,14 @@ var insertRecordSQL = `INSERT INTO author (
 	)
 `
 
-var updateRecordSQL = `UPDATE {{.Name}} SET 
+var updateRecordSQL = `UPDATE author SET 
 	name=?,
     updated_by=?,
     updated_at=?
 	WHERE id=?
 `
 
-var deleteRecordSQL = `UPDATE {{.Name}} SET 
+var deleteRecordSQL = `UPDATE author SET 
     updated_by=?,
     updated_at=?,
     deleted_at=?
@@ -39,7 +39,7 @@ var selectByIDQuery = `SELECT
     updated_by,
     created_at,
     updated_at
-    FROM {{.Name}}
+    FROM author
     WHERE id=?
     AND deleted_at IS NULL`
 
@@ -51,10 +51,10 @@ var selectCollectionQuery = `SELECT
     updated_by,
     created_at,
     updated_at
-    FROM {{.Name}}
+    FROM author
 `
 
 var selectCollectionCountQuery = `SELECT 
     COUNT(*) count
-    FROM {{.Name}}
+    FROM author
 `
