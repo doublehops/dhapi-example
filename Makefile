@@ -21,4 +21,4 @@ docker_down:
 
 # make scaffold model=<table_name>
 scaffold:
-	go run ./cmd/scaffold/run.go -config ./config.json -model $(model)
+	go run ./cmd/scaffold/run.go -config ./config.json -table $(table)

@@ -27,9 +27,9 @@ func main() {
 }
 
 func run() error {
-	var modelName string
+	var tableName string
 
-	flag.StringVar(&modelName, "model", "", "the database table/model to scaffold")
+	flag.StringVar(&tableName, "table", "", "the database table (and model) to scaffold")
 
 	configFile := flag.String("config", "config.json", "Scaffold file to use")
 	flag.Parse()
@@ -51,7 +51,7 @@ func run() error {
 		return fmt.Errorf("error configuring logger. %s", err.Error())
 	}
 
-	l.Info(context.TODO(), "flags", logga.KVPs{"model": modelName})
+	l.Info(context.TODO(), "flags", logga.KVPs{"table": tableName})
 
 	// Setup db connection.
 	DB, err := db.New(l, cfg.DB)
@@ -69,7 +69,7 @@ func run() error {
 		return fmt.Errorf("error getting scaffold config. %s", err.Error())
 	}
 
-	s := scaffold.New(pwd, scf, modelName, DB, l)
+	s := scaffold.New(pwd, scf, tableName, DB, l)
 	err = s.Run()
 	if err != nil {
 		return err

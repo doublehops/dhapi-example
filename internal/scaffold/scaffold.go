@@ -102,10 +102,6 @@ func (s *Scaffold) Run() error {
 		return errors.New("failed to run. " + err.Error())
 	}
 
-	//for k, _ := range columns {
-	//	s.l.Info(nil, ">>>>> 000 column: "+k, nil)
-	//}
-
 	moduleName, err := getModuleName()
 	if err != nil {
 		s.l.Error(ctx, err.Error(), nil)
