@@ -3,6 +3,7 @@ package mynewtableservice
 import (
 	"context"
 	"fmt"
+
 	"github.com/doublehops/dhapi-example/internal/logga"
 
 	"github.com/doublehops/dhapi-example/internal/app"
@@ -38,7 +39,7 @@ func (s MyNewTableService) Create(ctx context.Context, record *model.MyNewTable)
 	if err != nil {
 		s.Log.Error(ctx, "unable to save new record. "+err.Error(), nil)
 
-		return record, req.CouldNotSaveRecord
+		return record, req.ErrCouldNotSaveRecord
 	}
 
 	err = tx.Commit()

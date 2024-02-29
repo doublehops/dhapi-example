@@ -4,6 +4,7 @@ const (
 	keyNotInSlice = "value was not found in available items"
 )
 
+// nolint:cyclop
 func In(slice []interface{}, errorMessage string) ValidationFuncs {
 	return func(required bool, value interface{}) (bool, string) {
 		if errorMessage == "" {

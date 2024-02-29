@@ -46,7 +46,7 @@ func (h *Handle) Create(w http.ResponseWriter, r *http.Request, _ httprouter.Par
 	}
 
 	if errors := record.Validate(); len(errors) > 0 {
-		errs := req.GetValidateErrResp(errors, req.ValidationError.Error())
+		errs := req.GetValidateErrResp(errors, req.ErrValidation.Error())
 		h.base.WriteJSON(ctx, w, http.StatusBadRequest, errs)
 
 		return
@@ -54,7 +54,7 @@ func (h *Handle) Create(w http.ResponseWriter, r *http.Request, _ httprouter.Par
 
 	a, err := h.srv.Create(ctx, record)
 	if err != nil {
-		h.base.WriteJSON(ctx, w, http.StatusInternalServerError, req.GeneralErrResp(req.ErrorProcessingRequest.Error()))
+		h.base.WriteJSON(ctx, w, http.StatusInternalServerError, req.GeneralErrResp(req.ErrProcessingRequest.Error()))
 
 		return
 	}
@@ -103,7 +103,7 @@ func (h *Handle) UpdateByID(w http.ResponseWriter, r *http.Request, ps httproute
 	}
 
 	if errors := record.Validate(); len(errors) > 0 {
-		errs := req.GetValidateErrResp(errors, req.ValidationError.Error())
+		errs := req.GetValidateErrResp(errors, req.ErrValidation.Error())
 		h.base.WriteJSON(ctx, w, http.StatusBadRequest, errs)
 
 		return

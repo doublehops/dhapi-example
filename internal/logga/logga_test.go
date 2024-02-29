@@ -91,7 +91,7 @@ func TestGetLogLevel(t *testing.T) {
 			name:            "failNotConfigured",
 			configuredLevel: "",
 			expectedLevel:   slog.LevelInfo,
-			expectedError:   invalidLogLevelValue,
+			expectedError:   ErrInvalidLogLevelValue,
 		},
 	}
 
