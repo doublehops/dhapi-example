@@ -32,7 +32,7 @@ func (s MyNewTableService) Create(ctx context.Context, record *model.MyNewTable)
 	}
 
 	tx, _ := s.DB.BeginTx(ctx, nil)
-	defer tx.Rollback()
+	defer tx.Rollback() // nolint: errcheck
 
 	err := s.myNewTableRepo.Create(ctx, tx, record)
 	if err != nil {
@@ -59,7 +59,7 @@ func (s MyNewTableService) Update(ctx context.Context, record *model.MyNewTable)
 	record.SetUpdated(ctx)
 
 	tx, _ := s.DB.BeginTx(ctx, nil)
-	defer tx.Rollback()
+	defer tx.Rollback() // nolint: errcheck
 
 	err := s.myNewTableRepo.Update(ctx, tx, record)
 	if err != nil {
@@ -82,7 +82,7 @@ func (s MyNewTableService) Update(ctx context.Context, record *model.MyNewTable)
 
 func (s MyNewTableService) DeleteByID(ctx context.Context, record *model.MyNewTable) error {
 	tx, _ := s.DB.BeginTx(ctx, nil)
-	defer tx.Rollback()
+	defer tx.Rollback() // nolint: errcheck
 
 	record.SetDeleted(ctx)
 

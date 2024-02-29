@@ -84,7 +84,7 @@ func getRule(col column, m Model) string {
 		rule = fmt.Sprintf("{\"%s\", %s.%s, true, []validator.ValidationFuncs{validator.LengthInRange(3, 8, \"\")}},\n", col.CamelCase, m.FirstInitial, col.CapitalisedAbbr)
 	}
 
-	return rule
+	return rule + " //nolint:govet"
 }
 
 // getPropertyType will check which column type the property is and return a corresponding

@@ -31,7 +31,7 @@ func (s AuthorService) Create(ctx context.Context, author *model.Author) (*model
 	}
 
 	tx, _ := s.DB.BeginTx(ctx, nil)
-	defer tx.Rollback()
+	defer tx.Rollback() // nolint: errcheck
 
 	err := s.authorRepo.Create(ctx, tx, author)
 	if err != nil {
@@ -58,7 +58,7 @@ func (s AuthorService) Update(ctx context.Context, author *model.Author) (*model
 	author.SetUpdated(ctx)
 
 	tx, _ := s.DB.BeginTx(ctx, nil)
-	defer tx.Rollback()
+	defer tx.Rollback() // nolint: errcheck
 
 	err := s.authorRepo.Update(ctx, tx, author)
 	if err != nil {
@@ -81,7 +81,7 @@ func (s AuthorService) Update(ctx context.Context, author *model.Author) (*model
 
 func (s AuthorService) DeleteByID(ctx context.Context, author *model.Author) error {
 	tx, _ := s.DB.BeginTx(ctx, nil)
-	defer tx.Rollback()
+	defer tx.Rollback() // nolint: errcheck
 
 	author.SetDeleted(ctx)
 

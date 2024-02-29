@@ -104,8 +104,8 @@ func (mnt *MyNewTable) GetAll(ctx context.Context, DB *sql.DB, p *req.Request) (
 		return records, fmt.Errorf("unable to fetch rows")
 	}
 	defer rows.Close()
-	if err != nil {
-		mnt.Log.Error(ctx, "GetAll() unable to fetch rows", logga.KVPs{"err": err})
+	if rows.Err() != nil {
+		mnt.Log.Error(ctx, "GetAll() unable to fetch rows", logga.KVPs{"err": rows.Err()})
 
 		return records, fmt.Errorf("unable to fetch rows")
 	}
