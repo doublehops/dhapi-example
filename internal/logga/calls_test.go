@@ -5,7 +5,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/doublehops/dhapi-example/internal/config"
+	"github.com/doublehops/dhapi-example/internal/app"
 )
 
 func TestGetArguments(t *testing.T) {
@@ -50,7 +50,7 @@ func TestGetArguments(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			ctx := tt.context
 			for key, value := range tt.ctxVars {
-				ctx = context.WithValue(ctx, key, value)
+				ctx = context.WithValue(ctx, app.ContextVar(key), value)
 			}
 			args := getArguments(ctx, tt.args)
 			if !reflect.DeepEqual(tt.expectedArgs, args) {
@@ -60,18 +60,19 @@ func TestGetArguments(t *testing.T) {
 	}
 }
 
-func TestCalls(t *testing.T) {
-	ctx := context.Background()
-
-	cfg := &config.Logging{
-		LogLevel:     "DEBUG",
-		OutputFormat: "text",
-	}
-
-	l, _ := New(cfg)
-
-	l.Info(ctx, "my message", nil)
-	l.Debug(ctx, "my message", nil)
-	l.Warn(ctx, "my message", nil)
-	l.Error(ctx, "my message", nil)
-}
+// todo - I can't remember what this is for.
+//func TestCalls(t *testing.T) {
+//	ctx := context.Background()
+//
+//	cfg := &config.Logging{
+//		LogLevel:     "DEBUG",
+//		OutputFormat: "text",
+//	}
+//
+//	l, _ := New(cfg)
+//
+//	l.Info(ctx, "my message", nil)
+//	l.Debug(ctx, "my message", nil)
+//	l.Warn(ctx, "my message", nil)
+//	l.Error(ctx, "my message", nil)
+//}

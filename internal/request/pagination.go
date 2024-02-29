@@ -43,7 +43,7 @@ func GetRequestParams(r *http.Request, filters []FilterRule, sortableFields []st
 	return pg
 }
 
-func getFilterParams(ctx context.Context, query url.Values, filters []FilterRule) []FilterRule {
+func getFilterParams(_ context.Context, query url.Values, filters []FilterRule) []FilterRule {
 	var newFilters []FilterRule
 	for _, f := range filters {
 		val := query.Get(f.Field)
