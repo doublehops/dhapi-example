@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"context"
 	"errors"
-	"fmt"
 	"io"
 	"os"
 	"text/template"
@@ -50,7 +49,12 @@ func (s *Scaffold) printRoutes(ctx context.Context, m Model) error {
 		return errors.New(e)
 	}
 
-	fmt.Print(buf.String())
+	if _, err := os.Stdout.Write(buf.Bytes()); err != nil {
+		e := "unable to write to stdout. " + err.Error()
+		s.l.Error(ctx, e, nil)
+
+		return errors.New(e)
+	}
 
 	return nil
 }
