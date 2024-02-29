@@ -10,7 +10,7 @@ import (
 
 type Model interface {
 	GetUserID() int32
-	SetCreated(context.Context)
+	SetCreated(context.Context) error
 }
 
 type BaseModel struct {
