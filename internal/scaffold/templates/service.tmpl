@@ -26,7 +26,9 @@ func New(app *service.App, {{.LowerCase}}Repo *{{.LowerCase}}repository.{{.Pasca
 func (s {{.PascalCase}}Service) Create(ctx context.Context, record *model.{{.PascalCase}}) (*model.{{.PascalCase}}, error) {
 	ctx = context.WithValue(ctx, app.UserIDKey, 1) // todo - set this in middleware.
 
-	record.SetCreated(ctx)
+	if err := record.SetCreated(ctx); err != nil {
+		s.Log.Error(ctx, "error in SetCreated", logga.KVPs{"error": err.Error()})
+	}
 
 	tx, _ := s.DB.BeginTx(ctx, nil)
 	defer tx.Rollback()

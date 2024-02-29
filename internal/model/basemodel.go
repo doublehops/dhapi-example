@@ -28,13 +28,12 @@ func (bm *BaseModel) GetUserID() int32 {
 	return bm.UserID
 }
 
-func (bm *BaseModel) SetCreated(ctx context.Context) {
+func (bm *BaseModel) SetCreated(ctx context.Context) error {
 	userID := ctx.Value(app.UserIDKey)
 	if userID != nil {
-
 		uID, ok := userID.(int)
 		if !ok {
-			// todo - check what to do here. logging would be best.
+			return fmt.Errorf("unable to convert userID to int")
 		}
 
 		bm.CreatedBy = int32(uID)
@@ -46,6 +45,8 @@ func (bm *BaseModel) SetCreated(ctx context.Context) {
 
 	bm.CreatedAt = &t
 	bm.UpdatedAt = &t
+
+	return nil
 }
 
 func (bm *BaseModel) SetUpdated(ctx context.Context) {

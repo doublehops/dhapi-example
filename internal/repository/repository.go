@@ -24,6 +24,9 @@ func GetRecordCount(DB *sql.DB, q string, params []any) (int32, error) {
 		}
 	}
 	defer row.Close()
+	if row.Err() != nil {
+		return 0, fmt.Errorf("error in row.Err(). " + row.Err().Error())
+	}
 
 	if err != nil {
 		return 0, fmt.Errorf("unable to run count query. %s", err)
