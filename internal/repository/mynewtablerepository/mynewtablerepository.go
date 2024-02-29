@@ -69,9 +69,10 @@ func (mnt *MyNewTable) GetByID(ctx context.Context, DB *sql.DB, ID int32, record
 
 	err := row.Scan(&record.ID, &record.CurrencyID, &record.Name, &record.CreatedAt, &record.UpdatedAt, &record.DeletedAt)
 	if err != nil {
+		mnt.Log.Info(ctx, "unable to fetch record", logga.KVPs{"ID": ID})
+
 		return fmt.Errorf("unable to fetch record %d", ID)
 	}
-
 	return nil
 }
 

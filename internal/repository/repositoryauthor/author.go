@@ -69,6 +69,8 @@ func (a *Author) GetByID(ctx context.Context, DB *sql.DB, ID int32, model *model
 
 	err := row.Scan(&model.ID, &model.UserID, &model.Name, &model.CreatedBy, &model.UpdatedBy, &model.CreatedAt, &model.UpdatedAt)
 	if err != nil {
+		a.Log.Info(ctx, "unable to fetch record", logga.KVPs{"ID": ID})
+		
 		return fmt.Errorf("unable to fetch record %d", ID)
 	}
 

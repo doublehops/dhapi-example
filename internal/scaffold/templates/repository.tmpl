@@ -72,7 +72,8 @@ func ({{.Initialisation}} *{{.PascalCase}}) GetByID(ctx context.Context, DB *sql
 	row := DB.QueryRow(selectByIDQuery, ID)
 
 	err := row.Scan({{.ScanFields}})
-	if err != nil {
+		a.Log.Info(ctx, "unable to fetch record", logga.KVPs{"ID": ID})
+
 		return fmt.Errorf("unable to fetch record %d", ID)
 	}
 

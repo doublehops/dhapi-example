@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 
+	// Import sql driver to register itself with the database/sql package.
 	_ "github.com/go-sql-driver/mysql"
 
 	"github.com/doublehops/dhapi-example/internal/config"
