@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/julienschmidt/httprouter"
 
@@ -61,9 +62,14 @@ func run() error {
 		router.Handle(r.Method(), r.Path(), r.Handler())
 	}
 
+	server := &http.Server{
+		Addr:              ":8080",
+		ReadHeaderTimeout: 3 * time.Second,
+	}
+
 	l.Info(ctx, "Starting server on port :8080", nil)
 
-	err = http.ListenAndServe(":8080", router)
+	err = server.ListenAndServe()
 	if err != nil {
 		return fmt.Errorf("unable to start server. %s", err.Error())
 	}

@@ -34,7 +34,7 @@ func New(app *service.App) *Handle {
 	}
 }
 
-func (h *Handle) Create(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func (h *Handle) Create(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	ctx := r.Context()
 	h.base.Log.Info(ctx, "Request made to "+tools.CurrentFunction(), nil)
 
@@ -153,7 +153,7 @@ func (h *Handle) DeleteByID(w http.ResponseWriter, r *http.Request, ps httproute
 	//	 return
 	// }
 
-	if err = h.srv.DeleteByID(ctx, record, int32(i)); err != nil {
+	if err = h.srv.DeleteByID(ctx, record); err != nil {
 		h.base.WriteJSON(ctx, w, http.StatusInternalServerError, req.ErrorProcessingRequestResp())
 
 		return
@@ -223,7 +223,7 @@ func getSortableFields() []string {
 	}
 }
 
-func (h *Handle) GetAll(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func (h *Handle) GetAll(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	ctx := r.Context()
 	h.base.Log.Info(ctx, "Request made to Get myNewTable", nil)
 

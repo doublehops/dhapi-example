@@ -77,7 +77,7 @@ func (s MyNewTableService) Update(ctx context.Context, record *model.MyNewTable)
 	return a, nil
 }
 
-func (s MyNewTableService) DeleteByID(ctx context.Context, record *model.MyNewTable, ID int32) error {
+func (s MyNewTableService) DeleteByID(ctx context.Context, record *model.MyNewTable) error {
 	tx, _ := s.DB.BeginTx(ctx, nil)
 	defer tx.Rollback()
 

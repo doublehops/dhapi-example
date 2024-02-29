@@ -77,7 +77,7 @@ func (s {{.PascalCase}}Service) Update(ctx context.Context, record *model.{{.Pas
 	return a, nil
 }
 
-func (s {{.PascalCase}}Service) DeleteByID(ctx context.Context, record *model.{{.PascalCase}}, ID int32) error {
+func (s {{.PascalCase}}Service) DeleteByID(ctx context.Context, record *model.{{.PascalCase}}) error {
 	tx, _ := s.DB.BeginTx(ctx, nil)
 	defer tx.Rollback()
 

@@ -33,7 +33,7 @@ func New(app *service.App) *Handle {
 	}
 }
 
-func (h *Handle) Create(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func (h *Handle) Create(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	ctx := r.Context()
 	h.srv.Log.Info(ctx, "Request made to CreateAuthor", nil)
 
@@ -150,7 +150,7 @@ func (h *Handle) DeleteByID(w http.ResponseWriter, r *http.Request, ps httproute
 		return
 	}
 
-	if err = h.srv.DeleteByID(ctx, author, int32(i)); err != nil {
+	if err = h.srv.DeleteByID(ctx, author); err != nil {
 		h.base.WriteJSON(ctx, w, http.StatusInternalServerError, req.ErrorProcessingRequestResp())
 
 		return

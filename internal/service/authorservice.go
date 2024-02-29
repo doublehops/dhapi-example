@@ -76,7 +76,7 @@ func (s AuthorService) Update(ctx context.Context, author *model.Author) (*model
 	return a, nil
 }
 
-func (s AuthorService) DeleteByID(ctx context.Context, author *model.Author, ID int32) error {
+func (s AuthorService) DeleteByID(ctx context.Context, author *model.Author) error {
 	tx, _ := s.DB.BeginTx(ctx, nil)
 	defer tx.Rollback()
 

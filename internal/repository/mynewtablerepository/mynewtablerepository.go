@@ -73,6 +73,7 @@ func (mnt *MyNewTable) GetByID(ctx context.Context, DB *sql.DB, ID int32, record
 
 		return fmt.Errorf("unable to fetch record %d", ID)
 	}
+
 	return nil
 }
 
