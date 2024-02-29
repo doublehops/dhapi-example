@@ -13,7 +13,7 @@ import (
 )
 
 type {{.PascalCase}} struct {
-	Log *logga.Logga
+	l *logga.Logga
 }
 
 func New(logger *logga.Logga) *{{.PascalCase}} {
@@ -27,7 +27,7 @@ func ({{.Initialisation}} *{{.PascalCase}}) Create(ctx context.Context, tx *sql.
 	result, err := tx.Exec(insertRecordSQL, {{.InsertFields}})
 	if err != nil {
 		errMsg := fmt.Sprintf("there was an error saving record to db. %s", err)
-		{{.Initialisation}}.Log.Error(ctx, errMsg, nil)
+		{{.Initialisation}}.l.Error(ctx, errMsg, nil)
 
 		return fmt.Errorf(errMsg)
 	}
@@ -47,7 +47,7 @@ func ({{.Initialisation}} *{{.PascalCase}}) Update(ctx context.Context, tx *sql.
 	_, err := tx.Exec(updateRecordSQL, {{.UpdateFields}})
 	if err != nil {
 		errMsg := fmt.Sprintf("there was an error saving record to db. %s", err)
-		{{.Initialisation}}.Log.Error(ctx, errMsg, nil)
+		{{.Initialisation}}.l.Error(ctx, errMsg, nil)
 
 		return fmt.Errorf(errMsg)
 	}
@@ -60,7 +60,7 @@ func ({{.Initialisation}} *{{.PascalCase}}) Delete(ctx context.Context, tx *sql.
 	_, err := tx.Exec(deleteRecordSQL, model.UpdatedAt, model.DeletedAt, model.ID)
 	if err != nil {
 		errMsg := fmt.Sprintf("there was an error saving record to db. %s", err)
-		{{.Initialisation}}.Log.Error(ctx, errMsg, nil)
+		{{.Initialisation}}.l.Error(ctx, errMsg, nil)
 
 		return fmt.Errorf(errMsg)
 	}
@@ -72,7 +72,7 @@ func ({{.Initialisation}} *{{.PascalCase}}) GetByID(ctx context.Context, DB *sql
 	row := DB.QueryRow(selectByIDQuery, ID)
 
 	err := row.Scan({{.ScanFields}})
-		a.Log.Info(ctx, "unable to fetch record", logga.KVPs{"ID": ID})
+		{{.Initialisation}}.l.Info(ctx, "unable to fetch record", logga.KVPs{"ID": ID})
 
 		return fmt.Errorf("unable to fetch record %d", ID)
 	}
@@ -90,25 +90,25 @@ func ({{.Initialisation}} *{{.PascalCase}}) GetAll(ctx context.Context, DB *sql.
 	countQ, countParams := repository.BuildQuery(selectCollectionCountQuery, p, true)
 	count, err := repository.GetRecordCount(DB, countQ, countParams)
 	if err != nil {
-		{{.Initialisation}}.Log.Error(ctx, "GetAll()", logga.KVPs{"err": err})
+		{{.Initialisation}}.l.Error(ctx, "GetAll()", logga.KVPs{"err": err})
 	}
 	p.SetRecordCount(count)
 
 	q, params := repository.BuildQuery(selectCollectionQuery, p, false)
 
-	{{.Initialisation}}.Log.Debug(ctx, "GetAll()", logga.KVPs{"query": q})
+	{{.Initialisation}}.l.Debug(ctx, "GetAll()", logga.KVPs{"query": q})
 	if len(params) == 0 {
 		rows, err = DB.Query(q)
 	} else {
 		rows, err = DB.Query(q, params...)
 	}
 	if err != nil {
-		{{.Initialisation}}.Log.Error(ctx, "GetAll() unable to fetch rows", logga.KVPs{"err": err})
+		{{.Initialisation}}.l.Error(ctx, "GetAll() unable to fetch rows", logga.KVPs{"err": err})
 		return records, fmt.Errorf("unable to fetch rows")
 	}
 	defer rows.Close()
 	if err != nil {
-		{{.Initialisation}}.Log.Error(ctx, "GetAll() unable to fetch rows", logga.KVPs{"err": err})
+		{{.Initialisation}}.l.Error(ctx, "GetAll() unable to fetch rows", logga.KVPs{"err": err})
 
 		return records, fmt.Errorf("unable to fetch rows")
 	}

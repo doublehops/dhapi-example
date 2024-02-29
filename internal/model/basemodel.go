@@ -31,9 +31,15 @@ func (bm *BaseModel) GetUserID() int32 {
 func (bm *BaseModel) SetCreated(ctx context.Context) {
 	userID := ctx.Value(app.UserIDKey)
 	if userID != nil {
-		bm.CreatedBy = int32(userID.(int))
-		bm.UpdatedBy = int32(userID.(int))
-		bm.UserID = int32(userID.(int))
+
+		uID, ok := userID.(int)
+		if !ok {
+			// todo - check what to do here. logging would be best.
+		}
+
+		bm.CreatedBy = int32(uID)
+		bm.UpdatedBy = int32(uID)
+		bm.UserID = int32(uID)
 	}
 
 	t := time.Now()
