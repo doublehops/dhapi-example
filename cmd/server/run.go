@@ -58,7 +58,7 @@ func run() error {
 
 	l.Info(ctx, "Adding routes", nil)
 	for _, r := range rts.Routes() {
-		fmt.Printf(">>> %s %s\n", r.Method(), r.Path())
+		log.Printf(">>> %s %s\n", r.Method(), r.Path())
 		router.Handle(r.Method(), r.Path(), r.Handler())
 	}
 

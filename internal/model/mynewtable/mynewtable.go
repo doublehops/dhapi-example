@@ -14,8 +14,9 @@ type MyNewTable struct {
 
 func (m *MyNewTable) getRules() []validator.Rule {
 	return []validator.Rule{
-		// nolint:composites
+		//nolint:govet
 		{"currencyId", m.CurrencyID, true, []validator.ValidationFuncs{validator.IsInt("")}},
+		//nolint:govet
 		{"name", m.Name, true, []validator.ValidationFuncs{validator.LengthInRange(3, 8, "")}},
 	}
 }

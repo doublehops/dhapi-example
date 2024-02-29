@@ -68,7 +68,7 @@ func (h *Handle) UpdateByID(w http.ResponseWriter, r *http.Request, ps httproute
 	h.base.Log.Info(ctx, "Request made to UpdateMyNewTable", nil)
 
 	ID := ps.ByName("id")
-	i, err := strconv.Atoi(ID)
+	i, err := strconv.ParseInt(ID, 10, 32)
 	if err != nil {
 		h.base.WriteJSON(ctx, w, http.StatusBadRequest, "ID is not a valid value")
 
@@ -125,7 +125,7 @@ func (h *Handle) DeleteByID(w http.ResponseWriter, r *http.Request, ps httproute
 	h.base.Log.Info(ctx, "Request made to DELETE myNewTable", nil)
 
 	ID := ps.ByName("id")
-	i, err := strconv.Atoi(ID)
+	i, err := strconv.ParseInt(ID, 10, 32)
 	if err != nil {
 		h.base.WriteJSON(ctx, w, http.StatusBadRequest, "ID is not a valid value")
 
@@ -168,7 +168,7 @@ func (h *Handle) GetByID(w http.ResponseWriter, r *http.Request, ps httprouter.P
 	h.base.Log.Info(ctx, "Request made to Get myNewTable", nil)
 
 	ID := ps.ByName("id")
-	i, err := strconv.Atoi(ID)
+	i, err := strconv.ParseInt(ID, 10, 32)
 	if err != nil {
 		h.base.WriteJSON(ctx, w, http.StatusBadRequest, "ID is not a valid value")
 

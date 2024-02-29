@@ -189,8 +189,11 @@ func (s *Scaffold) getTableDefinition() ([]ColumnDefinition, error) {
 
 	q := "DESCRIBE " + s.tableName
 	rows, err := s.DB.Query(q)
-	if err != nil {
+	if err != nil || rows.Err() != nil {
 		return cols, errors.New("error executing query. " + err.Error())
+	}
+	if rows.Err() != nil {
+		return cols, errors.New("error in rows.Err(). " + err.Error())
 	}
 	defer rows.Close()
 

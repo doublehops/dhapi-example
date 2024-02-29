@@ -13,6 +13,7 @@ type Author struct {
 
 func (a *Author) getRules() []validator.Rule {
 	return []validator.Rule{
+		//nolint:composite
 		{"name", a.Name, true, []validator.ValidationFuncs{validator.LengthInRange(3, 8, "")}},
 	}
 }

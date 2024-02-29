@@ -33,7 +33,7 @@ func New(app *service.App) *Handle {
 	}
 }
 
-func (h *Handle) Create(w http.ResponseWriter, r *http.Request, _222 httprouter.Params) {
+func (h *Handle) Create(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	ctx := r.Context()
 	h.srv.Log.Info(ctx, "Request made to CreateAuthor", nil)
 
@@ -67,7 +67,7 @@ func (h *Handle) UpdateByID(w http.ResponseWriter, r *http.Request, ps httproute
 	h.srv.Log.Info(ctx, "Request made to UpdateAuthor", nil)
 
 	ID := ps.ByName("id")
-	i, err := strconv.Atoi(ID)
+	i, err := strconv.ParseInt(ID, 10, 32)
 	if err != nil {
 		h.base.WriteJSON(ctx, w, http.StatusBadRequest, "ID is not a valid value")
 
@@ -123,7 +123,7 @@ func (h *Handle) DeleteByID(w http.ResponseWriter, r *http.Request, ps httproute
 	h.srv.Log.Info(ctx, "Request made to DELETE author", nil)
 
 	ID := ps.ByName("id")
-	i, err := strconv.Atoi(ID)
+	i, err := strconv.ParseInt(ID, 10, 32)
 	if err != nil {
 		h.base.WriteJSON(ctx, w, http.StatusBadRequest, "ID is not a valid value")
 
@@ -165,7 +165,7 @@ func (h *Handle) GetByID(w http.ResponseWriter, r *http.Request, ps httprouter.P
 	h.srv.Log.Info(ctx, "Request made to Get author", nil)
 
 	ID := ps.ByName("id")
-	i, err := strconv.Atoi(ID)
+	i, err := strconv.ParseInt(ID, 10, 32)
 	if err != nil {
 		h.base.WriteJSON(ctx, w, http.StatusBadRequest, "ID is not a valid value")
 

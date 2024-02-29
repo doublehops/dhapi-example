@@ -70,7 +70,7 @@ func (a *Author) GetByID(ctx context.Context, DB *sql.DB, ID int32, model *model
 	err := row.Scan(&model.ID, &model.UserID, &model.Name, &model.CreatedBy, &model.UpdatedBy, &model.CreatedAt, &model.UpdatedAt)
 	if err != nil {
 		a.Log.Info(ctx, "unable to fetch record", logga.KVPs{"ID": ID})
-		
+
 		return fmt.Errorf("unable to fetch record %d", ID)
 	}
 
@@ -101,9 +101,15 @@ func (a *Author) GetAll(ctx context.Context, DB *sql.DB, p *req.Request) ([]*mod
 	}
 	if err != nil {
 		a.Log.Error(ctx, "GetAll() unable to fetch rows", logga.KVPs{"err": err})
+
 		return authors, fmt.Errorf("unable to fetch rows")
 	}
 	defer rows.Close()
+	if rows.Err() != nil {
+		a.Log.Error(ctx, "error with rows.Err(). "+rows.Err().Error(), nil)
+
+		return authors, err
+	}
 
 	for rows.Next() {
 		var record model.Author

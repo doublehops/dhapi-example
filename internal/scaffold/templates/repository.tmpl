@@ -107,6 +107,11 @@ func ({{.Initialisation}} *{{.PascalCase}}) GetAll(ctx context.Context, DB *sql.
 		return records, fmt.Errorf("unable to fetch rows")
 	}
 	defer rows.Close()
+	if err != nil {
+		{{.Initialisation}}.Log.Error(ctx, "GetAll() unable to fetch rows", logga.KVPs{"err": err})
+
+		return records, fmt.Errorf("unable to fetch rows")
+	}
 
 	for rows.Next() {
 		var record model.{{.PascalCase}}
