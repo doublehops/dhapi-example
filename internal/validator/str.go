@@ -13,10 +13,17 @@ func In(slice []interface{}, errorMessage string) ValidationFuncs {
 		// We want to convert the slice values into strings.
 		var strSlice []string
 		for _, item := range slice {
-			strSlice = append(strSlice, item.(string))
+			i, ok := item.(string)
+			if !ok {
+				return false, ProcessingPropertyError
+			}
+			strSlice = append(strSlice, i)
 		}
 
-		v := value.(string)
+		v, ok := value.(string)
+		if !ok {
+			return false, ProcessingPropertyError
+		}
 
 		if v == "" && required {
 			return false, RequiredPropertyError

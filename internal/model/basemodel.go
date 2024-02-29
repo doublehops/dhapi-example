@@ -79,8 +79,7 @@ func (bm *BaseModel) getRequestUserID(ctx context.Context) int32 {
 	var ok bool
 
 	if intValue, ok = val.(int32); !ok {
-		// @todo - log something here
-		fmt.Println("unable to get userID.")
+		intValue = 0
 	}
 
 	return intValue

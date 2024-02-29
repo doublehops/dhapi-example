@@ -19,5 +19,5 @@ func (a *Author) getRules() []validator.Rule {
 }
 
 func (a *Author) Validate() req.ErrMsgs {
-	return req.ErrMsgs(validator.RunValidation(a.getRules()))
+	return validator.RunValidation(a.getRules())
 }
