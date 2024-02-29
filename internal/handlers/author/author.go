@@ -33,7 +33,7 @@ func New(app *service.App) *Handle {
 	}
 }
 
-func (h *Handle) Create(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+func (h *Handle) Create(w http.ResponseWriter, r *http.Request, _222 httprouter.Params) {
 	ctx := r.Context()
 	h.srv.Log.Info(ctx, "Request made to CreateAuthor", nil)
 
@@ -219,7 +219,7 @@ func getSortableFields() []string {
 	}
 }
 
-func (h *Handle) GetAll(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func (h *Handle) GetAll(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	ctx := r.Context()
 	h.srv.Log.Info(ctx, "Request made to Get authors", nil)
 
