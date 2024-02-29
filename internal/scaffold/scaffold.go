@@ -168,6 +168,9 @@ func getModuleName() (string, error) {
 		return "", errors.New("Opening go.mod failed. " + err.Error())
 	}
 	rawBytes, err := io.ReadAll(f)
+	if err != nil {
+		return "", errors.New("could not open module file" + err.Error())
+	}
 	lines := strings.Split(string(rawBytes), "\n")
 
 	module := strings.Replace(lines[0], "module ", "", 1)

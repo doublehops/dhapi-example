@@ -98,6 +98,12 @@ func (s *Scaffold) writeFile(src, dest string, tmpl Model) error {
 	defer f.Close()
 
 	source, err := io.ReadAll(f)
+	if err != nil {
+		e := "unable to read source file." + err.Error()
+		s.l.Error(ctx, e, nil)
+
+		return errors.New(e)
+	}
 
 	f, err = os.Create(dest)
 	if err != nil {
@@ -105,6 +111,12 @@ func (s *Scaffold) writeFile(src, dest string, tmpl Model) error {
 	}
 
 	t, err := template.New("model").Parse(string(source))
+	if err != nil {
+		e := "unable to parse template." + err.Error()
+		s.l.Error(ctx, e, nil)
+
+		return errors.New(e)
+	}
 	err = t.Execute(f, tmpl)
 	if err != nil {
 		return errors.New("unable to write template. " + err.Error())

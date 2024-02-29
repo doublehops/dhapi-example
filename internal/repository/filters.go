@@ -101,5 +101,6 @@ func camelToSnake(s string) string {
 		}
 		snakeCase.WriteRune(unicode.ToLower(r))
 	}
+	
 	return snakeCase.String()
 }

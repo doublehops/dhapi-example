@@ -98,7 +98,7 @@ func (s *Scaffold) setColumnSQLParams(m *Model) {
 		}
 
 		insertCols += fmt.Sprintf("\t%s,\n", col.Original)
-		insertQs += fmt.Sprintf("\t?,\n")
+		insertQs += "?,\n"
 		updateStmt += fmt.Sprintf("\t%s=?,\n", col.Original)
 	}
 

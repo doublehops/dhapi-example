@@ -1,5 +1,7 @@
 package app
 
+type contextVar string
+
 const (
-	UserIDKey = "userID"
+	UserIDKey contextVar = "userID"
 )
