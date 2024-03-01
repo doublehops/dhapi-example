@@ -8,14 +8,13 @@ import (
 	"os"
 	"time"
 
-	"github.com/julienschmidt/httprouter"
-
 	"github.com/doublehops/dhapi-example/internal/config"
 	"github.com/doublehops/dhapi-example/internal/db"
 	"github.com/doublehops/dhapi-example/internal/logga"
 	"github.com/doublehops/dhapi-example/internal/routes"
 	"github.com/doublehops/dhapi-example/internal/runflags"
 	"github.com/doublehops/dhapi-example/internal/service"
+	"github.com/julienschmidt/httprouter"
 )
 
 func main() {
@@ -62,14 +61,11 @@ func run() error {
 		router.Handle(r.Method(), r.Path(), r.Handler())
 	}
 
-	server := &http.Server{
-		Addr:              ":8080",
-		ReadHeaderTimeout: 3 * time.Second,
-	}
+	mux := http.TimeoutHandler(router, time.Second*1, "Timeout!")
 
 	l.Info(ctx, "Starting server on port :8080", nil)
 
-	err = server.ListenAndServe()
+	err = http.ListenAndServe(":8080", mux)
 	if err != nil {
 		return fmt.Errorf("unable to start server. %s", err.Error())
 	}
