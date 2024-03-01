@@ -22,7 +22,6 @@ func New(logger *logga.Logga) *MyNewTable {
 }
 
 func (mnt *MyNewTable) Create(ctx context.Context, tx *sql.Tx, model *model.MyNewTable) error {
-
 	result, err := tx.Exec(insertRecordSQL, model.CurrencyID, model.Name, model.CreatedAt, model.UpdatedAt, model.DeletedAt)
 	if err != nil {
 		errMsg := fmt.Sprintf("there was an error saving record to db. %s", err)
@@ -42,7 +41,6 @@ func (mnt *MyNewTable) Create(ctx context.Context, tx *sql.Tx, model *model.MyNe
 }
 
 func (mnt *MyNewTable) Update(ctx context.Context, tx *sql.Tx, model *model.MyNewTable) error {
-
 	_, err := tx.Exec(updateRecordSQL, model.CurrencyID, model.Name, model.CreatedAt, model.UpdatedAt, model.DeletedAt, model.ID)
 	if err != nil {
 		errMsg := fmt.Sprintf("there was an error saving record to db. %s", err)
@@ -55,7 +53,6 @@ func (mnt *MyNewTable) Update(ctx context.Context, tx *sql.Tx, model *model.MyNe
 }
 
 func (mnt *MyNewTable) Delete(ctx context.Context, tx *sql.Tx, model *model.MyNewTable) error {
-
 	_, err := tx.Exec(deleteRecordSQL, model.UpdatedAt, model.DeletedAt, model.ID)
 	if err != nil {
 		errMsg := fmt.Sprintf("there was an error saving record to db. %s", err)
