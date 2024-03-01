@@ -4,9 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/doublehops/dhapi-example/internal/logga"
-
 	"github.com/doublehops/dhapi-example/internal/app"
+	"github.com/doublehops/dhapi-example/internal/logga"
 	"github.com/doublehops/dhapi-example/internal/model/mynewtable"
 	"github.com/doublehops/dhapi-example/internal/repository/mynewtablerepository"
 	req "github.com/doublehops/dhapi-example/internal/request"

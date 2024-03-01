@@ -7,11 +7,11 @@ var insertRecordSQL = `INSERT INTO my_new_table (
 	updated_at,
 	deleted_at
 	  ) VALUES (
-	?,
-	?,
-	?,
-	?,
-	?
+?,
+?,
+?,
+?,
+?
 	)
 `
 

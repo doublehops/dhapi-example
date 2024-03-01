@@ -18,7 +18,7 @@ type {{.PascalCase}} struct {
 
 func New(logger *logga.Logga) *{{.PascalCase}} {
 	return &{{.PascalCase}}{
-		Log: logger,
+		l: logger,
 	}
 }
 
@@ -72,9 +72,10 @@ func ({{.Initialisation}} *{{.PascalCase}}) GetByID(ctx context.Context, DB *sql
 	row := DB.QueryRow(selectByIDQuery, ID)
 
 	err := row.Scan({{.ScanFields}})
+	if err != nil {
 		{{.Initialisation}}.l.Info(ctx, "unable to fetch record", logga.KVPs{"ID": ID})
 
-		return fmt.Errorf("unable to fetch record %d", ID)
+		return fmt.Errorf("unable to fetch record %d. err: %s", ID, err)
 	}
 
 	return nil
@@ -113,7 +114,7 @@ func ({{.Initialisation}} *{{.PascalCase}}) GetAll(ctx context.Context, DB *sql.
 		return records, fmt.Errorf("unable to fetch rows")
 	}
 	if rows.Err() != nil {
-		mnt.Log.Error(ctx, "GetAll() unable to fetch rows", logga.KVPs{"err": rows.Err()})
+		mnt.l.Error(ctx, "GetAll() unable to fetch rows", logga.KVPs{"err": rows.Err()})
 
 		return records, fmt.Errorf("unable to fetch rows")
 	}

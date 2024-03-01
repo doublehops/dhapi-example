@@ -6,6 +6,7 @@ import (
 
 	"{{.Module}}/internal/model/{{.LowerCase}}"
 	"{{.Module}}/internal/app"
+	"{{.Module}}/internal/logga"
 	"{{.Module}}/internal/repository/{{.LowerCase}}repository"
 	"{{.Module}}/internal/service"
 	req "{{.Module}}/internal/request"
@@ -37,7 +38,7 @@ func (s {{.PascalCase}}Service) Create(ctx context.Context, record *model.{{.Pas
 	if err != nil {
 		s.Log.Error(ctx, "unable to save new record. "+err.Error(), nil)
 
-		return record, req.CouldNotSaveRecord
+		return record, req.ErrCouldNotSaveRecord
 	}
 
 	err = tx.Commit()

@@ -75,16 +75,18 @@ func (s *Scaffold) getValidationRules(m Model) string {
 func getRule(col column, m Model) string {
 	var rule string
 
+	noLint := "//nolint:govet"
+
 	switch col.Type {
 	case "string":
-		rule = fmt.Sprintf("{\"%s\", %s.%s, true, []validator.ValidationFuncs{validator.LengthInRange(3, 8, \"\")}},\n", col.CamelCase, m.FirstInitial, col.CapitalisedAbbr)
+		rule = fmt.Sprintf("{\"%s\", %s.%s, true, []validator.ValidationFuncs{validator.LengthInRange(3, 8, \"\")}}, %s\n", col.CamelCase, m.FirstInitial, col.CapitalisedAbbr, noLint)
 	case "int":
-		rule = fmt.Sprintf("{\"%s\", %s.%s, true, []validator.ValidationFuncs{validator.IsInt(\"\")}},\n", col.CamelCase, m.FirstInitial, col.CapitalisedAbbr)
+		rule = fmt.Sprintf("{\"%s\", %s.%s, true, []validator.ValidationFuncs{validator.IsInt(\"\")}}, %s\n", col.CamelCase, m.FirstInitial, col.CapitalisedAbbr, noLint)
 	default:
-		rule = fmt.Sprintf("{\"%s\", %s.%s, true, []validator.ValidationFuncs{validator.LengthInRange(3, 8, \"\")}},\n", col.CamelCase, m.FirstInitial, col.CapitalisedAbbr)
+		rule = fmt.Sprintf("{\"%s\", %s.%s, true, []validator.ValidationFuncs{validator.LengthInRange(3, 8, \"\")}} %s,\n", col.CamelCase, m.FirstInitial, col.CapitalisedAbbr, noLint)
 	}
 
-	return rule + " //nolint:govet"
+	return rule
 }
 
 // getPropertyType will check which column type the property is and return a corresponding
