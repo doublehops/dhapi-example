@@ -13,7 +13,7 @@ The basic requirements from a RESTful API framework are:
 - ~~ability to include prebuilt and custom middleware~~
 - ~~easy filtering in collection requests~~
 - ~~sorting and ordering in collection requests~~
-- CRUD scaffolding
+- ~~CRUD scaffolding~~
 - user model, login and authentication, etc...
 - ci/cd
 - documentation
