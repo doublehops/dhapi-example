@@ -13,10 +13,10 @@ type Author struct {
 
 func (a *Author) getRules() []validator.Rule {
 	return []validator.Rule{
-		{"name", a.Name, true, []validator.ValidationFuncs{validator.LengthInRange(3, 8, "")}},
+		{"name", a.Name, true, []validator.ValidationFuncs{validator.LengthInRange(3, 8, "")}}, //nolint:govet
 	}
 }
 
 func (a *Author) Validate() req.ErrMsgs {
-	return req.ErrMsgs(validator.RunValidation(a.getRules()))
+	return validator.RunValidation(a.getRules())
 }

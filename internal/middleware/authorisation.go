@@ -2,10 +2,11 @@ package middleware
 
 import (
 	"context"
-	"github.com/doublehops/dhapi-example/internal/app"
-	"github.com/julienschmidt/httprouter"
 	"log"
 	"net/http"
+
+	"github.com/doublehops/dhapi-example/internal/app"
+	"github.com/julienschmidt/httprouter"
 )
 
 // AuthMiddleware will authenticate user by the bearer token passed in through the authorization header.

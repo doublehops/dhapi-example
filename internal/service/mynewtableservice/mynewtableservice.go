@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/doublehops/dhapi-example/internal/app"
+	"github.com/doublehops/dhapi-example/internal/logga"
 	"github.com/doublehops/dhapi-example/internal/model/mynewtable"
 	"github.com/doublehops/dhapi-example/internal/repository/mynewtablerepository"
 	req "github.com/doublehops/dhapi-example/internal/request"
@@ -26,16 +27,18 @@ func New(app *service.App, mynewtableRepo *mynewtablerepository.MyNewTable) *MyN
 func (s MyNewTableService) Create(ctx context.Context, record *model.MyNewTable) (*model.MyNewTable, error) {
 	ctx = context.WithValue(ctx, app.UserIDKey, 1) // todo - set this in middleware.
 
-	record.SetCreated(ctx)
+	if err := record.SetCreated(ctx); err != nil {
+		s.Log.Error(ctx, "error in SetCreated", logga.KVPs{"error": err.Error()})
+	}
 
 	tx, _ := s.DB.BeginTx(ctx, nil)
-	defer tx.Rollback()
+	defer tx.Rollback() // nolint: errcheck
 
 	err := s.myNewTableRepo.Create(ctx, tx, record)
 	if err != nil {
 		s.Log.Error(ctx, "unable to save new record. "+err.Error(), nil)
 
-		return record, req.CouldNotSaveRecord
+		return record, req.ErrCouldNotSaveRecord
 	}
 
 	err = tx.Commit()
@@ -56,7 +59,7 @@ func (s MyNewTableService) Update(ctx context.Context, record *model.MyNewTable)
 	record.SetUpdated(ctx)
 
 	tx, _ := s.DB.BeginTx(ctx, nil)
-	defer tx.Rollback()
+	defer tx.Rollback() // nolint: errcheck
 
 	err := s.myNewTableRepo.Update(ctx, tx, record)
 	if err != nil {
@@ -77,9 +80,9 @@ func (s MyNewTableService) Update(ctx context.Context, record *model.MyNewTable)
 	return a, nil
 }
 
-func (s MyNewTableService) DeleteByID(ctx context.Context, record *model.MyNewTable, ID int32) error {
+func (s MyNewTableService) DeleteByID(ctx context.Context, record *model.MyNewTable) error {
 	tx, _ := s.DB.BeginTx(ctx, nil)
-	defer tx.Rollback()
+	defer tx.Rollback() // nolint: errcheck
 
 	record.SetDeleted(ctx)
 

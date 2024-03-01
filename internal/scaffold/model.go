@@ -3,15 +3,15 @@ package scaffold
 import (
 	"context"
 	"fmt"
-	"github.com/doublehops/go-common/str"
 	"strings"
+
+	"github.com/doublehops/go-common/str"
 )
 
 const modelTemplate = "./internal/scaffold/templates/model.tmpl"
 
 // createModel will create the model.
 func (s *Scaffold) createModel(ctx context.Context, m Model) error {
-
 	s.l.Info(ctx, ">>>>>>>> in createModel()", nil)
 	m.ModelStructProperties = getStructProperties(m.Columns)
 	m.ValidationRules = s.getValidationRules(m)
@@ -75,13 +75,15 @@ func (s *Scaffold) getValidationRules(m Model) string {
 func getRule(col column, m Model) string {
 	var rule string
 
+	noLint := "//nolint:govet"
+
 	switch col.Type {
 	case "string":
-		rule = fmt.Sprintf("{\"%s\", %s.%s, true, []validator.ValidationFuncs{validator.LengthInRange(3, 8, \"\")}},\n", col.CamelCase, m.FirstInitial, col.CapitalisedAbbr)
+		rule = fmt.Sprintf("{\"%s\", %s.%s, true, []validator.ValidationFuncs{validator.LengthInRange(3, 8, \"\")}}, %s\n", col.CamelCase, m.FirstInitial, col.CapitalisedAbbr, noLint)
 	case "int":
-		rule = fmt.Sprintf("{\"%s\", %s.%s, true, []validator.ValidationFuncs{validator.IsInt(\"\")}},\n", col.CamelCase, m.FirstInitial, col.CapitalisedAbbr)
+		rule = fmt.Sprintf("{\"%s\", %s.%s, true, []validator.ValidationFuncs{validator.IsInt(\"\")}}, %s\n", col.CamelCase, m.FirstInitial, col.CapitalisedAbbr, noLint)
 	default:
-		rule = fmt.Sprintf("{\"%s\", %s.%s, true, []validator.ValidationFuncs{validator.LengthInRange(3, 8, \"\")}},\n", col.CamelCase, m.FirstInitial, col.CapitalisedAbbr)
+		rule = fmt.Sprintf("{\"%s\", %s.%s, true, []validator.ValidationFuncs{validator.LengthInRange(3, 8, \"\")}} %s,\n", col.CamelCase, m.FirstInitial, col.CapitalisedAbbr, noLint)
 	}
 
 	return rule

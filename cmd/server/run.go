@@ -1,12 +1,12 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"net/http"
 	"os"
-
-	"github.com/julienschmidt/httprouter"
+	"time"
 
 	"github.com/doublehops/dhapi-example/internal/config"
 	"github.com/doublehops/dhapi-example/internal/db"
@@ -14,6 +14,7 @@ import (
 	"github.com/doublehops/dhapi-example/internal/routes"
 	"github.com/doublehops/dhapi-example/internal/runflags"
 	"github.com/doublehops/dhapi-example/internal/service"
+	"github.com/julienschmidt/httprouter"
 )
 
 func main() {
@@ -24,6 +25,8 @@ func main() {
 }
 
 func run() error {
+	ctx := context.Background()
+
 	flags := runflags.GetFlags()
 
 	// Setup config.
@@ -52,15 +55,18 @@ func run() error {
 	router := httprouter.New()
 	rts := routes.GetV1Routes(App)
 
-	l.Info(nil, "Adding routes", nil)
+	l.Info(ctx, "Adding routes", nil)
 	for _, r := range rts.Routes() {
-		fmt.Printf(">>> %s %s\n", r.Method(), r.Path())
+		log.Printf(">>> %s %s\n", r.Method(), r.Path())
 		router.Handle(r.Method(), r.Path(), r.Handler())
 	}
 
-	l.Info(nil, "Starting server on port :8080", nil)
+	mux := http.TimeoutHandler(router, time.Second*1, "Timeout!")
 
-	err = http.ListenAndServe(":8080", router)
+	l.Info(ctx, "Starting server on port :8080", nil)
+
+	// todo - This really needs to be replaced with something that allows timeouts.
+	err = http.ListenAndServe(":8080", mux) // nolint:gosec
 	if err != nil {
 		return fmt.Errorf("unable to start server. %s", err.Error())
 	}

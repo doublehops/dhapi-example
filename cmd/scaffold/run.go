@@ -96,7 +96,7 @@ func GetScaffoldConfig(pwd string) (scaffold.Config, error) {
 		return cp, fmt.Errorf("unable to read config file `%s`. %w", relPath, err)
 	}
 
-	if err = json.Unmarshal(f, &cp); err != nil {
+	if err := json.Unmarshal(f, &cp); err != nil {
 		return cp, err
 	}
 

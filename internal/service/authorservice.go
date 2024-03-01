@@ -2,6 +2,9 @@ package service
 
 import (
 	"context"
+
+	"github.com/doublehops/dhapi-example/internal/logga"
+
 	"github.com/doublehops/dhapi-example/internal/model"
 
 	"github.com/doublehops/dhapi-example/internal/app"
@@ -24,16 +27,18 @@ func New(app *App, authorRepo *repositoryauthor.Author) *AuthorService {
 func (s AuthorService) Create(ctx context.Context, author *model.Author) (*model.Author, error) {
 	ctx = context.WithValue(ctx, app.UserIDKey, 1) // todo - set this in middleware.
 
-	author.SetCreated(ctx)
+	if err := author.SetCreated(ctx); err != nil {
+		s.Log.Error(ctx, "error in SetCreated", logga.KVPs{"error": err.Error()})
+	}
 
 	tx, _ := s.DB.BeginTx(ctx, nil)
-	defer tx.Rollback()
+	defer tx.Rollback() // nolint: errcheck
 
 	err := s.authorRepo.Create(ctx, tx, author)
 	if err != nil {
 		s.Log.Error(ctx, "unable to save new record. "+err.Error(), nil)
 
-		return author, req.CouldNotSaveRecord
+		return author, req.ErrCouldNotSaveRecord
 	}
 
 	err = tx.Commit()
@@ -54,7 +59,7 @@ func (s AuthorService) Update(ctx context.Context, author *model.Author) (*model
 	author.SetUpdated(ctx)
 
 	tx, _ := s.DB.BeginTx(ctx, nil)
-	defer tx.Rollback()
+	defer tx.Rollback() // nolint: errcheck
 
 	err := s.authorRepo.Update(ctx, tx, author)
 	if err != nil {
@@ -75,9 +80,9 @@ func (s AuthorService) Update(ctx context.Context, author *model.Author) (*model
 	return a, nil
 }
 
-func (s AuthorService) DeleteByID(ctx context.Context, author *model.Author, ID int32) error {
+func (s AuthorService) DeleteByID(ctx context.Context, author *model.Author) error {
 	tx, _ := s.DB.BeginTx(ctx, nil)
-	defer tx.Rollback()
+	defer tx.Rollback() // nolint: errcheck
 
 	author.SetDeleted(ctx)
 

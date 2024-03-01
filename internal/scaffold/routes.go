@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"context"
 	"errors"
-	"fmt"
 	"io"
 	"os"
 	"text/template"
@@ -14,7 +13,6 @@ const routeTemplate = "./internal/scaffold/templates/routes.tmpl"
 
 // printRoutes will print the routes for the user to manually add to the routes table.
 func (s *Scaffold) printRoutes(ctx context.Context, m Model) error {
-
 	m.ModelStructProperties = getStructProperties(m.Columns)
 
 	f, err := os.Open(routeTemplate)
@@ -27,10 +25,22 @@ func (s *Scaffold) printRoutes(ctx context.Context, m Model) error {
 	defer f.Close()
 
 	source, err := io.ReadAll(f)
+	if err != nil {
+		e := "unable to read file." + err.Error()
+		s.l.Error(ctx, e, nil)
+
+		return errors.New(e)
+	}
 
 	buf := bytes.Buffer{}
 
 	t, err := template.New("model").Parse(string(source))
+	if err != nil {
+		e := "unable to parse template." + err.Error()
+		s.l.Error(ctx, e, nil)
+
+		return errors.New(e)
+	}
 	err = t.Execute(&buf, m)
 	if err != nil {
 		e := "unable to write new file. " + err.Error()
@@ -39,7 +49,12 @@ func (s *Scaffold) printRoutes(ctx context.Context, m Model) error {
 		return errors.New(e)
 	}
 
-	fmt.Print(buf.String())
+	if _, err := os.Stdout.Write(buf.Bytes()); err != nil {
+		e := "unable to write to stdout. " + err.Error()
+		s.l.Error(ctx, e, nil)
+
+		return errors.New(e)
+	}
 
 	return nil
 }

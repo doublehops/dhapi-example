@@ -25,7 +25,7 @@ func (bh *BaseHandler) GetUser(ctx context.Context) int32 {
 	return intValue
 }
 
-func (bh *BaseHandler) WriteJson(ctx context.Context, w http.ResponseWriter, statusCode int, res interface{}) {
+func (bh *BaseHandler) WriteJSON(ctx context.Context, w http.ResponseWriter, statusCode int, res interface{}) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(statusCode)
 

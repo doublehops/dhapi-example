@@ -5,11 +5,12 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	"github.com/doublehops/dhapi-example/internal/logga"
 	"io"
 	"log"
 	"os"
 	"strings"
+
+	"github.com/doublehops/dhapi-example/internal/logga"
 )
 
 const goModuleFile = "./go.mod"
@@ -167,6 +168,9 @@ func getModuleName() (string, error) {
 		return "", errors.New("Opening go.mod failed. " + err.Error())
 	}
 	rawBytes, err := io.ReadAll(f)
+	if err != nil {
+		return "", errors.New("could not open module file" + err.Error())
+	}
 	lines := strings.Split(string(rawBytes), "\n")
 
 	module := strings.Replace(lines[0], "module ", "", 1)
@@ -181,13 +185,15 @@ type ColumnDefinition struct {
 
 // getTableDefinition will get the table and column definitions which will be used to build all files.
 func (s *Scaffold) getTableDefinition() ([]ColumnDefinition, error) {
-
 	cols := []ColumnDefinition{}
 
 	q := "DESCRIBE " + s.tableName
 	rows, err := s.DB.Query(q)
-	if err != nil {
+	if err != nil || rows.Err() != nil {
 		return cols, errors.New("error executing query. " + err.Error())
+	}
+	if rows.Err() != nil {
+		return cols, errors.New("error in rows.Err(). " + err.Error())
 	}
 	defer rows.Close()
 

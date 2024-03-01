@@ -6,12 +6,12 @@ import (
 )
 
 var (
-	ValidationError        = errors.New("one or more validation errors occurred")
-	RecordNotFound         = errors.New("record not found")
-	CouldNotSaveRecord     = errors.New("could not save record")
-	CouldNotParseRequest   = errors.New("could not parse request")
-	ErrorProcessingRequest = errors.New("there was an error processing the request")
-	ErrorNotAuthorised     = errors.New("not authorised")
+	ErrValidation           = errors.New("one or more validation errors occurred")
+	ErrRecordNotFound       = errors.New("record not found")
+	ErrCouldNotSaveRecord   = errors.New("could not save record")
+	ErrCouldNotParseRequest = errors.New("could not parse request")
+	ErrProcessingRequest    = errors.New("there was an error processing the request")
+	ErrNotAuthorised        = errors.New("not authorised")
 
 	NotFoundMsg = ErrorMessage{"message": "not found"}
 )
@@ -37,7 +37,7 @@ func GeneralErrResp(msg string) GeneralErrorResp {
 func GetNotAuthorisedResp() GeneralErrorResp {
 	return GeneralErrorResp{
 		Name:    "there was an error processing request",
-		Message: ErrorNotAuthorised.Error(),
+		Message: ErrNotAuthorised.Error(),
 		Code:    http.StatusForbidden,
 		Status:  "error",
 		Errors:  nil,
@@ -47,8 +47,8 @@ func GetNotAuthorisedResp() GeneralErrorResp {
 // GetNotFoundResp for returning 404 messages.
 func GetNotFoundResp() GeneralErrorResp {
 	return GeneralErrorResp{
-		Name:    RecordNotFound.Error(),
-		Message: RecordNotFound.Error(),
+		Name:    ErrRecordNotFound.Error(),
+		Message: ErrRecordNotFound.Error(),
 		Code:    http.StatusNotFound,
 		Status:  "error",
 		Errors:  nil,
@@ -65,7 +65,7 @@ func GetListResp(data interface{}, pagination *Request) CollResp {
 // GetValidateErrResp will prepare the error response. It will default to a predefined error for Message but
 // will override it if one is supplied.
 func GetValidateErrResp(errors ErrMsgs, errs ...string) GeneralErrorResp {
-	err := ValidationError.Error()
+	err := ErrValidation.Error()
 	if len(errs) > 0 {
 		err = errs[0]
 	}
@@ -83,7 +83,7 @@ func GetValidateErrResp(errors ErrMsgs, errs ...string) GeneralErrorResp {
 func UnableToParseResp() GeneralErrorResp {
 	return GeneralErrorResp{
 		Name:    "Parsing error",
-		Message: CouldNotParseRequest.Error(),
+		Message: ErrCouldNotParseRequest.Error(),
 		Code:    http.StatusBadRequest,
 		Status:  "error",
 		Errors:  nil,
@@ -94,7 +94,7 @@ func UnableToParseResp() GeneralErrorResp {
 func ErrorProcessingRequestResp() GeneralErrorResp {
 	return GeneralErrorResp{
 		Name:    "Parsing error",
-		Message: ErrorProcessingRequest.Error(),
+		Message: ErrProcessingRequest.Error(),
 		Code:    http.StatusInternalServerError,
 		Status:  "error",
 		Errors:  nil,

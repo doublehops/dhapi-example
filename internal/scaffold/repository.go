@@ -13,7 +13,6 @@ const (
 
 // createRepository will create the repository.
 func (s *Scaffold) createRepository(ctx context.Context, m Model) error {
-
 	m.ModelStructProperties = getStructProperties(m.Columns)
 	m.InsertFields, m.UpdateFields, m.ScanFields = s.getQueryFields(m.Columns)
 	path := fmt.Sprintf("%s/%s/%s", s.pwd, s.Config.Paths.Repository, m.LowerCase+"repository")
@@ -84,7 +83,6 @@ func (s *Scaffold) getQueryFields(cols []column) (string, string, string) {
 
 // setColumnSQLParams will build the parameter count for each SQL query.
 func (s *Scaffold) setColumnSQLParams(m *Model) {
-
 	var (
 		insertCols = ""
 		insertQs   = ""
@@ -100,7 +98,7 @@ func (s *Scaffold) setColumnSQLParams(m *Model) {
 		}
 
 		insertCols += fmt.Sprintf("\t%s,\n", col.Original)
-		insertQs += fmt.Sprintf("\t?,\n")
+		insertQs += "?,\n"
 		updateStmt += fmt.Sprintf("\t%s=?,\n", col.Original)
 	}
 

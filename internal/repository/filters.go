@@ -66,7 +66,6 @@ func addPagination(query string, pagination *req.Request, includePagination bool
 }
 
 func addFilters(query string, filters []req.FilterRule) (string, req.Params) {
-
 	var params req.Params
 
 	var whereClauses []string
@@ -102,5 +101,6 @@ func camelToSnake(s string) string {
 		}
 		snakeCase.WriteRune(unicode.ToLower(r))
 	}
+
 	return snakeCase.String()
 }

@@ -10,7 +10,7 @@ import (
 
 type Model interface {
 	GetUserID() int32
-	SetCreated(context.Context)
+	SetCreated(context.Context) error
 }
 
 type BaseModel struct {
@@ -28,18 +28,25 @@ func (bm *BaseModel) GetUserID() int32 {
 	return bm.UserID
 }
 
-func (bm *BaseModel) SetCreated(ctx context.Context) {
+func (bm *BaseModel) SetCreated(ctx context.Context) error {
 	userID := ctx.Value(app.UserIDKey)
 	if userID != nil {
-		bm.CreatedBy = int32(userID.(int))
-		bm.UpdatedBy = int32(userID.(int))
-		bm.UserID = int32(userID.(int))
+		uID, ok := userID.(int)
+		if !ok {
+			return fmt.Errorf("unable to convert userID to int")
+		}
+
+		bm.CreatedBy = int32(uID)
+		bm.UpdatedBy = int32(uID)
+		bm.UserID = int32(uID)
 	}
 
 	t := time.Now()
 
 	bm.CreatedAt = &t
 	bm.UpdatedAt = &t
+
+	return nil
 }
 
 func (bm *BaseModel) SetUpdated(ctx context.Context) {
@@ -72,8 +79,7 @@ func (bm *BaseModel) getRequestUserID(ctx context.Context) int32 {
 	var ok bool
 
 	if intValue, ok = val.(int32); !ok {
-		// @todo - log something here
-		fmt.Println("unable to get userID.")
+		intValue = 0
 	}
 
 	return intValue

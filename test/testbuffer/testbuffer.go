@@ -25,7 +25,7 @@ func (tb TestBuffer) Read() ([]byte, error) {
 
 // Write will write contents to a file. This will not work is tests are running asynchronous.
 func (tb TestBuffer) Write(p []byte) (n int, err error) {
-	err = os.WriteFile(Filename, p, 0666)
+	err = os.WriteFile(Filename, p, 0o600)
 	if err != nil {
 		return 0, fmt.Errorf("unable to write temp file: %s. %s", Filename, err)
 	}

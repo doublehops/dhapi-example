@@ -9,7 +9,6 @@ const handlerTemplate = "./internal/scaffold/templates/handler.tmpl"
 
 // createHandler will create the handler file for the model.
 func (s *Scaffold) createHandler(ctx context.Context, m Model) error {
-
 	m.ModelStructProperties = getStructProperties(m.Columns)
 	m.ValidationRules = s.getValidationRules(m)
 	path := fmt.Sprintf("%s/%s/%s", s.pwd, s.Config.Paths.Handlers, m.LowerCase)

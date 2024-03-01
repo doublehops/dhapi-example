@@ -2,6 +2,7 @@ package logga
 
 import (
 	"context"
+
 	"github.com/doublehops/dhapi-example/internal/app"
 	"github.com/doublehops/dhapi-example/internal/tools"
 )

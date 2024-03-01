@@ -2,10 +2,12 @@ package request
 
 type FilterType string
 
-var FilterEquals FilterType = "FilterEquals"
-var FilterLike FilterType = "FilterLike"
-var FilterIsNull FilterType = "FilterIsNull"
-var FilterRange FilterType = "FilterRange"
+var (
+	FilterEquals FilterType = "FilterEquals"
+	FilterLike   FilterType = "FilterLike"
+	FilterIsNull FilterType = "FilterIsNull"
+	FilterRange  FilterType = "FilterRange"
+)
 
 type FilterRule struct {
 	Field string
