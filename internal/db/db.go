@@ -7,8 +7,8 @@ import (
 	// Import sql driver to register itself with the database/sql package.
 	_ "github.com/go-sql-driver/mysql"
 
-	"github.com/doublehops/dhapi-example/internal/config"
-	"github.com/doublehops/dhapi-example/internal/logga"
+	"github.com/doublehops/dh-go-framework/internal/config"
+	"github.com/doublehops/dh-go-framework/internal/logga"
 )
 
 func New(l *logga.Logga, cfg config.DB) (*sql.DB, error) {

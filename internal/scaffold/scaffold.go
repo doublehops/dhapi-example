@@ -10,7 +10,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/doublehops/dhapi-example/internal/logga"
+	"github.com/doublehops/dh-go-framework/internal/logga"
 )
 
 const goModuleFile = "./go.mod"

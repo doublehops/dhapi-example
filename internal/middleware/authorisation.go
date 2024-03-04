@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/doublehops/dhapi-example/internal/app"
+	"github.com/doublehops/dh-go-framework/internal/app"
 	"github.com/julienschmidt/httprouter"
 )
 

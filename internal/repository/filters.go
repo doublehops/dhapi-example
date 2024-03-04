@@ -6,7 +6,7 @@ import (
 	"strings"
 	"unicode"
 
-	req "github.com/doublehops/dhapi-example/internal/request"
+	req "github.com/doublehops/dh-go-framework/internal/request"
 )
 
 type Order string

@@ -4,11 +4,11 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	model "github.com/doublehops/dh-go-framework/internal/model/mynewtable"
 
-	"github.com/doublehops/dhapi-example/internal/logga"
-	"github.com/doublehops/dhapi-example/internal/model/mynewtable"
-	"github.com/doublehops/dhapi-example/internal/repository"
-	req "github.com/doublehops/dhapi-example/internal/request"
+	"github.com/doublehops/dh-go-framework/internal/logga"
+	"github.com/doublehops/dh-go-framework/internal/repository"
+	req "github.com/doublehops/dh-go-framework/internal/request"
 )
 
 type MyNewTable struct {

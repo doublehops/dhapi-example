@@ -1,7 +1,7 @@
 package validator
 
 import (
-	req "github.com/doublehops/dhapi-example/internal/request"
+	req "github.com/doublehops/dh-go-framework/internal/request"
 )
 
 const (

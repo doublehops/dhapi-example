@@ -3,8 +3,8 @@ package logga
 import (
 	"context"
 
-	"github.com/doublehops/dhapi-example/internal/app"
-	"github.com/doublehops/dhapi-example/internal/tools"
+	"github.com/doublehops/dh-go-framework/internal/app"
+	"github.com/doublehops/dh-go-framework/internal/tools"
 )
 
 // Debug - args should be key/value pairs separated by a space. Example: "file", "migrate.go"

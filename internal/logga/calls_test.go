@@ -5,7 +5,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/doublehops/dhapi-example/internal/app"
+	"github.com/doublehops/dh-go-framework/internal/app"
 )
 
 func TestGetArguments(t *testing.T) {
@@ -61,7 +61,7 @@ func TestGetArguments(t *testing.T) {
 }
 
 // todo - I can't remember what this is for.
-//func TestCalls(t *testing.T) {
+// func TestCalls(t *testing.T) {
 //	ctx := context.Background()
 //
 //	cfg := &config.Logging{
@@ -75,4 +75,4 @@ func TestGetArguments(t *testing.T) {
 //	l.Debug(ctx, "my message", nil)
 //	l.Warn(ctx, "my message", nil)
 //	l.Error(ctx, "my message", nil)
-//}
+// }

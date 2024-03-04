@@ -1,4 +1,4 @@
-module github.com/doublehops/dhapi-example
+module github.com/doublehops/dh-go-framework
 
 go 1.21.0
 
