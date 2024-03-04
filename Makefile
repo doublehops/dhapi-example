@@ -9,7 +9,8 @@ gofmt:
 lint:
 	golangci-lint --config ./ci/.golangci-lint.yml run
 
-test:
+# `test` is a reserved keyword in makefiles.
+tst:
 	go test ./... -cover
 
 SHELL := /bin/bash
