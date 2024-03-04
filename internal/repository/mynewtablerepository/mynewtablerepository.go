@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+
 	model "github.com/doublehops/dh-go-framework/internal/model/mynewtable"
 
 	"github.com/doublehops/dh-go-framework/internal/logga"
