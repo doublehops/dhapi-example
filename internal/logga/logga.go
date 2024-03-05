@@ -6,8 +6,8 @@ import (
 	"log/slog"
 	"os"
 
-	"github.com/doublehops/dhapi-example/internal/config"
-	"github.com/doublehops/dhapi-example/test/testbuffer"
+	"github.com/doublehops/dh-go-framework/internal/config"
+	"github.com/doublehops/dh-go-framework/test/testbuffer"
 )
 
 var (

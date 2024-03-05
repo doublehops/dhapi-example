@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/doublehops/dhapi-example/internal/app"
+	"github.com/doublehops/dh-go-framework/internal/app"
 )
 
 type Model interface {

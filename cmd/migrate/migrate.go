@@ -6,9 +6,9 @@ import (
 	"log"
 	"os"
 
-	"github.com/doublehops/dhapi-example/internal/config"
-	"github.com/doublehops/dhapi-example/internal/db"
-	"github.com/doublehops/dhapi-example/internal/logga"
+	"github.com/doublehops/dh-go-framework/internal/config"
+	"github.com/doublehops/dh-go-framework/internal/db"
+	"github.com/doublehops/dh-go-framework/internal/logga"
 
 	_ "github.com/go-sql-driver/mysql"
 

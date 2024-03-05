@@ -1,12 +1,12 @@
 package routes
 
 import (
-	"github.com/doublehops/dhapi-example/internal/middleware"
-	"github.com/doublehops/dhapi-example/internal/service"
+	"github.com/doublehops/dh-go-framework/internal/middleware"
+	"github.com/doublehops/dh-go-framework/internal/service"
 	group "github.com/mythrnr/httprouter-group"
 
-	"github.com/doublehops/dhapi-example/internal/handlers/author"
-	"github.com/doublehops/dhapi-example/internal/handlers/mynewtable"
+	"github.com/doublehops/dh-go-framework/internal/handlers/author"
+	"github.com/doublehops/dh-go-framework/internal/handlers/mynewtable"
 )
 
 func GetV1Routes(app *service.App) *group.RouteGroup {

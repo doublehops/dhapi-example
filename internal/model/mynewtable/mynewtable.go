@@ -1,9 +1,9 @@
 package model
 
 import (
-	"github.com/doublehops/dhapi-example/internal/model"
-	req "github.com/doublehops/dhapi-example/internal/request"
-	"github.com/doublehops/dhapi-example/internal/validator"
+	"github.com/doublehops/dh-go-framework/internal/model"
+	req "github.com/doublehops/dh-go-framework/internal/request"
+	"github.com/doublehops/dh-go-framework/internal/validator"
 )
 
 type MyNewTable struct {

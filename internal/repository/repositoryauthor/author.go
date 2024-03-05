@@ -5,10 +5,10 @@ import (
 	"database/sql"
 	"fmt"
 
-	"github.com/doublehops/dhapi-example/internal/logga"
-	"github.com/doublehops/dhapi-example/internal/model"
-	"github.com/doublehops/dhapi-example/internal/repository"
-	req "github.com/doublehops/dhapi-example/internal/request"
+	"github.com/doublehops/dh-go-framework/internal/logga"
+	"github.com/doublehops/dh-go-framework/internal/model"
+	"github.com/doublehops/dh-go-framework/internal/repository"
+	req "github.com/doublehops/dh-go-framework/internal/request"
 )
 
 type Author struct {

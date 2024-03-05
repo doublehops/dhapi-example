@@ -4,12 +4,13 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/doublehops/dhapi-example/internal/app"
-	"github.com/doublehops/dhapi-example/internal/logga"
-	"github.com/doublehops/dhapi-example/internal/model/mynewtable"
-	"github.com/doublehops/dhapi-example/internal/repository/mynewtablerepository"
-	req "github.com/doublehops/dhapi-example/internal/request"
-	"github.com/doublehops/dhapi-example/internal/service"
+	model "github.com/doublehops/dh-go-framework/internal/model/mynewtable"
+
+	"github.com/doublehops/dh-go-framework/internal/app"
+	"github.com/doublehops/dh-go-framework/internal/logga"
+	"github.com/doublehops/dh-go-framework/internal/repository/mynewtablerepository"
+	req "github.com/doublehops/dh-go-framework/internal/request"
+	"github.com/doublehops/dh-go-framework/internal/service"
 )
 
 type MyNewTableService struct {
