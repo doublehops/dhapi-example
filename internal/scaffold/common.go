@@ -11,7 +11,7 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/doublehops/dhapi-example/internal/logga"
+	"github.com/doublehops/dh-go-framework/internal/logga"
 	"golang.org/x/text/cases"
 	"golang.org/x/text/language"
 )

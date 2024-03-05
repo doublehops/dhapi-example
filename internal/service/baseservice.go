@@ -3,8 +3,8 @@ package service
 import (
 	"database/sql"
 
-	"github.com/doublehops/dhapi-example/internal/logga"
-	"github.com/doublehops/dhapi-example/internal/model"
+	"github.com/doublehops/dh-go-framework/internal/logga"
+	"github.com/doublehops/dh-go-framework/internal/model"
 )
 
 type App struct {

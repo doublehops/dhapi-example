@@ -5,8 +5,8 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/doublehops/dhapi-example/internal/app"
-	"github.com/doublehops/dhapi-example/internal/logga"
+	"github.com/doublehops/dh-go-framework/internal/app"
+	"github.com/doublehops/dh-go-framework/internal/logga"
 )
 
 type BaseHandler struct {

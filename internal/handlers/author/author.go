@@ -5,14 +5,14 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/doublehops/dhapi-example/internal/model"
+	"github.com/doublehops/dh-go-framework/internal/model"
 
 	"github.com/julienschmidt/httprouter"
 
-	"github.com/doublehops/dhapi-example/internal/handlers"
-	"github.com/doublehops/dhapi-example/internal/repository/repositoryauthor"
-	req "github.com/doublehops/dhapi-example/internal/request"
-	"github.com/doublehops/dhapi-example/internal/service"
+	"github.com/doublehops/dh-go-framework/internal/handlers"
+	"github.com/doublehops/dh-go-framework/internal/repository/repositoryauthor"
+	req "github.com/doublehops/dh-go-framework/internal/request"
+	"github.com/doublehops/dh-go-framework/internal/service"
 )
 
 type Handle struct {

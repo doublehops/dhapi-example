@@ -1,9 +1,9 @@
 package model
 
 import (
-	"github.com/doublehops/dhapi-example/internal/validator"
+	"github.com/doublehops/dh-go-framework/internal/validator"
 
-	req "github.com/doublehops/dhapi-example/internal/request"
+	req "github.com/doublehops/dh-go-framework/internal/request"
 )
 
 type Author struct {

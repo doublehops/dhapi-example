@@ -7,13 +7,13 @@ import (
 
 	"github.com/julienschmidt/httprouter"
 
-	"github.com/doublehops/dhapi-example/internal/handlers"
-	model "github.com/doublehops/dhapi-example/internal/model/mynewtable"
-	"github.com/doublehops/dhapi-example/internal/repository/mynewtablerepository"
-	req "github.com/doublehops/dhapi-example/internal/request"
-	"github.com/doublehops/dhapi-example/internal/service"
-	"github.com/doublehops/dhapi-example/internal/service/mynewtableservice"
-	"github.com/doublehops/dhapi-example/internal/tools"
+	"github.com/doublehops/dh-go-framework/internal/handlers"
+	model "github.com/doublehops/dh-go-framework/internal/model/mynewtable"
+	"github.com/doublehops/dh-go-framework/internal/repository/mynewtablerepository"
+	req "github.com/doublehops/dh-go-framework/internal/request"
+	"github.com/doublehops/dh-go-framework/internal/service"
+	"github.com/doublehops/dh-go-framework/internal/service/mynewtableservice"
+	"github.com/doublehops/dh-go-framework/internal/tools"
 )
 
 type Handle struct {
