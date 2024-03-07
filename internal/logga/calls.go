@@ -75,8 +75,8 @@ func getContextAtts(ctx context.Context) []any {
 		return args
 	}
 
-	if traceID := ctx.Value("traceID"); traceID != nil {
-		args = append(args, "traceID", traceID)
+	if traceID := ctx.Value(app.TraceIDKey); traceID != nil {
+		args = append(args, app.TraceIDKey, traceID)
 	}
 
 	if userID := ctx.Value(app.UserIDKey); userID != nil {

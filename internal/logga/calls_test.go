@@ -13,35 +13,35 @@ func TestGetArguments(t *testing.T) {
 		name         string
 		context      context.Context
 		args         KVPs
-		ctxVars      map[string]any
+		ctxVars      map[app.ContextVar]any
 		expectedArgs interface{}
 	}{
 		{
 			name:         "successWithAll",
 			context:      context.Background(),
 			args:         KVPs{"hello": "world"},
-			ctxVars:      map[string]any{"traceID": "ABCD-1234", "userID": 123},
-			expectedArgs: []interface{}{"hello", "world", "traceID", "ABCD-1234", "userID", 123},
+			ctxVars:      map[app.ContextVar]any{app.TraceIDKey: "ABCD-1234", app.UserIDKey: 123},
+			expectedArgs: []interface{}{"hello", "world", app.TraceIDKey, "ABCD-1234", app.UserIDKey, 123},
 		},
 		{
 			name:         "SuccessOnlyArgs",
 			context:      context.Background(),
 			args:         KVPs{"hello": "world"},
-			ctxVars:      map[string]any{},
+			ctxVars:      map[app.ContextVar]any{},
 			expectedArgs: []interface{}{"hello", "world"},
 		},
 		{
 			name:         "SuccessOnlyCtxArgs",
 			context:      context.Background(),
 			args:         KVPs{},
-			ctxVars:      map[string]any{"traceID": "ABCD-1234", "userID": 123},
-			expectedArgs: []interface{}{"traceID", "ABCD-1234", "userID", 123},
+			ctxVars:      map[app.ContextVar]any{app.TraceIDKey: "ABCD-1234", app.UserIDKey: 123},
+			expectedArgs: []interface{}{app.TraceIDKey, "ABCD-1234", app.UserIDKey, 123},
 		},
 		{
 			name:         "SuccessOnlyCtxArgs",
 			context:      nil,
 			args:         KVPs{"hello": "world"},
-			ctxVars:      map[string]any{},
+			ctxVars:      map[app.ContextVar]any{},
 			expectedArgs: []interface{}{"hello", "world"},
 		},
 	}
@@ -50,7 +50,7 @@ func TestGetArguments(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			ctx := tt.context
 			for key, value := range tt.ctxVars {
-				ctx = context.WithValue(ctx, app.ContextVar(key), value)
+				ctx = context.WithValue(ctx, key, value)
 			}
 			args := getArguments(ctx, tt.args)
 			if !reflect.DeepEqual(tt.expectedArgs, args) {
