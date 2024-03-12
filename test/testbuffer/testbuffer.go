@@ -5,7 +5,7 @@ import (
 	"os"
 )
 
-var Filename = "/tmp/testwriter.log"
+const Filename = "/tmp/testwriter.log"
 
 type TestBuffer struct{}
 
