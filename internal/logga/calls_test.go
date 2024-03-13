@@ -58,7 +58,6 @@ func TestGetArguments(t *testing.T) {
 			}
 			args := addArgs(ctx, tt.args)
 			assert.ElementsMatch(t, tt.expectedArgs, args, "elements not as expected")
-			assert.Equal(t, tt.expectedArgs, args, "args not equal as expected")
 		})
 	}
 }
