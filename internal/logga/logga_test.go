@@ -189,7 +189,7 @@ func TestSendLogMessage(t *testing.T) {
 			for fileExists() {
 				time.Sleep(50 * time.Millisecond)
 			}
-			// defer os.Remove(testbuffer.Filename) // Uncomment code.
+			defer os.Remove(testbuffer.Filename)
 
 			ctx := context.Background()
 
