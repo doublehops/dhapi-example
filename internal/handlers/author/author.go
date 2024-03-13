@@ -2,6 +2,7 @@ package author
 
 import (
 	"encoding/json"
+	"github.com/doublehops/dh-go-framework/internal/service/authorservice"
 	"net/http"
 	"strconv"
 
@@ -17,7 +18,7 @@ import (
 
 type Handle struct {
 	repo *repositoryauthor.Author
-	srv  *service.AuthorService
+	srv  *authorservice.AuthorService
 	base *handlers.BaseHandler
 }
 
@@ -26,7 +27,7 @@ func New(app *service.App) *Handle {
 
 	return &Handle{
 		repo: ar,
-		srv:  service.New(app, ar),
+		srv:  authorservice.New(app, ar),
 		base: &handlers.BaseHandler{
 			Log: app.Log,
 		},

@@ -5,7 +5,6 @@ import (
 	"github.com/doublehops/dh-go-framework/internal/app"
 	"github.com/doublehops/dh-go-framework/internal/tools"
 	"log/slog"
-	"reflect"
 )
 
 // Debug - args should be key/value pairs separated by a space. Example: "file", "migrate.go"
@@ -54,15 +53,16 @@ func addArgs(ctx context.Context, KVPs KVPs) []any {
 	}
 
 	for key, value := range KVPs {
-		var rt = reflect.TypeOf(value)
-		switch rt.Kind() {
-		case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32:
-			v := value.(int)
-			atts = append(atts, slog.Int(key, v))
-		default:
-			v := value.(string)
-			atts = append(atts, slog.String(key, v))
-		}
+		atts = append(atts, slog.Any(key, value))
+		// var rt = reflect.TypeOf(value)
+		// switch rt.Kind() {
+		// case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32:
+		// 	v := value.(int)
+		// 	atts = append(atts, slog.Int(key, v))
+		// default:
+		// 	v := value.(string)
+		// 	atts = append(atts, slog.String(key, v))
+		// }
 	}
 
 	return atts

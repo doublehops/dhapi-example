@@ -1,7 +1,8 @@
-package service
+package authorservice
 
 import (
 	"context"
+	"github.com/doublehops/dh-go-framework/internal/service"
 
 	"github.com/doublehops/dh-go-framework/internal/logga"
 
@@ -13,11 +14,11 @@ import (
 )
 
 type AuthorService struct {
-	*App
+	*service.App
 	authorRepo *repositoryauthor.Author
 }
 
-func New(app *App, authorRepo *repositoryauthor.Author) *AuthorService {
+func New(app *service.App, authorRepo *repositoryauthor.Author) *AuthorService {
 	return &AuthorService{
 		App:        app,
 		authorRepo: authorRepo,
